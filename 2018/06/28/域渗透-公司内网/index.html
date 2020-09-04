@@ -1,35 +1,967 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.2.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.2.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这是一篇受保护的文章。如果你确实想看，请与我联系。">
+<meta name="keywords" content="渗透测试,内网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透测试-公司内网">
+<meta property="og:url" content="https://fl4g.cn/2018/06/28/域渗透-公司内网/index.html">
+<meta property="og:site_name" content="zering的博客">
+<meta property="og:description" content="这是一篇受保护的文章。如果你确实想看，请与我联系。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-09-04T04:24:52.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="渗透测试-公司内网">
+<meta name="twitter:description" content="这是一篇受保护的文章。如果你确实想看，请与我联系。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zering的博客" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://fl4g.cn/2018/06/28/域渗透-公司内网/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>渗透测试-公司内网 | zering的博客</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <a href="https://github.com/zeringzxh" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; left: 0; transform: scale(-1, 1);" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style></a>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zering的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录点滴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/06/28/域渗透-公司内网/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">渗透测试-公司内网
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-28 08:43:04" itemprop="dateCreated datePublished" datetime="2018-06-28T08:43:04+08:00">2018-06-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-04 12:24:52" itemprop="dateModified" datetime="2020-09-04T12:24:52+08:00">2020-09-04</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/渗透测试/" itemprop="url" rel="index"><span itemprop="name">渗透测试</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/28/域渗透-公司内网/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/06/28/域渗透-公司内网/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="">
+    <label for="hbePass">输入密码，查看文章。</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="47d0b81cfb72d6242c59ac1cc0072eb8de487bd1af66f4741494a97893d232db">6ffbc8721281742c406c1666a9aa6cf6284e303b0e00556b685127b9a6b6b54d33c192694c3720a3a03285bcefba59439e41c15ba8c6e6d0ff83434befabe35b169aba738cc9663e64177935852c9e165b8d78e0272cd4993f6bef511933bad7c99aba2c761f5b92ec3f3503f978e666d3ebeaf33ff017943cf8b6ded36046a1c2e99ab13f47efa3c23146e064340bd89fe6ca895e5ba3f62b1b07cc496cbbe06c3a85a69a4d3a6314331d2ffc7747ae859b26ab1db0e34ece5898809e6e8ba0e8b360d4b78b2b3afeca166c1ce5365bfa307337293fa04a6474973bcddb54d458673a7efaa7ba206c2c283144a9deb65716bf1850130ce92c5c9060c0d9789751f389f1b89e5b4ad72bc906aab119b4090bf441d9f518e747b0c463871260d3efaf875dd05bebef7ecf43e863de64aa68927a34d0132938e91df6c4cb6ccfd1728b25b0285632580b4146cc63911da9278d4c34fa78fcecd6c90619c3e048afccd04e2f550adc0c022ed32af5688f66f8bb4a047a744e844680050bb6c5a4693c43e7024b1daafebaa410dd4174cc6000c307df9fb4b383c653cec2d6a78c9a578fd5cfc395cabd71f7e024eddde8edf55199b50a0a050cee0ae0930978c44d45ad8e7d5f26b98f69ae5439d8fd4202e33997aca14ede6e775726fdbc8c840572e73f27821ba1658d8fc39bf0053caa9c6ff2a7f8c068db59843b7e863cc26b1961207d0328b84b8056bb2638362ff4f48e5ccf949583a0b429d44d7fe04c91dccb1ee6eaa546fd900545365b816103a80d87cf865661c3f8eda7a00ee2e2c249034e072c4d9b8d77a2053b6975929aefa8cbd863a351b4e967d30f4846823b409ee5e8d379f6cb4cb46a70d782d15185fb570985cc7a5b1017d7bf6dc763d2e64936fbc1aaf13bd84f96003b292794d6407159e213b40edb32462f0ede1efd2ea971214577041f7600eebdae89a5fe930aeb4bc350d66b1817484abc2033cdbee7d365d605dd8f9027035c62d24df09fe566ba6e51c0dd8444870fb3abbe262210304217b6220eeb1a67037aa9281f9f75643ba755875b00211c2708890f3abc7988839d554128bf89b4550e54c04d38846b4aa3be077ca6acbb3c99362d7c8ef6a3db013d69639805f437973a4fcd1a9abe7cd9b8e88492bddb99d469995a31ff11b4e0ff458f342258129bc7217daae01e7be84a344111f6479c041717e9e6fef306f59d90d4f2986cdd64e72390cc770eab5dbf2fd7ad93d582d83e8ff434ecb846bb1efc8606092402c53dbd7431eed534c63666836128f3f09996e3d95fd19e26ac789bdb3be96722dbb662812f73f8b9ad5ec8a9515b891f00c8a8b8d748dd0010ace63323aa1999651e1c5e972b42dbaa468fc7d0a1dd83ca6e9fa1ba245422b604f90a42aeee9cc77f6fc60deae6fbe1f4efc116a6af2a9b52089fba94d70633c7e7d6ba0281b94c120396a91389d85dc418d39a499f2a78e8b8d47b28b4228fc24f7f7fedb385ea5d14261eacaf917fbef073352f09a38284a75bac010193ba9f4299a6c08784cd1aaa3fd15f3ac548f029bd064b43c410f0b1aa96f547dbdc8ebc6a11a160c403e89e349c75ef65988eb2970c22925a25ea0ac7b5d0a38be9f3303b9790fd212e645d69730f9bd7c83a4ac8f9ca838c8d1b08b9823a166a32615902d21fe71c158e1b00c9a9681f589eb0ad95d6a30947b1dabc7cf80a0731b90273e91a876edc278806cdcfad436b0d04d510367e7d01a0da13785c5570e02a30170adec996690322a60a55896f239a5375eceba47e34c7f3a6f5ca007695f081da4e1b39983519b0defccac57283149a19088a860ff6a7410a1f0c9ee782db01d034e4ecda3600990a11676c2f0aab90fdbc8db59edf646d1d72965e19789f449aad9418d123d3a71750caa82a6210e0535b0c14ef4ae873d7bea1a8e2dc28c0629d0a61aa3158c8a4b2173b3639591f29e5655e841f30d18a3ecda8b03a7b0cfade9e8501d3a18f90d0780bf686aef649645245e6ca597cf1a804dd557827c6d2852de39a5c167ec3c85aa55c5d9cddc506977333452ce1ce3126474cf7be0961dec1704493ab47d2a33e0099580a583ea3904f23227e658eedb2cc0b59cc41874d1bf0cb50d38d7c9d0518d6e323f26669940d4050d64f7e8b88c1256e94641187be19bd39123a12d77f75d1d8d0b8b76d5e7e0b39087558680a9a5f930499c73247a42581f8f3e72320ca473b0d59fc463e64a9ab58b329b41ec7116a1b659bc331d429ec7be6ecbb33e7d1de65f90fde28e189da5c5ef80ff7ca87bdcd0c7aa6055010af07ace6b4145ef26807c9cdc8bb72b5d65d388e8db4b0eb14b344e4241521e3d9810e2796786081a8e5490a7dffe07b7fe566bc681a2763c8d09fd22900d55c42af11fd91efbab17069ddc89358425857cba317e37b2017af64c1b7ed5c13e50cef4bf4b74b9a208278e737b68a399b3b2d9767498f6e2e820a7a56bc0772109ba362f11d37ab9bcbdd2251763dcc818067127c766e524de0a59da5a680db372b390cf7b4280cd42f6ed31382edc787de95f668f0746fa62571215e3873d2ed15ec76cd9b13c59fda83196ce98f4da92098ee0db143c9a39931c9c6f04d26599db8705bfd14f926f94743e72941a7ec69829944702825ee59c45ce0cd93152530ffaa7d2c40c16b3468d556e8a36dad153d18fbe6943eb59d1dd499aa329f8da4e266c878c9f0138138b373bf178491c9ff42b9280a9525585b9431856277d4c02b54cf6ea1d7b4684fd00f30819629f1c55284a7b2acd25b45bd1076c299a8e37037c33886c841fde3375ba073ce36212221e0938f323bf3bd49eda4f47d07d250ea541a458d0695a2e0bd531550f692c907d25517a96728059c3589cd60bb5f514bd37099aaffffb75af934d77b3b14b1e5c1ee5caaf2ff5df388429e3940c38c5498576463a9b68422993cbe3060a007337638e09d995e6bbdf2f45765c8b1a37c4209f9b18daed28c84f5925076d9fa180bd09dbac77387e090607c354ae78cea895467bf7b34250cea97511b9157191c801664d2b934e1e4ce00b76765d03f5296f3b7cf46304fb4c60ecd395e162399ebeee43358d232066ea0bea501617687f1527cbbf54c480d2d29488e925e9fa30a8074558fb7b14ce1b8a311882b287b3e700fd6c0caa7a705f0a87ef9bcd8799a43040de8d486b5986ae7257eb68f6de75e4bd4f8e78e19aaee5b7cd8b70f6fda3fc647835aef67334ddd9f5d710eaa49d8c5c0e8519c04fc26ba2c7e739e4a0657e50eef0a69bcefa10fe56e09f92285b785753a873dfa6575431860707af9225ec44626610253371efef250be5b5ba0f168fb297d9c0c6b5c294c6a9022ae94f8fd2d735a00df9df7d120f8601673cdeb38b4a29296c3e3c56fcc3b68452036512f899e767f529a34ce0e6b1f164ce501401672f3cced4df7f6482ffc35bba379a8780f7a16e5fcc2a54875642b89345dc1b2659eb3c45e153759a8bee5d5b72b1ce60836bc5949a2e628ad0f5d6cfb6c82acb0dd09754bfdea3da04483bea073b99d33b250c1314c964d4670ed2b09214b59e6ab792ddef1b31b81bdac5dfd61998182dacb99af9b05020d94a4c55be256a43f833e62ff4107b065285668bbcc1bfd20ed3ecf9d78f56f990d0b25260961261894b0e665194af13f606b1be3a88ea7d6d165c6c140008346d32fdd1f97a3b400537184704c0fe4310d067e3792de64356b56fa2758b179eacc4192cc16fad0be7b5f080b85ba701a6fe46dbdbb51abf4464f5e8655549d55680323da949dd86159ab5bfba81e38e218ffd8a4cea4d5425ff207f11c4c6b805a8f6081b9ada2eecc220bd32243e2738e645610c974d5f2271cf76980065b65840f17d71a80012f03a1fa86d7ecca16a3120da3ad57907ea81148acc42896bb453e26e14f81074955e91a7214aee60ffd99fb24a6595d31ac2602e38aebf3e5c57d05768e1c5550da9c8f443d49e822f62b05d1ec5baeea16e5a4b9856d3064853672c5c61d85b3e2ca114124b5a92ea5da8afb417788dd19c460153eb0ec21c337dbcdd1abc7a5c42fbccb5be2171b5136a1c09ea12678271242460bffa0d1a01fde412b194123a69d8e372b0a821dbb609a72b342cfe725234f590fe6e04771b67782b4a6d7359ab1a7ab6464996ceda2e9ee07b51dbb6dbdee36670e50dd98846c6fbe21577a635eaa9e7653b6cc1ef29a680ef9a0cbc41dd212a8a907fa97432f99b054fd98f3f59800c4301e55ebdd7a307aed98c1eb9d44d627e2575e7f532a2e56b6176520b32b37d74c73660f0f5ddd51fb77be1a310fde4fd5c9901b0b5d1dac215d1be28061b9c72bbceb6943d4b7f3cf882089dd99ea5ecfd71f7ae4f635ca38e40bfb6aafd03daaa3fb10e43881e65e3d44af10ed8d8bbc4a3d1e74c20e09588b77ba097db3b360c97f4cbdf45f8ea59815445a739252c235855c62ffe8faa21b8c2abc2c33f434e5c33b2c4fce147ece918504686699825d18e5983d4d397277bedf22d4d1c23b00c734c70f0526c3b0f7e5f352f62d297b8608697eaa9b729497cc74c31a93b57fed8cb08914a79668b6bf70e686d686b204429da71dc8cb9f1a8b2ae2155afb8dcf2d360f671e2e6deae5ace83462af16b9fe19230d10e6022c7fcd388756057989addfc694bee051452b4c814e5b75a05a4f5a327bee4e47b2dea6637772fdbc79e4eb8191e0cca36696118367a77be591ab50083683494ccdef7874fd138e3b6a2c1b9800e7dda74dd64838de4bd840d31b54ac37a4cf5d99577dd7560f6312a41f0176af53e7d5d21f1d131e21d8ef49b9632d2d7b0f7b2564c59c89ed6445ef6cf12b1ceab952df04ac9bb783754310aa13eda43f744dda664cc026c033d392c236c6001c0dde765e9fff9e6f6e9d95dce3cd97600d5ad9e5e113e5ac2d7f98e8e91f6920da062168167ee6234bdbf070df1d43aa2cfb9f4e26a29376fe6f88a2b3c83f760b8c444bd259210fe9add6c41b614e0ab781119c3fa53526173bd5ca2389f8f7cf5da29eb1eb613650a6b965d94d86987174872f7e4afc8f3a08e72d5ebe0248c9e4bf0fcbcf5fd5454bba19163ebc3f5c1db3f7433b00a6f6af7bdd97a7bae2fd87a5ee7000a37c24aedaf0021faa6c94597a6d1fe5a7fa0be6621b31fb71252845e7333e9868c3f4f6627c0068a0a4525575ebc5bcc3ab8581a21ca3bf523100a74180d38352dfe00eafec2e5e6da010899a6ce8d520e29a3e68359c2a23c64050ff001ceb978cdf0453ebf358f99e4e6a0d94ecf8b7ab889dd2f8da9a823ba7721df19a7a40919323dfc787529b31e3124005cc73232c13782cf8eb634522664442548a9b959944697caa78f1aab6ab30f679b1961698278a6a206057b79e0ced9940f94268f5a7547710655fdc54e8d13fcb64bd710c49dcec1e766432d037371895d3bbe9c66a678eb7444ff75a210d9b7859f6714824bc732edb54c4a0f1341f0ac9a8aeaf9eee8da44bb09151584836f0bea8692f11a541ed37406987cf64a5a0359dfc1e52637232bca18a9d17b6598c69a3c3b32c767e1fdce73eecda93a93fc28f6ef3e9f52f057edbc85acc49b01026ff0417f1442a4623db0da17b68a2dcc9ffa3224f3442d6c6814d</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+          
+            <div>
+
+    <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+
+</div>
+
+          
+    </div>
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zering</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://fl4g.cn/2018/06/28/域渗透-公司内网/" title="渗透测试-公司内网">https://fl4g.cn/2018/06/28/域渗透-公司内网/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渗透测试/" rel="tag"><i class="fa fa-tag"></i> 渗透测试</a>
+          
+            <a href="/tags/内网/" rel="tag"><i class="fa fa-tag"></i> 内网</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/06/Cuckoo-Sandbox学习-安装篇/" rel="next" title="Cuckoo-Sandbox学习-安装篇">
+                <i class="fa fa-chevron-left"></i> Cuckoo-Sandbox学习-安装篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/12/流量分析入门/" rel="prev" title="流量分析入门">
+                流量分析入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+			  
+			    <ul class="sidebar-nav motion-element">
+			      <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+			        文章目录
+			      </li>
+			      <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+			        站点概览
+			      </li>
+			    </ul>
+			  
+			
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zering</p>
+              <p class="site-description motion-element" itemprop="description">学而时习之</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                天才或疯子
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://1sparrow.com/" title="一只麻雀" target="_blank">一只麻雀</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.51cto.com/13769225" title="Wuli王蜀黎" target="_blank">Wuli王蜀黎</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+     
+			  
+			  <!--noindex-->
+			    <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+			      <div class="post-toc">
+			
+			        
+			          
+			        
+			
+			        
+			          <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-问题发现"><span class="nav-number">1.</span> <span class="nav-text">0x01 问题发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-漏洞利用"><span class="nav-number">2.</span> <span class="nav-text">0x02 漏洞利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-域信息收集"><span class="nav-number">3.</span> <span class="nav-text">0x02 域信息收集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-后记"><span class="nav-number">4.</span> <span class="nav-text">0x03 后记</span></a></li></ol></div>
+			        
+			
+			      </div>
+			    </section>
+			  <!--/noindex-->
+			  
+			
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zering</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_uv">
+      本站访客数:<span id="busuanzi_value_site_uv"></span>
+    </span>
+  </div>
+<!--  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.2.0</div>
+
+-->
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共13.3k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.2.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.2.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.2.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.2.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.2.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lQLsGBhiarkYBwvOmqFw80NJ-gzGzoHsz',
+        appKey: 'qBw97RhefahyXiugjB2ogQtl',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
