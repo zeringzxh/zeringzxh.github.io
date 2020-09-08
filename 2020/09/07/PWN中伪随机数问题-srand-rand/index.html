@@ -112,8 +112,8 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/rand运行.png">
 <meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/srand为2.png">
-<meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/zering/hexo/source/_posts/2020-09-07-PWN中伪随机数问题-srand-rand/dice-game.png">
-<meta property="og:updated_time" content="2020-09-07T10:13:02.278Z">
+<meta property="og:image" content="https://fl4g.cn/2020/09/07/PWN中伪随机数问题-srand-rand/dice-game.png">
+<meta property="og:updated_time" content="2020-09-08T01:51:17.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PWN中伪随机数问题--srand()&#x2F;rand()">
 <meta name="twitter:description" content="0x00 前言PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。">
@@ -344,12 +344,24 @@
                 
               
 
-              <time title="创建时间：2020-09-07 17:03:44 / 修改时间：18:13:02" itemprop="dateCreated datePublished" datetime="2020-09-07T17:03:44+08:00">2020-09-07</time>
+              <time title="创建时间：2020-09-07 17:03:44" itemprop="dateCreated datePublished" datetime="2020-09-07T17:03:44+08:00">2020-09-07</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-08 09:51:17" itemprop="dateModified" datetime="2020-09-08T09:51:17+08:00">2020-09-08</time>
               
             
           </span>
@@ -430,7 +442,7 @@
 <p><img src="/2020/09/07/PWN中伪随机数问题-srand-rand/srand为2.png" style="zoom:50%;"></p>
 <h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界–dice_game</strong></p>
 <p>我们直接拖入ida看源码</p>
-<p><img src="/2020/09/07/PWN中伪随机数问题-srand-rand/zering/hexo/source/_posts/2020-09-07-PWN中伪随机数问题-srand-rand/dice-game.png" style="zoom:80%;"></p>
+<p><img src="/2020/09/07/PWN中伪随机数问题-srand-rand/dice-game.png" style="zoom:80%;"></p>
 <p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">'A'</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <p>此时，我们就直接使用给出的libc来自动计算随机数</p>
