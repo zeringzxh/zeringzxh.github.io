@@ -469,11 +469,11 @@
 <h2 id="常见报错解决："><a href="#常见报错解决：" class="headerlink" title="常见报错解决："></a>常见报错解决：</h2><ul>
 <li>部署时，若报如下错</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">error: 源引用表达式 hexo 没有匹配</span><br><span class="line">error: 推送一些引用到 <span class="string">'https://github.com/yournamezxh/yournamezxh.github.io.git'</span> 失败</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">error: 源引用表达式 hexo 没有匹配</span><br><span class="line">error: 推送一些引用到 <span class="string">'https://github.com/yourname/yourname.github.io.git'</span> 失败</span><br></pre></td></tr></table></figure>
 <p>使用</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git checkout -b hexo</span><br></pre></td></tr></table></figure>
 <p>来切换分支，此时还是会报错：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">error: 推送一些引用到 &apos;https://github.com/yournamezxh/yournamezxh.github.io.git&apos; 失败</span><br><span class="line"></span><br><span class="line">提示：更新被拒绝，因为您当前分支的最新提交落后于其对应的远程分支。</span><br><span class="line"></span><br><span class="line">提示：再次推送前，先与远程变更合并（如 &apos;git pull ...&apos;）。详见</span><br><span class="line"></span><br><span class="line">提示：&apos;git push --help&apos; 中的 &apos;Note about fast-forwards&apos; 小节</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">error: 推送一些引用到 &apos;https://github.com/yourname/yourname.github.io.git&apos; 失败</span><br><span class="line"></span><br><span class="line">提示：更新被拒绝，因为您当前分支的最新提交落后于其对应的远程分支。</span><br><span class="line"></span><br><span class="line">提示：再次推送前，先与远程变更合并（如 &apos;git pull ...&apos;）。详见</span><br><span class="line"></span><br><span class="line">提示：&apos;git push --help&apos; 中的 &apos;Note about fast-forwards&apos; 小节</span><br></pre></td></tr></table></figure>
 <p>使用</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push -u origin +hexo</span><br></pre></td></tr></table></figure>
 <ul>
