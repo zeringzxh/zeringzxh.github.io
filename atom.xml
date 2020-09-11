@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-09-10T03:53:43.000Z</updated>
+  <updated>2020-09-11T12:03:07.520Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hexo及next主题使用问题记录</title>
+    <link href="https://fl4g.cn/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    <id>https://fl4g.cn/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</id>
+    <published>2020-09-11T11:53:00.000Z</published>
+    <updated>2020-09-11T12:03:07.520Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p><h1 id="Next7-8"><a href="#Next7-8" class="headerlink" title="Next7.8"></a>Next7.8</h1><ol><li>点击“阅读全文”后，会直接滚动到原文中&lt;/!– more –&gt;下，且config里面没有scroll_to_more配置，如何从头开始阅读。</li></ol><p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p><p>修改\themes\next\layout_macro\post.swig中</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure><p>为</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;strong&gt;不定期更新各类使用过程中遇到的问题&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Next7-8&quot;&gt;&lt;a href=&quot;#Next7-8&quot; class=&quot;headerlink&quot; title=&quot;Next7.8&quot;&gt;&lt;/a&gt;Next7.8&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;点击“阅读全文”后，会直接滚动到原文中&amp;lt;/!– more –&amp;gt;下，且config里面没有scroll_to_more配置，如何从头开始阅读。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;参考博文&lt;a href=&quot;https://blog.csdn.net/weizhixiang/article/details/105112467&quot;&gt;hexo关于next主题scroll_to_more失效&lt;/a&gt;进行如下设置&lt;/p&gt;
+&lt;p&gt;修改\themes\next\layout_macro\post.swig中&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&amp;quot;btn&amp;quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;href&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&amp;quot;&amp;#123;&amp;#123; url_for(post.path) &amp;#125;&amp;#125;#more&amp;quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;rel&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&amp;quot;contents&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;为&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&amp;quot;btn&amp;quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;href&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&amp;quot;&amp;#123;&amp;#123; url_for(post.path) &amp;#125;&amp;#125;&amp;quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;rel&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&amp;quot;contents&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    <category term="hero" scheme="https://fl4g.cn/categories/hero/"/>
+    
+    
+    <category term="next" scheme="https://fl4g.cn/tags/next/"/>
+    
+  </entry>
   
   <entry>
     <title>第2章 网络攻击原理与常用方法</title>
@@ -506,31 +536,6 @@
     <category term="逆向" scheme="https://fl4g.cn/tags/%E9%80%86%E5%90%91/"/>
     
     <category term="android" scheme="https://fl4g.cn/tags/android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>URL去重去似</title>
-    <link href="https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/"/>
-    <id>https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</id>
-    <published>2018-05-24T01:48:54.000Z</published>
-    <updated>2020-09-08T06:50:39.165Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p><ul><li><p>布隆过滤器去重</p></li><li><p>Hash表去重</p><a id="more"></a><h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol><li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li><li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li><li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li></ol><p>python有两个第三方插件实现了此功能：</p><ul><li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li><li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li></ul><p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure><p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p><p>布隆过滤器存在一定的误判率。</p><h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p><h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure><p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure><h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p><ul><li>btree：树结构，存储任意复杂key和value</li><li>hash：hash存储，访问量巨大时，效果好</li><li>queue：队列操作，只能存储定长数据，key必须是数字</li><li>recno：与queue相似，但支持边长value</li></ul><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure><p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p></li></ul><h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p><ul><li>协议相同（protocol）</li><li>主机名相同（host）</li><li>端口相同（port）</li><li>资源路劲相同（path）</li><li>参数名所组成列表相同或包含</li></ul><p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><p>输出结果：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><p>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx/">http://xxx</a></em>开头,否则会出错。</strong></p>]]></content>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;URL去重&quot;&gt;&lt;a href=&quot;#URL去重&quot; class=&quot;headerlink&quot; title=&quot;URL去重&quot;&gt;&lt;/a&gt;URL去重&lt;/h2&gt;&lt;p&gt;URL去重主要有两种方式：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;布隆过滤器去重&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Hash表去重&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="python" scheme="https://fl4g.cn/categories/python/"/>
-    
-    
-    <category term="爬虫" scheme="https://fl4g.cn/tags/%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   
