@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-09-11T13:17:35.770Z</updated>
+  <updated>2020-09-12T08:22:11.665Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://fl4g.cn/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
     <id>https://fl4g.cn/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</id>
     <published>2020-09-11T11:53:00.000Z</published>
-    <updated>2020-09-11T13:17:35.770Z</updated>
+    <updated>2020-09-12T08:22:11.665Z</updated>
     
     <content type="html"><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p><a id="more"></a><h1 id="Next7-8"><a href="#Next7-8" class="headerlink" title="Next7.8"></a>Next7.8</h1><ol><li>点击“阅读全文”后，会直接滚动到原文中&lt;!– more –&gt;下，且config里面没有scroll_to_more配置，如何从头开始阅读。</li></ol><p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p><p>修改\themes\next\layout_macro\post.swig中</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure><p>为</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>]]></content>
     
@@ -30,7 +30,7 @@
     
     
     
-    <category term="hero" scheme="https://fl4g.cn/categories/hero/"/>
+    <category term="hexo" scheme="https://fl4g.cn/categories/hexo/"/>
     
     
     <category term="next" scheme="https://fl4g.cn/tags/next/"/>
