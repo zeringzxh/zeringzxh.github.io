@@ -145,72 +145,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Cuckoo-Sandbox学习-安装篇</title>
-    <url>/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/</url>
-    <content><![CDATA[<p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
-<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit</p>
-<a id="more"></a>
-
-<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/%E7%BD%91%E5%8D%A1-ubuntu.PNG"></p>
-<p>依赖库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure>
-<p>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure>
-<p>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure>
-<hr>
-<p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure>
-<p>安装VirtualBox</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure>
-<p>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG"></p>
-<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG"></p>
-<p>从中可以看出配置文件路径为*/home/cuckoo/.cuckoo/conf*，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>几个主要的配置文件：</p>
-<ul>
-<li>cuckoo.conf：用于配置常规行为和分析选项。</li>
-<li>auxiliary.conf：用于启用和配置辅助模块。</li>
-<li>&lt;machinery&gt;.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</li>
-<li>memory.conf：波动配置。</li>
-<li>processing.conf：用于启用和配置处理模块。</li>
-<li>reporting.conf：用于启用或禁用报告格式。</li>
-</ul>
-<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG"></p>
-<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7%E9%85%8D%E7%BD%AE.PNG"></p>
-<p>为了正常运行，需要配置如下一些选项。</p>
-<ul>
-<li>启用自动登录</li>
-<li>启用远程RPC</li>
-<li>关闭分页（可选）</li>
-<li>禁用屏幕保护程序（可选）</li>
-</ul>
-<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。</p>
-<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure>
-<p>前两条命令里的 &lt;USERNAME&gt; 和 &lt;PASSWORD&gt; 为自己的账户和密码。</p>
-<p>找到之前安装的cuckoo路径下的agent/agent.py,并将其放到win7的启动目录下，<code>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</code>，把agent.py后缀改为agent.pyw，这样程序启动就不会有GUI窗口。</p>
-<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>很多恶意软件都需要访问网络才可以正常运行，因此需要配置windows主机上网，使用host主机开启流量转发、用 iptables 做地址转换（NAT）规则。</p>
-<p>临时开启ip转发功能方式，系统重启之后便失效：</p>
-<ul>
-<li>sudo sysctl -w net.ipv4.ip_forward=1</li>
-<li>sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward</li>
-</ul>
-<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-<p>然后配置Iptables的规则:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure>
-<p>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG"></p>
-]]></content>
-      <categories>
-        <category>工具使用</category>
-      </categories>
-      <tags>
-        <tag>Cickoo Sandbox</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Android逆向-smali语法</title>
     <url>/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="Dalvik"><a href="#Dalvik" class="headerlink" title="Dalvik"></a>Dalvik</h2><p>DVM运行Dalvik字节码，可执行文件格式dex(dalvik executable)，有点类似于机器码。DVM基于寄存器，JVM基于栈。</p>
@@ -351,6 +285,72 @@
       <tags>
         <tag>逆向</tag>
         <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cuckoo-Sandbox学习-安装篇</title>
+    <url>/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/</url>
+    <content><![CDATA[<p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
+<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit</p>
+<a id="more"></a>
+
+<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/%E7%BD%91%E5%8D%A1-ubuntu.PNG"></p>
+<p>依赖库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure>
+<p>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure>
+<p>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure>
+<hr>
+<p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure>
+<p>安装VirtualBox</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure>
+<p>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG"></p>
+<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG"></p>
+<p>从中可以看出配置文件路径为*/home/cuckoo/.cuckoo/conf*，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>几个主要的配置文件：</p>
+<ul>
+<li>cuckoo.conf：用于配置常规行为和分析选项。</li>
+<li>auxiliary.conf：用于启用和配置辅助模块。</li>
+<li>&lt;machinery&gt;.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</li>
+<li>memory.conf：波动配置。</li>
+<li>processing.conf：用于启用和配置处理模块。</li>
+<li>reporting.conf：用于启用或禁用报告格式。</li>
+</ul>
+<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG"></p>
+<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7%E9%85%8D%E7%BD%AE.PNG"></p>
+<p>为了正常运行，需要配置如下一些选项。</p>
+<ul>
+<li>启用自动登录</li>
+<li>启用远程RPC</li>
+<li>关闭分页（可选）</li>
+<li>禁用屏幕保护程序（可选）</li>
+</ul>
+<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。</p>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure>
+<p>前两条命令里的 &lt;USERNAME&gt; 和 &lt;PASSWORD&gt; 为自己的账户和密码。</p>
+<p>找到之前安装的cuckoo路径下的agent/agent.py,并将其放到win7的启动目录下，<code>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</code>，把agent.py后缀改为agent.pyw，这样程序启动就不会有GUI窗口。</p>
+<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>很多恶意软件都需要访问网络才可以正常运行，因此需要配置windows主机上网，使用host主机开启流量转发、用 iptables 做地址转换（NAT）规则。</p>
+<p>临时开启ip转发功能方式，系统重启之后便失效：</p>
+<ul>
+<li>sudo sysctl -w net.ipv4.ip_forward=1</li>
+<li>sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward</li>
+</ul>
+<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+<p>然后配置Iptables的规则:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure>
+<p>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG"></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>Cickoo Sandbox</tag>
       </tags>
   </entry>
   <entry>
@@ -842,7 +842,7 @@
 <p>进入设置－》帐户页面找到如下页面：<br><img src="/2019/01/22/GSIL%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8-GitHub%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E7%9B%91%E6%8E%A7/%E5%BC%80%E5%90%AFQQ%E9%82%AE%E7%AE%B1SMTP%E6%9C%8D%E5%8A%A1.PNG"></p>
 <p>点击开启POP3/SMTP服务，进行密保验证：<br><img src="/2019/01/22/GSIL%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8-GitHub%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E7%9B%91%E6%8E%A7/%E5%AF%86%E4%BF%9D%E9%AA%8C%E8%AF%81.PNG"></p>
 <p>获取授权码后填入password中。</p>
-<p>最后需要在“to : <a href="mailto:&#102;&#x65;&#101;&#x69;&#64;&#x66;&#x65;&#x65;&#x69;&#46;&#99;&#x6e;">&#102;&#x65;&#101;&#x69;&#64;&#x66;&#x65;&#x65;&#x69;&#46;&#99;&#x6e;</a>”下一行添加“cc ：<a href="mailto:&#102;&#x65;&#x65;&#x69;&#64;&#x66;&#x65;&#101;&#x69;&#46;&#99;&#x6e;">&#102;&#x65;&#x65;&#x69;&#64;&#x66;&#x65;&#101;&#x69;&#46;&#99;&#x6e;</a>”抄送邮箱，不然后面运行会报错。</p>
+<p>最后需要在“to : <a href="mailto:&#102;&#101;&#101;&#x69;&#x40;&#102;&#101;&#101;&#105;&#46;&#x63;&#x6e;">&#102;&#101;&#101;&#x69;&#x40;&#102;&#101;&#101;&#105;&#46;&#x63;&#x6e;</a>”下一行添加“cc ：<a href="mailto:&#102;&#x65;&#x65;&#x69;&#64;&#x66;&#x65;&#x65;&#x69;&#46;&#x63;&#110;">&#102;&#x65;&#x65;&#x69;&#64;&#x66;&#x65;&#x65;&#x69;&#46;&#x63;&#110;</a>”抄送邮箱，不然后面运行会报错。</p>
 </li>
 <li><p>GitHub设置部分<br>登录GitHub账号，设置tokens的页面说明文档已经给出：<br><a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a></p>
 <p>点击Generate new token，出现如下页面：<br><img src="/2019/01/22/GSIL%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8-GitHub%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E7%9B%91%E6%8E%A7/token.PNG"></p>
@@ -1087,114 +1087,6 @@
       </tags>
   </entry>
   <entry>
-    <title>第2章 网络攻击原理与常用方法</title>
-    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
-<ul>
-<li>信息泄露攻击</li>
-<li>完整性破坏攻击</li>
-<li>拒绝服务攻击</li>
-<li>非法使用攻击</li>
-</ul>
-<a id="more"></a>
-
-<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86.jpg"></p>
-<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
-<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
-<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
-<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
-</ol>
-<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
-<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
-<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
-<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
-<li>获取目标访问权限。（获取更高权限）</li>
-<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
-<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
-<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
-<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
-</ol>
-<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
-<ul>
-<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
-<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
-<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
-<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
-<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
-<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
-<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
-<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL&lt;64，WIN&gt;0；端口关闭：TTL&gt;64，WIN=0）</li>
-<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-</ul>
-<p><strong>口令破解</strong></p>
-<p><strong>缓冲区溢出</strong></p>
-<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
-<p><strong>恶意代码</strong></p>
-<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
-<p><strong>拒绝服务</strong></p>
-<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
-<ul>
-<li>同步包风暴（SYN Flood）</li>
-<li>UDP洪水（UDP Flood）</li>
-<li>Smurf攻击</li>
-<li>垃圾邮件</li>
-<li>消耗CPU和内存资源等拒绝服务攻击</li>
-<li>死亡之ping（ping of death）</li>
-<li>泪滴攻击（Teardrop Attack）</li>
-<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
-</ul>
-<p><strong>网络钓鱼</strong></p>
-<p><strong>网络窃听</strong></p>
-<p>技术手段：网络嗅探、中间人攻击</p>
-<p><strong>SQL注入</strong></p>
-<p><strong>社交工程</strong></p>
-<p><strong>电子监听</strong></p>
-<p><strong>会话劫持</strong></p>
-<p><strong>漏洞扫描</strong></p>
-<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
-<p><strong>代理技术</strong></p>
-<p><strong>数据加密</strong></p>
-<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
-<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
-<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
-<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
-<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo及next主题使用问题记录</title>
-    <url>/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p>
-<a id="more"></a>
-
-<h1 id="Next7-8"><a href="#Next7-8" class="headerlink" title="Next7.8"></a>Next7.8</h1><ol>
-<li>点击“阅读全文”后，会直接滚动到原文中&lt;!– more –&gt;下，且config里面没有scroll_to_more配置，如何从头开始阅读。</li>
-</ol>
-<p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p>
-<p>修改\themes\next\layout_macro\post.swig中</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>为</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-      <tags>
-        <tag>next</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>第1章 网络信息安全概述</title>
     <url>/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<h1 id="网络信息安全基本属性"><a href="#网络信息安全基本属性" class="headerlink" title="网络信息安全基本属性"></a>网络信息安全基本属性</h1><ul>
@@ -1312,6 +1204,114 @@
       </categories>
       <tags>
         <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第2章 网络攻击原理与常用方法</title>
+    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
+<ul>
+<li>信息泄露攻击</li>
+<li>完整性破坏攻击</li>
+<li>拒绝服务攻击</li>
+<li>非法使用攻击</li>
+</ul>
+<a id="more"></a>
+
+<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86.jpg"></p>
+<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
+<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
+<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
+<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
+</ol>
+<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
+<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
+<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
+<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
+<li>获取目标访问权限。（获取更高权限）</li>
+<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
+<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
+<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
+<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
+</ol>
+<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
+<ul>
+<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
+<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
+<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
+<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
+<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
+<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
+<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
+<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL&lt;64，WIN&gt;0；端口关闭：TTL&gt;64，WIN=0）</li>
+<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+</ul>
+<p><strong>口令破解</strong></p>
+<p><strong>缓冲区溢出</strong></p>
+<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
+<p><strong>恶意代码</strong></p>
+<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
+<p><strong>拒绝服务</strong></p>
+<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
+<ul>
+<li>同步包风暴（SYN Flood）</li>
+<li>UDP洪水（UDP Flood）</li>
+<li>Smurf攻击</li>
+<li>垃圾邮件</li>
+<li>消耗CPU和内存资源等拒绝服务攻击</li>
+<li>死亡之ping（ping of death）</li>
+<li>泪滴攻击（Teardrop Attack）</li>
+<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
+</ul>
+<p><strong>网络钓鱼</strong></p>
+<p><strong>网络窃听</strong></p>
+<p>技术手段：网络嗅探、中间人攻击</p>
+<p><strong>SQL注入</strong></p>
+<p><strong>社交工程</strong></p>
+<p><strong>电子监听</strong></p>
+<p><strong>会话劫持</strong></p>
+<p><strong>漏洞扫描</strong></p>
+<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
+<p><strong>代理技术</strong></p>
+<p><strong>数据加密</strong></p>
+<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
+<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
+<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
+<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
+<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo及next主题使用问题记录</title>
+    <url>/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p>
+<a id="more"></a>
+
+<h1 id="Next7-8"><a href="#Next7-8" class="headerlink" title="Next7.8"></a>Next7.8</h1><ol>
+<li>点击“阅读全文”后，会直接滚动到原文中&lt;!– more –&gt;下，且config里面没有scroll_to_more配置，如何从头开始阅读。</li>
+</ol>
+<p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p>
+<p>修改\themes\next\layout_macro\post.swig中</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>next</tag>
       </tags>
   </entry>
   <entry>
