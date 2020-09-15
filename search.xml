@@ -373,6 +373,67 @@
       </tags>
   </entry>
   <entry>
+    <title>流量分析入门</title>
+    <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。</p>
+<a id="more"></a>
+<h3 id="NetFlow输出格式"><a href="#NetFlow输出格式" class="headerlink" title="NetFlow输出格式"></a>NetFlow输出格式</h3><p>NetFlow输出格式为报头+一系列Flow流。报头包含序列号、记录数、系统时间等，Flow流包含IP地址、端口、路由信息等。</p>
+<p>一个IP数据包的Flow流至少定义了7个关键元素：</p>
+<ul>
+<li>源IP地址；</li>
+<li>目的IP地址；</li>
+<li>源端口号；</li>
+<li>目的端口号；</li>
+<li>第三层协议类型；</li>
+<li>TOS字段；</li>
+<li>网络设备输入/输出的逻辑端口。</li>
+</ul>
+<p>OSSIM提供可视化NetFlow图形界面，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/NetFlow.png"></p>
+<h3 id="NetFlow监测恶意代码"><a href="#NetFlow监测恶意代码" class="headerlink" title="NetFlow监测恶意代码"></a>NetFlow监测恶意代码</h3><p>NetFlow数据流获取方便，当网络正常运行时，NetFlow数据流是有一定的规律性的，当网络中存在异常流量时，网络流量会发生异常的波动。<br>监测蠕虫的策略：选取几个不同时间段，若时间段内符合特征的Flow超过上限值，则为病毒。</p>
+<h3 id="反应网络运行的核心参数"><a href="#反应网络运行的核心参数" class="headerlink" title="反应网络运行的核心参数"></a>反应网络运行的核心参数</h3><ul>
+<li>平均每秒流量：如果网络内部存在大流量的攻击或P2P等大流量的下载等异常流量时，其数值会比正常时大很多。</li>
+<li>平均每秒包数：大部分的异常流量都会产生非常多的数据包数。</li>
+<li>数据包大小分布：64字节左右的小包和1500字节左右的大包的分布比例较小，小包过多，可能存在扫描、攻击行为，大包过多可能存在消耗带宽资源的大包DOS攻击行为。</li>
+<li>平均包长：网络内的平均包长会在500-700字节左右。</li>
+<li>TCP会话数、UDP会话数、IP地址个数、MAC地址个数。。。</li>
+</ul>
+<h2 id="WireShark"><a href="#WireShark" class="headerlink" title="WireShark"></a>WireShark</h2><p> WireShark是目前世界上最流行的网络分析工具，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/WireShark.png"></p>
+<h3 id="界面详解"><a href="#界面详解" class="headerlink" title="界面详解"></a>界面详解</h3><p>1.过滤器规则：</p>
+<ul>
+<li>tcp-&gt;只显示TCP协议的记录；</li>
+<li>http-&gt;只看HTTP协议的记录；</li>
+<li>ip.src ==192.168.1.102 -&gt;显示源地址为192.168.1.102的记录；</li>
+<li>ip.dst==192.168.1.102 -&gt;目标地址为192.168.1.10的记录；</li>
+<li>ip.addr == 42.121.252.58 -&gt;只显示与某主机的通信；</li>
+<li>tcp.port ==80-&gt;端口为80的；</li>
+<li>tcp.srcport == 80 -&gt;只显示TCP协议的源端口为80的；</li>
+<li>http.request.method==”GET”  -&gt;只显示HTTP GET方法的；</li>
+<li>eth.type == 0x806-&gt;只显示ARP报文，这个字段的值表示是ARP报文，如果是ip报文此值为0x8000（可在表达式中选取对应的16进制值）。</li>
+</ul>
+<p>2.封包列表：<br>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。</p>
+<p>3.封包的详细信息：<br>在封包信息中，每行对应的含义及在OSI模型中的对应关系如下：</p>
+<ul>
+<li>Frame:   物理层的数据帧概况  -&gt;对应OSI七层模型中的【物理层】</li>
+<li>Ethernet II: 数据链路层以太网帧头部信息  -&gt;对应OSI七层模型中的【数据链路层】</li>
+<li>Internet Protocol Version 4: 互联网层IP包头部信息  -&gt;对应OSI七层模型中的【网络层】</li>
+<li>Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP  -&gt;对应OSI七层模型中的【传输层】</li>
+<li>Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议  -&gt;对应OSI七层模型中的【应用层】</li>
+</ul>
+<h3 id="WireShark统计模块"><a href="#WireShark统计模块" class="headerlink" title="WireShark统计模块"></a>WireShark统计模块</h3><h4 id="捕获文件的属性"><a href="#捕获文件的属性" class="headerlink" title="捕获文件的属性"></a>捕获文件的属性</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7.PNG"><br>这一菜单简单收集所有抓包数据，在定义了过滤条件的时候，将呈现过滤后的数据。当想要知道每秒的平均报文数或是字节数时，可以使用此工具。</p>
+<h4 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/%E7%BB%9F%E8%AE%A1_Endpoints.png"><br>此窗口中，能够看到第2,3,4层的endpoints，也就是以太网，IP, TCP或UDP。查看收发大量数据流的IP地址。</p>
+<h4 id="Conversations"><a href="#Conversations" class="headerlink" title="Conversations"></a>Conversations</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/Conversations.PNG"><br>显示2层以太网统计数据，第3层IP统计数据，或第4层TCP或UDP统计数据，网络会话是两个指定终端之间的数据流。例如，IP会话是两个IP地址之间的所有数据流，TCP会话包含了所有TCP连接。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/Chilam007/p/6973990.html"> 抓包工具 - Wireshark（详细介绍与TCP三次握手数据分析）
+</a></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>NetFlow</tag>
+        <tag>WireShark</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo博客迁移到其他电脑</title>
     <url>/2018/08/03/Hexo%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E5%88%B0%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91/</url>
     <content><![CDATA[<h2 id="备份原文件"><a href="#备份原文件" class="headerlink" title="备份原文件"></a>备份原文件</h2><p>需要转移的文件有：</p>
@@ -491,67 +552,6 @@
       </categories>
       <tags>
         <tag>博客迁移</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>流量分析入门</title>
-    <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。</p>
-<a id="more"></a>
-<h3 id="NetFlow输出格式"><a href="#NetFlow输出格式" class="headerlink" title="NetFlow输出格式"></a>NetFlow输出格式</h3><p>NetFlow输出格式为报头+一系列Flow流。报头包含序列号、记录数、系统时间等，Flow流包含IP地址、端口、路由信息等。</p>
-<p>一个IP数据包的Flow流至少定义了7个关键元素：</p>
-<ul>
-<li>源IP地址；</li>
-<li>目的IP地址；</li>
-<li>源端口号；</li>
-<li>目的端口号；</li>
-<li>第三层协议类型；</li>
-<li>TOS字段；</li>
-<li>网络设备输入/输出的逻辑端口。</li>
-</ul>
-<p>OSSIM提供可视化NetFlow图形界面，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/NetFlow.png"></p>
-<h3 id="NetFlow监测恶意代码"><a href="#NetFlow监测恶意代码" class="headerlink" title="NetFlow监测恶意代码"></a>NetFlow监测恶意代码</h3><p>NetFlow数据流获取方便，当网络正常运行时，NetFlow数据流是有一定的规律性的，当网络中存在异常流量时，网络流量会发生异常的波动。<br>监测蠕虫的策略：选取几个不同时间段，若时间段内符合特征的Flow超过上限值，则为病毒。</p>
-<h3 id="反应网络运行的核心参数"><a href="#反应网络运行的核心参数" class="headerlink" title="反应网络运行的核心参数"></a>反应网络运行的核心参数</h3><ul>
-<li>平均每秒流量：如果网络内部存在大流量的攻击或P2P等大流量的下载等异常流量时，其数值会比正常时大很多。</li>
-<li>平均每秒包数：大部分的异常流量都会产生非常多的数据包数。</li>
-<li>数据包大小分布：64字节左右的小包和1500字节左右的大包的分布比例较小，小包过多，可能存在扫描、攻击行为，大包过多可能存在消耗带宽资源的大包DOS攻击行为。</li>
-<li>平均包长：网络内的平均包长会在500-700字节左右。</li>
-<li>TCP会话数、UDP会话数、IP地址个数、MAC地址个数。。。</li>
-</ul>
-<h2 id="WireShark"><a href="#WireShark" class="headerlink" title="WireShark"></a>WireShark</h2><p> WireShark是目前世界上最流行的网络分析工具，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/WireShark.png"></p>
-<h3 id="界面详解"><a href="#界面详解" class="headerlink" title="界面详解"></a>界面详解</h3><p>1.过滤器规则：</p>
-<ul>
-<li>tcp-&gt;只显示TCP协议的记录；</li>
-<li>http-&gt;只看HTTP协议的记录；</li>
-<li>ip.src ==192.168.1.102 -&gt;显示源地址为192.168.1.102的记录；</li>
-<li>ip.dst==192.168.1.102 -&gt;目标地址为192.168.1.10的记录；</li>
-<li>ip.addr == 42.121.252.58 -&gt;只显示与某主机的通信；</li>
-<li>tcp.port ==80-&gt;端口为80的；</li>
-<li>tcp.srcport == 80 -&gt;只显示TCP协议的源端口为80的；</li>
-<li>http.request.method==”GET”  -&gt;只显示HTTP GET方法的；</li>
-<li>eth.type == 0x806-&gt;只显示ARP报文，这个字段的值表示是ARP报文，如果是ip报文此值为0x8000（可在表达式中选取对应的16进制值）。</li>
-</ul>
-<p>2.封包列表：<br>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。</p>
-<p>3.封包的详细信息：<br>在封包信息中，每行对应的含义及在OSI模型中的对应关系如下：</p>
-<ul>
-<li>Frame:   物理层的数据帧概况  -&gt;对应OSI七层模型中的【物理层】</li>
-<li>Ethernet II: 数据链路层以太网帧头部信息  -&gt;对应OSI七层模型中的【数据链路层】</li>
-<li>Internet Protocol Version 4: 互联网层IP包头部信息  -&gt;对应OSI七层模型中的【网络层】</li>
-<li>Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP  -&gt;对应OSI七层模型中的【传输层】</li>
-<li>Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议  -&gt;对应OSI七层模型中的【应用层】</li>
-</ul>
-<h3 id="WireShark统计模块"><a href="#WireShark统计模块" class="headerlink" title="WireShark统计模块"></a>WireShark统计模块</h3><h4 id="捕获文件的属性"><a href="#捕获文件的属性" class="headerlink" title="捕获文件的属性"></a>捕获文件的属性</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7.PNG"><br>这一菜单简单收集所有抓包数据，在定义了过滤条件的时候，将呈现过滤后的数据。当想要知道每秒的平均报文数或是字节数时，可以使用此工具。</p>
-<h4 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/%E7%BB%9F%E8%AE%A1_Endpoints.png"><br>此窗口中，能够看到第2,3,4层的endpoints，也就是以太网，IP, TCP或UDP。查看收发大量数据流的IP地址。</p>
-<h4 id="Conversations"><a href="#Conversations" class="headerlink" title="Conversations"></a>Conversations</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/Conversations.PNG"><br>显示2层以太网统计数据，第3层IP统计数据，或第4层TCP或UDP统计数据，网络会话是两个指定终端之间的数据流。例如，IP会话是两个IP地址之间的所有数据流，TCP会话包含了所有TCP连接。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/Chilam007/p/6973990.html"> 抓包工具 - Wireshark（详细介绍与TCP三次握手数据分析）
-</a></p>
-]]></content>
-      <categories>
-        <category>工具使用</category>
-      </categories>
-      <tags>
-        <tag>NetFlow</tag>
-        <tag>WireShark</tag>
       </tags>
   </entry>
   <entry>
@@ -842,7 +842,7 @@
 <p>进入设置－》帐户页面找到如下页面：<br><img src="/2019/01/22/GSIL%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8-GitHub%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E7%9B%91%E6%8E%A7/%E5%BC%80%E5%90%AFQQ%E9%82%AE%E7%AE%B1SMTP%E6%9C%8D%E5%8A%A1.PNG"></p>
 <p>点击开启POP3/SMTP服务，进行密保验证：<br><img src="/2019/01/22/GSIL%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8-GitHub%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E7%9B%91%E6%8E%A7/%E5%AF%86%E4%BF%9D%E9%AA%8C%E8%AF%81.PNG"></p>
 <p>获取授权码后填入password中。</p>
-<p>最后需要在“to : <a href="mailto:&#102;&#x65;&#x65;&#x69;&#64;&#x66;&#101;&#101;&#x69;&#46;&#x63;&#x6e;">&#102;&#x65;&#x65;&#x69;&#64;&#x66;&#101;&#101;&#x69;&#46;&#x63;&#x6e;</a>”下一行添加“cc ：<a href="mailto:&#x66;&#x65;&#101;&#105;&#x40;&#x66;&#101;&#x65;&#x69;&#46;&#99;&#110;">&#x66;&#x65;&#101;&#105;&#x40;&#x66;&#101;&#x65;&#x69;&#46;&#99;&#110;</a>”抄送邮箱，不然后面运行会报错。</p>
+<p>最后需要在“to : <a href="mailto:&#x66;&#x65;&#x65;&#x69;&#x40;&#102;&#x65;&#x65;&#x69;&#x2e;&#99;&#x6e;">&#x66;&#x65;&#x65;&#x69;&#x40;&#102;&#x65;&#x65;&#x69;&#x2e;&#99;&#x6e;</a>”下一行添加“cc ：<a href="mailto:&#x66;&#x65;&#101;&#x69;&#x40;&#102;&#x65;&#x65;&#105;&#x2e;&#x63;&#x6e;">&#x66;&#x65;&#101;&#x69;&#x40;&#102;&#x65;&#x65;&#105;&#x2e;&#x63;&#x6e;</a>”抄送邮箱，不然后面运行会报错。</p>
 </li>
 <li><p>GitHub设置部分<br>登录GitHub账号，设置tokens的页面说明文档已经给出：<br><a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a></p>
 <p>点击Generate new token，出现如下页面：<br><img src="/2019/01/22/GSIL%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8-GitHub%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E7%9B%91%E6%8E%A7/token.PNG"></p>
