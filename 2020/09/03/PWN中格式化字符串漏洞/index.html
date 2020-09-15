@@ -30,16 +30,16 @@
 <meta property="og:site_name" content="zering的博客">
 <meta property="og:description" content="0x00 前言哈哈哈，太懒了，时隔一年半又来更新博客了。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/%E8%84%B8.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/string%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2.png">
-<meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/printf%E8%AF%BB%E5%8F%96%E5%86%85%E5%AD%98.jpg">
+<meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/脸.jpg">
+<meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/string格式化字符串.png">
+<meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/printf读取内存.jpg">
 <meta property="og:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/cancary.jpg">
 <meta property="article:published_time" content="2020-09-03T07:41:04.000Z">
 <meta property="article:modified_time" content="2020-09-08T06:50:45.000Z">
 <meta property="article:author" content="zering">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/%E8%84%B8.jpg">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/脸.jpg">
 
 <link rel="canonical" href="https://fl4g.cn/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/">
 
@@ -290,77 +290,72 @@
 
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>哈哈哈，太懒了，时隔一年半又来更新博客了。</p>
-<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/%E8%84%B8.jpg"></p>
+<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/脸.jpg" alt></p>
 <a id="more"></a>
-
 <h1 id="0x01-漏洞原理"><a href="#0x01-漏洞原理" class="headerlink" title="0x01 漏洞原理"></a>0x01 漏洞原理</h1><p>最近做pwn的练习，发现格式化字符串漏洞会经常遇到，不太理解，只能抽出时间来研究一下这古老的漏洞。</p>
 <p>首先，我们来看一下常见的样式，（题目为“攻防世界”的string）ida反编译后在某个函数中看到如下的代码：</p>
-<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/string%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2.png"></p>
+<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/string格式化字符串.png" alt></p>
 <p>通常使用printf函数，根据cdcel调用约定，从右到左逐个压栈，如果传入字符串，则压入该字符串指针。由于printf无法知道被调用之前有多少参数被压入栈中，所以需要使用format参数用以指定到底有多少参数。</p>
 <p><strong>format类型</strong></p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="center">参数</th>
-<th align="center">表示</th>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">表示</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">%d</td>
-<td align="center">表示输出十进制整数</td>
+<tbody>
+<tr>
+<td style="text-align:center">%d</td>
+<td style="text-align:center">表示输出十进制整数</td>
 </tr>
 <tr>
-<td align="center">%n</td>
-<td align="center">输出所有打印的字符数</td>
+<td style="text-align:center">%n</td>
+<td style="text-align:center">输出所有打印的字符数</td>
 </tr>
 <tr>
-<td align="center">%x</td>
-<td align="center">输出十六进制数</td>
+<td style="text-align:center">%x</td>
+<td style="text-align:center">输出十六进制数</td>
 </tr>
 <tr>
-<td align="center">%s</td>
-<td align="center">从内存中读取字符串</td>
+<td style="text-align:center">%s</td>
+<td style="text-align:center">从内存中读取字符串</td>
 </tr>
 <tr>
-<td align="center">%p</td>
-<td align="center">显示一个指针</td>
+<td style="text-align:center">%p</td>
+<td style="text-align:center">显示一个指针</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p><strong># 特性一： printf()函数的参数个数不固定</strong></p>
 <p>当我们写作printf(str)时，此时参数可控，我们在控制了format参数之后结合printf()函数的特性就可以进行相应的攻击。</p>
 <p>当我们输入format参数大于存在参数时，printf会读取内存内的数据，如图</p>
-<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/printf%E8%AF%BB%E5%8F%96%E5%86%85%E5%AD%98.jpg"></p>
+<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/printf读取内存.jpg" alt></p>
 <p>此时我们只有3个参数，而我们使用printf(“%s %d %d %d %x\n”,buf,a,b，c)读取时，需要读取4个数据，此时便会读取到下一个地址的内容。</p>
 <p>以下例进行分析</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> str[<span class="number">200</span>];</span><br><span class="line">    fgets(str,<span class="number">200</span>,<span class="built_in">stdin</span>);</span><br><span class="line">    <span class="built_in">printf</span>(str);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>当我们在fgets时输入AAAA%08x%08x%08x%08x%08x%08x（%08x为格式化为8位16进制数，左对齐，空位补0），调用printf时输出数值时便会读取到内存中的0x41414141（A的16进制为0x41），输出结果为AAAA000000c8b7fc1c20b7e25438080482100000000141414141。</p>
 <p>如果我们将AAAA修改为某一敏感地址，使用%s读取地址里面的数据，如读取0x41414141地址的数据<code>\x41\x41\x41\x41%08x%08x%08x%08x%08x%s</code></p>
 <p><strong># 特性二：利用%n格式符写入数据</strong></p>
 <p>%n的作用是把前面已经打印的长度写入某个内存地址，（同一个printf中的输出长度）</p>
 <p>如下代码</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> num=<span class="number">66666666</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Before: num = %d\n&quot;</span>, num);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%d%n\n&quot;</span>, num, &amp;num);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;After: num = %d\n&quot;</span>, num);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>此时%n成功修改了num的值，输出结果为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Before: num &#x3D; 66666666</span><br><span class="line">66666666</span><br><span class="line">After: num &#x3D; 8</span><br></pre></td></tr></table></figure>
-
 <p><strong># 特性三：自定义打印字符串宽度</strong></p>
 <p>此时我们修改<code>printf(&quot;%d%n\n&quot;, num, &amp;num);</code>为<code>printf(&quot;%100d%n\n&quot;, num, &amp;num);</code>时，最终num输出为100。若改为%.100d或%0100d，则会在6之前输出92个0。</p>
 <p>当我们要把0x8048000地址写入内存时，此时，我们可以使用如下方式</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%.134512640d%n\n&quot;</span>, num, &amp;num);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;After: num = %x\n&quot;</span>, num);</span><br></pre></td></tr></table></figure>
-
-
-
 <p>此外还需要$的配合，如下的代码</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;7th: %7$d, 4th: %4$05d\n&quot;</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">70</span>, <span class="number">80</span>);</span><br></pre></td></tr></table></figure>
-
 <p>会打印输出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7th: 70, 4th: 00040</span><br></pre></td></tr></table></figure>
-
 <p>即%7$d 获取的将是参数列表中第7个元素的值，%4$05d 获取的是第四个参数的值，且有效位长度是5。</p>
 <h1 id="0x02-其他相关"><a href="#0x02-其他相关" class="headerlink" title="0x02 其他相关"></a>0x02 其他相关</h1><p>在Stack中Canary found绕过问题：</p>
 <p>系统产生一个随机数，在程序开始和结尾时会进行检查，如果发生改变就会抛出异常。</p>
-<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/cancary.jpg"></p>
+<p><img src="/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/cancary.jpg" alt></p>
 <p>某些题目需要将其先泄漏出来，再填充到结束的位置</p>
 <h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a target="_blank" rel="noopener" href="http://drops.xmd5.com/static/drops/papers-9426.html">漏洞挖掘基础之格式化字符串</a></p>
 <p><a target="_blank" rel="noopener" href="https://kevien.github.io/2018/04/07/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/">格式化字符串漏洞</a></p>
@@ -592,13 +587,13 @@ setInterval("createtime()",250);
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">50k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:04</span>
+    <span title="站点阅读时长">45 分钟</span>
 </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
 
@@ -674,6 +669,8 @@ setInterval("createtime()",250);
 
 
 
+
+  
 
   
 

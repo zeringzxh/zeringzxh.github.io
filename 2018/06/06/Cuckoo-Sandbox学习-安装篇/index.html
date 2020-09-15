@@ -30,18 +30,18 @@
 <meta property="og:site_name" content="zering的博客">
 <meta property="og:description" content="Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。 安装环境本人在vmware中建立两个虚拟机，一个host，一个guest。VMware 12 Proubuntu-16.04.1-desktop-amd64window7-64bit">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/%E7%BD%91%E5%8D%A1-ubuntu.PNG">
+<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG">
 <meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG">
 <meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG">
 <meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7%E9%85%8D%E7%BD%AE.PNG">
+<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7配置.PNG">
 <meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG">
 <meta property="article:published_time" content="2018-06-06T06:11:45.000Z">
 <meta property="article:modified_time" content="2020-09-10T14:47:06.000Z">
 <meta property="article:author" content="zering">
 <meta property="article:tag" content="Cickoo Sandbox">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/%E7%BD%91%E5%8D%A1-ubuntu.PNG">
+<meta name="twitter:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG">
 
 <link rel="canonical" href="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/">
 
@@ -272,7 +272,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.1k</span>
+              <span>3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -292,38 +292,24 @@
 
       
         <p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
-<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit</p>
-<a id="more"></a>
-
-<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/%E7%BD%91%E5%8D%A1-ubuntu.PNG"></p>
-<p>依赖库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure>
-<p>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure>
-<p>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure>
-<hr>
-<p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure>
-<p>安装VirtualBox</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure>
-<p>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG"></p>
-<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG"></p>
-<p>从中可以看出配置文件路径为*/home/cuckoo/.cuckoo/conf*，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
+<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit<br><a id="more"></a></p>
+<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG" alt></p>
+<p>依赖库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure><br>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure><br>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
+<h2 id><a href="#" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure></h2><p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure><br>安装VirtualBox</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure></h2><h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure><br>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG" alt></p>
+<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG" alt></p>
+<p>从中可以看出配置文件路径为<em>/home/cuckoo/.cuckoo/conf</em>，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
 <h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>几个主要的配置文件：</p>
 <ul>
 <li>cuckoo.conf：用于配置常规行为和分析选项。</li>
 <li>auxiliary.conf：用于启用和配置辅助模块。</li>
-<li>&lt;machinery&gt;.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</li>
+<li>\<machinery>.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</machinery></li>
 <li>memory.conf：波动配置。</li>
 <li>processing.conf：用于启用和配置处理模块。</li>
 <li>reporting.conf：用于启用或禁用报告格式。</li>
 </ul>
-<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG"></p>
-<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7%E9%85%8D%E7%BD%AE.PNG"></p>
+<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG" alt></p>
+<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7配置.PNG" alt></p>
 <p>为了正常运行，需要配置如下一些选项。</p>
 <ul>
 <li>启用自动登录</li>
@@ -331,9 +317,7 @@
 <li>关闭分页（可选）</li>
 <li>禁用屏幕保护程序（可选）</li>
 </ul>
-<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure>
-<p>前两条命令里的 &lt;USERNAME&gt; 和 &lt;PASSWORD&gt; 为自己的账户和密码。</p>
+<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。<br><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure><br>前两条命令里的 \<USERNAME> 和 \<PASSWORD> 为自己的账户和密码。</PASSWORD></USERNAME></p>
 <p>找到之前安装的cuckoo路径下的agent/agent.py,并将其放到win7的启动目录下，<code>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</code>，把agent.py后缀改为agent.pyw，这样程序启动就不会有GUI窗口。</p>
 <h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>很多恶意软件都需要访问网络才可以正常运行，因此需要配置windows主机上网，使用host主机开启流量转发、用 iptables 做地址转换（NAT）规则。</p>
 <p>临时开启ip转发功能方式，系统重启之后便失效：</p>
@@ -341,11 +325,7 @@
 <li>sudo sysctl -w net.ipv4.ip_forward=1</li>
 <li>sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward</li>
 </ul>
-<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-<p>然后配置Iptables的规则:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure>
-<p>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG"></p>
+<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure><br>然后配置Iptables的规则:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure><br>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG" alt></p>
 
     </div>
 
@@ -460,7 +440,11 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">安装准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Cuckoo"><span class="nav-number">3.</span> <span class="nav-text">安装Cuckoo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%BA%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">客户机安装及配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">网络配置</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">安装准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">1
+$ sudo pip install -U pip setuptools
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#-1"><span class="nav-number">4.</span> <span class="nav-text">1
+$ sudo apt-get install virtualbox
+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Cuckoo"><span class="nav-number">5.</span> <span class="nav-text">安装Cuckoo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">6.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%BA%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">客户机安装及配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">8.</span> <span class="nav-text">网络配置</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -562,13 +546,13 @@ setInterval("createtime()",250);
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">50k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:04</span>
+    <span title="站点阅读时长">45 分钟</span>
 </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
 
@@ -644,6 +628,8 @@ setInterval("createtime()",250);
 
 
 
+
+  
 
   
 

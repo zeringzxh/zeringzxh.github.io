@@ -30,13 +30,13 @@
 <meta property="og:site_name" content="zering的博客">
 <meta property="og:description" content="网络攻击概述网络攻击概念常见的危害行为：  信息泄露攻击 完整性破坏攻击 拒绝服务攻击 非法使用攻击">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86.jpg">
+<meta property="og:image" content="https://fl4g.cn/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg">
 <meta property="article:published_time" content="2020-09-10T03:18:34.000Z">
 <meta property="article:modified_time" content="2020-09-14T07:45:18.378Z">
 <meta property="article:author" content="zering">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86.jpg">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg">
 
 <link rel="canonical" href="https://fl4g.cn/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/">
 
@@ -294,8 +294,7 @@
 <li>非法使用攻击</li>
 </ul>
 <a id="more"></a>
-
-<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86.jpg"></p>
+<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
 <h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
 <li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
 <li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
@@ -320,7 +319,7 @@
 <li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
 <li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
 <li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
-<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL&lt;64，WIN&gt;0；端口关闭：TTL&gt;64，WIN=0）</li>
+<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
 <li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
 <li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
 </ul>
@@ -585,13 +584,13 @@ setInterval("createtime()",250);
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">50k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:04</span>
+    <span title="站点阅读时长">45 分钟</span>
 </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
 
@@ -667,6 +666,8 @@ setInterval("createtime()",250);
 
 
 
+
+  
 
   
 
