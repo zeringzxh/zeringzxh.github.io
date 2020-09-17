@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="学而时习之">
+<meta property="og:type" content="website">
+<meta property="og:title" content="zering的博客">
+<meta property="og:url" content="https://fl4g.cn/page/3/index.html">
+<meta property="og:site_name" content="zering的博客">
+<meta property="og:description" content="学而时习之">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="zering">
+<meta property="article:tag" content="zering,python,网络">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://fl4g.cn/page/3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>zering的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="zering的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zering的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">19</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">26</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zeringzxh" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">流量分析入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-12 14:34:19" itemprop="dateCreated datePublished" datetime="2018-07-12T14:34:19+08:00">2018-07-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-10 22:48:02" itemprop="dateModified" datetime="2020-09-10T22:48:02+08:00">2020-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。<br></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+   </div>
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/06/28/%E5%9F%9F%E6%B8%97%E9%80%8F-%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/28/%E5%9F%9F%E6%B8%97%E9%80%8F-%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91/" class="post-title-link" itemprop="url">渗透测试-公司内网</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-28 08:43:04" itemprop="dateCreated datePublished" datetime="2018-06-28T08:43:04+08:00">2018-06-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-10 22:47:44" itemprop="dateModified" datetime="2020-09-10T22:47:44+08:00">2020-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">渗透测试</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/06/28/%E5%9F%9F%E6%B8%97%E9%80%8F-%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/06/28/%E5%9F%9F%E6%B8%97%E9%80%8F-%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder>
+    <label for="hbePass">输入密码，查看文章。</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="ecdc7490afdd1cf0705198e8ae3df07eea5587cd727525d685ec97622e1e957c">6ffbc8721281742c406c1666a9aa6cf6284e303b0e00556b685127b9a6b6b54d33c192694c3720a3a03285bcefba59439e41c15ba8c6e6d0ff83434befabe35b169aba738cc9663e64177935852c9e165b8d78e0272cd4993f6bef511933bad7c99aba2c761f5b92ec3f3503f978e666d3ebeaf33ff017943cf8b6ded36046a1c2e99ab13f47efa3c23146e064340bd89fe6ca895e5ba3f62b1b07cc496cbbe06c3a85a69a4d3a6314331d2ffc7747ae859b26ab1db0e34ece5898809e6e8ba0e8b360d4b78b2b3afeca166c1ce5365bfa307337293fa04a6474973bcddb54d458673a7efaa7ba206c2c283144a9deb65716bf1850130ce92c5c9060c0d9789751f389f1b89e5b4ad72bc906aab119b4090bf441d9f518e747b0c463871260d3409291815898b66bd30ac2c5f8f29fc4c566f9a8d166326adbae8722091d2e4315ae8df3eb1b5ac9603b0cc5e233d665866269a71626f3a60cb83307e7bf571449402d49587f43f48fba3a2aacc2d2f6a04ae37c5c7d76de7eb6d4d7c40553335e41d76223f2b7c8002cf1e36780eab0de2c23b26b3fa99efa93216ba97414a9f7e6ed282134e8434fed0f30c4c31f2c6f3c611ce5e4987d0ef6d4ae94650329e61bbb8efd7ac23baba77a56dbb5b5a016d6962d5251cf083db61bb1a9ab0686566258c6f2ceb02d0071a902599d1280abad0dfc4fe5435aa1d3a01726522d77f36a9f7e0f04950083cbfe88c218f643240c5a580af48709382578cefd001e253bf22bcfe0e24c1b550b2bd5f334bed8cb692713fd4ff93e7898cac589cd0558324fe8b66d015889d2b589088c76e3303d4d43192ca6efc79045f1b047a5fa2e1a86d8d3481802ce0ff7191f7edeb4f40927a1e05a94c23bc9f161bcf2541e5259d49a88bc013e65f7dd4676452b8cce1b8f74593634bcc9b31071b949506b8ce6764dec77beec7823e05e7af35d0e38977aec557831f70b8c1521b80e8ceef2b43a8164f5f5760c91b3bdd4d7a219443686c39c03f844f3247496a2b0e857536dd1c838cfcc0fa709b8b0bb4406fb645b1234181fd0551dffabf1cde08507cfd8a60b464a795269f18648ed2900f73538026a8b61ad52ca2c4127d606e1114ff0a4e975dea14e18933c746dc27a5e102ef52acaab07128784a36875b4e092dc67540c09f0a38e62e765a80d8710027cd0d8bbbdad0c5b3c0abd370c6bed9d00e17e565925fa61764b54a7816d76dd6fe313e830e931e6b8f068bfffcb51703b95a911b6d4f16961c60db8fcd5f4d2bcb5fba6dbe29e6b34caece9652a5836dccaf5480c83985397ea39f9818c17217437359ad19f19b8efd5c2b1edd441b21bb3c07d7f06fe98e0196ebcc4a690181ea2ad967c9ea1e976f4e3ff3df9d40def23a6636b7cd49d7eb6442ee6e99de3039646ced49afe402a774472d932ede23b76f45e0160f3da69434e2c4357888adcadb39a4e7e38e20b7055bb16e5565e7b6698c43538b326c13bcc787e93cdf6e8cf3ddcd11294e00a2b8724260a36f902d5ec2218aeb40ba831aaf459615bac342775d52cc9f02454d27b8970832ef1e34a35e59390b364d828e8bfe2786ae0775f87801cb9f6e3c6259e149d6c4edb0219779bd8e8b18090d8de3c5aa18b970155de25b0dfaead0b76d75a874aab1f313103e0a703a5c0b1cf3fea061ea874c1b6a407e2d39300fc55cf84c27430d460475de4be1235259a18ce30d7a202edff98c79f855c17a9bf861558272a36a4366aa8bdf3f0232c07ad2e04501c0ba6c3ea473ec32b0287ba394c20c115aa0c9497327f6f62da28d95a7b99e2139aadeb9d26febd76ba2669d9ac0fe95b93a34b8358843bdba4118782d4a25c2ecc0ae4501cb31ae30dc0d6cd11696c62c728b104eb2f7287e4f723d319999fac5e24b3e1fa1fd79401b8df69c9ef490413aba497bf50eac8bc5ddf734d2ff3a4d26f1246cf77a896735da32c6e455fb22cd8b98bdb4ae1b402ba66fcc46abdedad5457564c2338e716f758e17eff5c631d143c26156e5c9ebf29590da013dd3c6f4ae05e214b3285a6f5464f92e0fd7a239308e117a5e079d5c4cb14d42258c94399241337c2765a5dd6b3185df3a4e47c8db75d04ef4f144c5b813f22279c3ae9f215eb09f53e66caf2edeba179ec2bf7f78d3e985e03089c5bac1a9ac613ef9a78e1841c08514100e2757a423c011aba7eac60db7809e686fbec52fa40296cd00e97645da023ef719ab004658098f495fc1cb4d47b2447b4022b56c77c0535feec69d2b097b3fa5c3a878cc1a79dc74a7ccfc84e281371b3b73ff43bd1f215382820d9304044d708704625f4c8b51c4e0c7dda3fc046cbc3b528bb0a2c373a7571d5fde1adce5ec13433ebe592433877ededb40bf6a88fad0c9c0b4ab3fb873b32f5f5db95da5e7379ca112f2011282e5521d4816955631fe2340c1ad0594bd441273fed378d4c8280dee064004cb84ed841705366a5b548588a7270f5e3deef09266698d1645d3204e5855e19b82db9486db3f23b47fd67bf5cd47accf58f873ef43d59d0d774cbb9dcb4f1a197cad47ed3ee07b217be1bbba64723fb32e7b9f72eae81ebd1ef479edf7d84ef0da5485bc82634e363818114c18044048f162e3bd284509b1105739b7ddf45007d13761122c2641b89ae4f31bd8c68004adb062ca2e98bb6e64d07b08ab8427d8df439692982b7d8b65c693faaacf2b414b4a9d3c6256ffe768a51a365445687b54b95affe84cfb13795df03e8cd206b5f36e323b491d20967ffedec4d33569e97383f95f51e8ef1b95dab5b889c007c3e620a4eab5b932cae5c5aa765fac84fd58668fefefafa489367c39b17d5da002cd5a87c2130dc8933e703af1a7f5cb310bf85fa590580d0cd78bae4eef8a707c56ce61c6431511bc3dd807522464bb8b8fd28b5bca3b63fe271c2c4f9449370e12045cd0ffe59cd8888865683b3b9f8f7ec4789e10a8b095224e54255fa013cce24709aa1611781e80197e81975285106d90a1e149a02a17b744a4e9fdb826b22a294cecda2909ec90d56ec6c404d15faf8900287f0a9ec5644cec849a8344565db3bab0c7a60589c6e7b724bd6f632a63fed7592ceaafdf7ce9255f1b7cf596caf3b68189d44ab66f7ab4fab4e3ebaf35d8533e2ce476a109cf3e4247b64aae9e3a5f6c242898e60aeb8f9d8105a2d1245bf2f5a99a5a9b8e8fbbbce6786ba16367fcfd5d8b0b64aece2fd05dc3d9c46a52becdea9d2d90226d82d0b514f82bd8db623aadf6812f5bbceb7bc174b818c2917255806956920256fa39cb1ef4cfd2f21f3e158488b375de5e6651a7da054beea7baf5e7c437d0d0d88cb3411be136e98858da6a06735112708ea8370dde379954091ab64698c8cc7d099def9edc823d2e4132f6b4f29eb3c4c770e455fc832458fad6182b87269c6f42cc5ca714b987bc5082f8ccf6d3f19ef2771da749bed9226bd19dbeb8b6c7a847fbe1a0d3bb07478db7ae9d5be50bbfefa10444da5733e3700bfedf1552794ef7fb2d8336bbdbee26c6dc174c794aae2ff948baccad7c991ba964b2625097674f1ad041b4b826cf301c403bfa782f4b8ffb31402c36f6b4f1edfb4f572d11bb8ed166dd565cfefe3f0b36422efca7d9ad437ab1303a6371279c2572bb4e45d12b59f12b48f3ac38e9c844015d59d954a692f086e3e66f8fd2b6a4e57b28cd3b4edb034e8b1e80963c9306186c9872833c5c5b6247089ffd3344f3b701e2cc26354f7670a2616397126e571188f977bc2b2cd5a4662514c4957cc295a85fe4257a5a7e6f3d77e28a93c853b7815c7e9ddcbc26fbeb39046cd903975514286d1199343e8e03e562e7280bfd455b47aa98d4be9965eab34fca7d37c4c601dd169e804c94b60252c246e03b726529c088a5435fdfd20bd39136bc38c81038705bbb9746b871928fb7655173864997b8a815f050579590f07fa10a248a298f1afdfbae9425473c138b122da9323a1ee419dac7f684f5bff3afd2161954e4fec299f953e6ff1bd08098dbd92f0f1c4c3a33228b7d2f484d4d679f25feb0585b7b1b3c7bc2153771bb83ccea77897055113bd9b2de79c78896a985e7f44688d3ec497970f009fd3e0ef7293edfff7740d97c0ea9e0120a6e02cea9c4c125555be6df5778a322f564a438a987508be6df7f06195ff31bfbb78e6be52aff8600f3fe2be064d6c15d321d8db7020c614b79f2d66ab3e2af0411995e9c07ff0e4d388c8e1a2acb03eac4ad69e0c4459b342e717d29c448fe660926ff94481957762692d834ca432d5a74bf8fd76239eeaa85ad438b625a3f21c8eef6e4255b09c97d0eef67f97bc76ff348011d8b48dad6813e880573e0568fd54a209251f599a1a66b4a7f222a27665a664db0ce155579ab056f367e4b809e6b41b109f84c9d072cbf9643384d23b6035bcc1424637b9e71326fca0b58fb1636adf8c13762ce7ee251e6896649c1b3faaad5a0bb08bf6f3574acd9e6c3f0cf5f5a06b59c37b2899b684c518d32f98e923d6007c275f1baf0745fc14a2530b5a3eb039e92543c1f90ceb7fa8e1cd784d82038730a416eea7ff519491570c23839ca977813531ccf2f69eb7cfe168376b58e0073a2722d645eca9096e4d5495fb769e87ccb5dd60b6b753b4f59705e7bbef9682073effd1ae75dbb5dc5e4c1c649f5cb8e6fa03d159c4b3a9bc7d1513401c83c1c36b3702606bec23393eef761d55ee2cbf94751cf66affe47e7c309e49fe1aaa9470d9f839676b72a80613644dbcb41e5c2361588927842f5278e71968df814e80f3200784b2df084e61dc579db6df0bba2c0a4501d584c9589cd3a9903b7612595ad1b8bed99d886fbd946066b6187ac19c2d7eedaa064ef256fadf9b0e03ef0529fe979a685caeb682f90063a39ce6bd7f740567eeaadf0386629d2d4c195bbcbf729d7b532d0c56e8c685f1d9dc9c427e7d42179c7ae3cc47f380a77d41c5b7154cc2a52c51024798553a8d318a9ecdadc06c1178cab98fcb3cae3dc4dd24aaab2e567a6d3a94018c690728dc279cfd7996e2e4d09e4e218f939f5b28de111fc3e84110f9c800ddfeaee11be54c1e5fab0131d0c347a39b1268fed506f00fba507a0921a88b28e5eae77a26744e04a176f74c5272c8d2b870462be88add34dab9daeb526f23842aaed52b8b50e0934fd3ecb98f5af7eb0e1866985886e6d7068228a3b9922c35224362441bb92ad54941e7b04a1a97cf6e3e53f88ea073980581b20a786f2341a4c9f15d7649632e4147bb8a26e3a268171c9ad9f8586f1b75ba7e252d77226cd617f4f5053e6a8cf7d7a757cdaeec917fff62a1c61466d91ff9c60663bc8439aedec102d9d5b1da59681ae2ac2fd35917959124930eed1f4bd82d620cf88d1a4af2feba4ca7160c096d8ed114865df069728110beb42566e376dd681272b899b773832ab403d38c9d27c682e0371f1aa0c65fce074700c9df2ccde32cee09142d505f9dbade9a98ccbb9c747910876fa3775679c55298c73e1ea873fdfdcf22618dc961747894c8ccd60d28003ff4a6dcbf481bdaaf93b63eac2b87fcac7c380bf69e145b03d52836952323677b93bd58c31a1a033b0d1d49156ab98854e8fd9081aeb7a54c93b5f20115205da0cfeecf574c0caf4a33dcbed5bcca694d35d0e1cc27022ec42edc1dab621e391edcf7d6e298db84b1f3fa3b2ef6699e37250f516fd52dc458dcc974e07fb56dc247efdac8f7207810b6d98bfab13f10db1f90c9987291383aa313a425a129485c334a0c58aa3bf915e1c5f5c7aaee1b7bdf5c94815a0ef2151849aa7c081225232e882a2462187965cbd4cccead50ba451130ca26072e4c126713f257018ca1c0e30a480786b35cd1fc6178d3ab6b87148070c85c97b0477a100160a7ae4145fceef3e86384203897d612f5fcec20bc0baf07961c0bd898c6740d24dc57b76e539d52eb95db0afb5a208af3b66af4bf1ca499d15f24acb1e1e25caf50</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/28/%E5%9F%9F%E6%B8%97%E9%80%8F-%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+   </div>
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/" class="post-title-link" itemprop="url">Cuckoo-Sandbox学习-安装篇</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-06 14:11:45" itemprop="dateCreated datePublished" datetime="2018-06-06T14:11:45+08:00">2018-06-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-10 22:47:06" itemprop="dateModified" datetime="2020-09-10T22:47:06+08:00">2020-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
+<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit<br></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+   </div>
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/" class="post-title-link" itemprop="url">Android逆向-smali语法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-01 10:56:06" itemprop="dateCreated datePublished" datetime="2018-06-01T10:56:06+08:00">2018-06-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-10 22:51:43" itemprop="dateModified" datetime="2020-09-10T22:51:43+08:00">2020-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Dalvik"><a href="#Dalvik" class="headerlink" title="Dalvik"></a>Dalvik</h2><p>DVM运行Dalvik字节码，可执行文件格式dex(dalvik executable)，有点类似于机器码。DVM基于寄存器，JVM基于栈。</p>
+<h2 id="smali语法"><a href="#smali语法" class="headerlink" title="smali语法"></a>smali语法</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+   </div>
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/" class="post-title-link" itemprop="url">URL去重去似</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-05-24 09:48:54" itemprop="dateCreated datePublished" datetime="2018-05-24T09:48:54+08:00">2018-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-08 14:50:39" itemprop="dateModified" datetime="2020-09-08T14:50:39+08:00">2020-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
+<ul>
+<li>布隆过滤器去重</li>
+<li><p>Hash表去重</p></li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+   </div>
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">python学习-argparse模块</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-05-14 15:28:37" itemprop="dateCreated datePublished" datetime="2018-05-14T15:28:37+08:00">2018-05-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-08 14:50:40" itemprop="dateModified" datetime="2020-09-08T14:50:40+08:00">2020-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>  argparse模块是python中用于解析命令行参数和选项的标准模块，方便用户在命令行中输入参数。</p>
+<h2 id="argparse使用"><a href="#argparse使用" class="headerlink" title="argparse使用"></a>argparse使用</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+   </div>
+      
+
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zering"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zering</p>
+  <div class="site-description" itemprop="description">学而时习之</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      天才或疯子
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://1sparrow.com/" title="https:&#x2F;&#x2F;1sparrow.com&#x2F;" rel="noopener" target="_blank">一只麻雀</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://blog.51cto.com/13769225" title="http:&#x2F;&#x2F;blog.51cto.com&#x2F;13769225" rel="noopener" target="_blank">Wuli王蜀黎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sa1tfish.github.io/" title="https:&#x2F;&#x2F;sa1tfish.github.io&#x2F;" rel="noopener" target="_blank">咸鱼的博客</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div>
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/31/2019 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+</div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zering</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">80k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:12</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'lQLsGBhiarkYBwvOmqFw80NJ-gzGzoHsz',
+      appKey     : 'qBw97RhefahyXiugjB2ogQtl',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--  -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+<!---->
+<script type="text/javascript" src="/js/src/custom.js"></script>
