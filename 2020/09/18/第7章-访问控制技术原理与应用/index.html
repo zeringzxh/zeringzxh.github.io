@@ -23,27 +23,23 @@
     var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。 安装环境本人在vmware中建立两个虚拟机，一个host，一个guest。VMware 12 Proubuntu-16.04.1-desktop-amd64window7-64bit">
+  <meta name="description" content="访问控制概述访问控制是指对资源对象的访问者授权、控制的方法及运行机制。 访问控制目标 防止非法用户进入系统； 阻止合法用户对系统资源的非法使用，即禁止合法用户的越权访问">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Cuckoo-Sandbox学习-安装篇">
-<meta property="og:url" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/index.html">
+<meta property="og:title" content="第7章 访问控制技术原理与应用">
+<meta property="og:url" content="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="zering的博客">
-<meta property="og:description" content="Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。 安装环境本人在vmware中建立两个虚拟机，一个host，一个guest。VMware 12 Proubuntu-16.04.1-desktop-amd64window7-64bit">
+<meta property="og:description" content="访问控制概述访问控制是指对资源对象的访问者授权、控制的方法及运行机制。 访问控制目标 防止非法用户进入系统； 阻止合法用户对系统资源的非法使用，即禁止合法用户的越权访问">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7配置.PNG">
-<meta property="og:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG">
-<meta property="article:published_time" content="2018-06-06T06:11:45.000Z">
-<meta property="article:modified_time" content="2020-09-10T14:47:06.000Z">
+<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/访问控制.jpg">
+<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/用户管理.jpg">
+<meta property="article:published_time" content="2020-09-18T02:22:43.000Z">
+<meta property="article:modified_time" content="2020-09-18T04:11:37.574Z">
 <meta property="article:author" content="zering">
-<meta property="article:tag" content="Cickoo Sandbox">
+<meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/访问控制.jpg">
 
-<link rel="canonical" href="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/">
+<link rel="canonical" href="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -56,7 +52,7 @@
   };
 </script>
 
-  <title>Cuckoo-Sandbox学习-安装篇 | zering的博客</title>
+  <title>第7章 访问控制技术原理与应用 | zering的博客</title>
   
 
 
@@ -208,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -221,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Cuckoo-Sandbox学习-安装篇
+          第7章 访问控制技术原理与应用
         </h1>
 
         <div class="post-meta">
@@ -230,23 +226,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2018-06-06 14:11:45" itemprop="dateCreated datePublished" datetime="2018-06-06T14:11:45+08:00">2018-06-06</time>
+              <time title="创建时间：2020-09-18 10:22:43 / 修改时间：12:11:37" itemprop="dateCreated datePublished" datetime="2020-09-18T10:22:43+08:00">2020-09-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-10 22:47:06" itemprop="dateModified" datetime="2020-09-10T22:47:06+08:00">2020-09-10</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+                  <a href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/" itemprop="url" rel="index"><span itemprop="name">信息安全工程师软考</span></a>
                 </span>
             </span>
 
@@ -266,8 +256,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -277,14 +267,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -296,41 +286,72 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
-<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit<br><a id="more"></a></p>
-<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG" alt></p>
-<p>依赖库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure><br>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure><br>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
-<h2 id><a href="#" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure></h2><p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure><br>安装VirtualBox</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure></h2><h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure><br>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG" alt></p>
-<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG" alt></p>
-<p>从中可以看出配置文件路径为<em>/home/cuckoo/.cuckoo/conf</em>，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>几个主要的配置文件：</p>
+        <h1 id="访问控制概述"><a href="#访问控制概述" class="headerlink" title="访问控制概述"></a>访问控制概述</h1><p>访问控制是指对资源对象的访问者授权、控制的方法及运行机制。</p>
+<h2 id="访问控制目标"><a href="#访问控制目标" class="headerlink" title="访问控制目标"></a>访问控制目标</h2><ol>
+<li>防止非法用户进入系统；</li>
+<li>阻止合法用户对系统资源的非法使用，即禁止合法用户的越权访问</li>
+</ol>
+<a id="more"></a>
+<h1 id="访问控制模型"><a href="#访问控制模型" class="headerlink" title="访问控制模型"></a>访问控制模型</h1><h2 id="访问控制参考模型"><a href="#访问控制参考模型" class="headerlink" title="访问控制参考模型"></a>访问控制参考模型</h2><p>组成要素有：主体、参考监视器、客体、访问控制数据库、审计库</p>
+<p><img src="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/访问控制.jpg" alt></p>
+<h1 id="访问控制类型"><a href="#访问控制类型" class="headerlink" title="访问控制类型"></a>访问控制类型</h1><h2 id="自主访问控制"><a href="#自主访问控制" class="headerlink" title="自主访问控制"></a>自主访问控制</h2><p>客体的所有者按照自己的安全策略授予系统中的其他用户对其的访问权。</p>
+<ol>
+<li><p>基于行的自主访问控制</p>
+<p>在每个主体上附加一个该主体可访问的客体的明细表，分成三种形式：</p>
 <ul>
-<li>cuckoo.conf：用于配置常规行为和分析选项。</li>
-<li>auxiliary.conf：用于启用和配置辅助模块。</li>
-<li>\<machinery>.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</machinery></li>
-<li>memory.conf：波动配置。</li>
-<li>processing.conf：用于启用和配置处理模块。</li>
-<li>reporting.conf：用于启用或禁用报告格式。</li>
+<li>能力表：访问客体的钥匙，决定用户访问模式（r、w、x）。</li>
+<li>前缀表：包括保护客体名和主体对它的访问权限。检查前缀表判定访问权。</li>
+<li>口令：每个客体都有一个口令，访问前，必须向系统提供该客体的口令。</li>
 </ul>
-<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG" alt></p>
-<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7配置.PNG" alt></p>
-<p>为了正常运行，需要配置如下一些选项。</p>
+</li>
+<li><p>基于列的自主访问控制</p>
+<p>在每个客体上附加一个可访问它的主体的明细表。两种形式：</p>
 <ul>
-<li>启用自动登录</li>
-<li>启用远程RPC</li>
-<li>关闭分页（可选）</li>
-<li>禁用屏幕保护程序（可选）</li>
+<li>保护位：对所有主体、主体组及客体拥有者指明一个访问模式集合，以比特位来表示访问权限。</li>
+<li>访问控制表：在每个客体附加一个主体明细表，表示访问控制矩阵。每一项包括主体的身份和主体对该客体的访问权限。</li>
 </ul>
-<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。<br><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure><br>前两条命令里的 \<USERNAME> 和 \<PASSWORD> 为自己的账户和密码。</PASSWORD></USERNAME></p>
-<p>找到之前安装的cuckoo路径下的agent/agent.py,并将其放到win7的启动目录下，<code>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</code>，把agent.py后缀改为agent.pyw，这样程序启动就不会有GUI窗口。</p>
-<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>很多恶意软件都需要访问网络才可以正常运行，因此需要配置windows主机上网，使用host主机开启流量转发、用 iptables 做地址转换（NAT）规则。</p>
-<p>临时开启ip转发功能方式，系统重启之后便失效：</p>
-<ul>
-<li>sudo sysctl -w net.ipv4.ip_forward=1</li>
-<li>sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward</li>
+</li>
+</ol>
+<p>好处：用户根据其安全需求，自行设置访问控制权限，访问机制简单、灵活</p>
+<p>缺点：依赖于用户的安全意识和技能，不能满足高安全等级的安全要求</p>
+<h2 id="强制访问控制"><a href="#强制访问控制" class="headerlink" title="强制访问控制"></a>强制访问控制</h2><p>根据主体和客体的安全属性，以强制方式控制主体对客体的访问。</p>
+<h2 id="基于角色的访问控制"><a href="#基于角色的访问控制" class="headerlink" title="基于角色的访问控制"></a>基于角色的访问控制</h2><p>RBRC：根据完成某些职责任务所需要点访问权限来进行授权和管理，由用户（U）、角色（R）、会话（S）和权限（P）四个基本要素组成。</p>
+<h2 id="基于属性点访问控制"><a href="#基于属性点访问控制" class="headerlink" title="基于属性点访问控制"></a>基于属性点访问控制</h2><p>ABAC：根据主体的属性、客体的属性、环境的条件以及访问策略对主体的请求操作进行授权许可或拒绝</p>
+<h1 id="访问控制策略设计与实现"><a href="#访问控制策略设计与实现" class="headerlink" title="访问控制策略设计与实现"></a>访问控制策略设计与实现</h1><h2 id="访问控制策略"><a href="#访问控制策略" class="headerlink" title="访问控制策略"></a>访问控制策略</h2><p>规定访问资源的权限，防止资源损失，泄漏或非法使用。</p>
+<p>设计要求：网络应用安全需求（内外部访问）、相关信息（端口）、传播和授权（分级分类）、一致性、法规和合同义务、访问权限的更新维护</p>
+<p>说明规则时：以“未经明确允许的都是禁止的”为前提、信息标记的变化、用户许可的变化、颁布之前的批准与许可</p>
+<p>组成：所要控制的对象、访问控制规则、用户权限或其他访问安全要求</p>
+<h2 id="访问控制规则"><a href="#访问控制规则" class="headerlink" title="访问控制规则"></a>访问控制规则</h2><ul>
+<li>基于用户身份的访问控制规则</li>
+<li>基于角色的访问控制规则</li>
+<li>基于地址的访问控制规则</li>
+<li>基于时间的访问控制规则</li>
+<li>基于异常事件的访问控制规则</li>
+<li>基于服务数量的访问控制规则</li>
 </ul>
-<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure><br>然后配置Iptables的规则:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure><br>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG" alt></p>
+<h1 id="访问控制过程与安全管理"><a href="#访问控制过程与安全管理" class="headerlink" title="访问控制过程与安全管理"></a>访问控制过程与安全管理</h1><h2 id="访问控制过程"><a href="#访问控制过程" class="headerlink" title="访问控制过程"></a>访问控制过程</h2><ol>
+<li>明确访问控制管理的资产</li>
+<li>分析管理资产的安全需求</li>
+<li>制定访问控制策略，确定访问控制规则以及用户权限分配</li>
+<li>实现访问控制策略，建立用户访问身份认证系统，根据用户类型授权访问资产</li>
+<li>运行和维护访问控制系统，及时调整访问策略</li>
+</ol>
+<h2 id="最小特权管理"><a href="#最小特权管理" class="headerlink" title="最小特权管理"></a>最小特权管理</h2><p>系统中每一个主体只能拥有完成任务所必要的权限集</p>
+<h2 id="用户访问管理"><a href="#用户访问管理" class="headerlink" title="用户访问管理"></a>用户访问管理</h2><p><img src="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/用户管理.jpg" style="zoom:50%;"></p>
+<h2 id="口令安全管理"><a href="#口令安全管理" class="headerlink" title="口令安全管理"></a>口令安全管理</h2><h1 id="访问控制主要产品与技术指标"><a href="#访问控制主要产品与技术指标" class="headerlink" title="访问控制主要产品与技术指标"></a>访问控制主要产品与技术指标</h1><h2 id="访问控制组要产品"><a href="#访问控制组要产品" class="headerlink" title="访问控制组要产品"></a>访问控制组要产品</h2><ol>
+<li>4A系统：认证（Authentication）、授权（Authorization）、账号（Account）、审计（Audit）</li>
+<li>安全网关：防火墙、统一威胁管理（UTM）</li>
+<li>系统安全增强</li>
+</ol>
+<h2 id="访问控制主要技术指标"><a href="#访问控制主要技术指标" class="headerlink" title="访问控制主要技术指标"></a>访问控制主要技术指标</h2><ul>
+<li>产品支持访问控制策略规则类型</li>
+<li>产品支持访问控制规则最大数量</li>
+<li>产品访问控制规则检查速度</li>
+<li>产品滋生安全和质量保障级别</li>
+</ul>
+<h1 id="访问控制技术应用"><a href="#访问控制技术应用" class="headerlink" title="访问控制技术应用"></a>访问控制技术应用</h1><p>应用场景类型：物理访问控制、网络访问控制、操作系统访问控制、数据库/数据访问控制、应用系统访问控制</p>
+<p>示例：</p>
+<p>UNIX/Linux系统访问控制、Windows访问控制、IIS FTP访问控制、网络访问控制、Web服务访问控制、基于角色管理的系统访问控制、网络安全等级保护访问控制设计等应用参考详见P151-P158</p>
 
     </div>
 
@@ -348,6 +369,24 @@
      
    </div>
       
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/09/09/2020年软考-信息安全工程师学习笔记/" rel="bookmark">2020年软考--信息安全工程师学习笔记</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/09/09/第1章-网络信息安全概述/" rel="bookmark">第1章 网络信息安全概述</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/09/10/第2章-网络攻击原理与常用方法/" rel="bookmark">第2章 网络攻击原理与常用方法</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/09/14/第3章-密码学基本理论/" rel="bookmark">第3章 密码学基本理论</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/09/16/第4章-网络安全体系与网络安全模型/" rel="bookmark">第4章 网络安全体系与网络安全模型</a></div>
+    </li>
+  </ul>
 
         
 
@@ -358,7 +397,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://fl4g.cn/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/" title="Cuckoo-Sandbox学习-安装篇">https://fl4g.cn/2018/06/06/Cuckoo-Sandbox学习-安装篇/</a>
+    <a href="https://fl4g.cn/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" title="第7章 访问控制技术原理与应用">https://fl4g.cn/2020/09/18/第7章-访问控制技术原理与应用/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -370,7 +409,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Cickoo-Sandbox/" rel="tag"><i class="fa fa-tag"></i> Cickoo Sandbox</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"><i class="fa fa-tag"></i> 学习笔记</a>
           </div>
 
         
@@ -379,13 +418,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/" rel="prev" title="Android逆向-smali语法">
-      <i class="fa fa-chevron-left"></i> Android逆向-smali语法
+    <a href="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/" rel="prev" title="第6章 认证技术原理应用">
+      <i class="fa fa-chevron-left"></i> 第6章 认证技术原理应用
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2018/06/28/%E5%9F%9F%E6%B8%97%E9%80%8F-%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91/" rel="next" title="渗透测试-公司内网">
-      渗透测试-公司内网 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -445,11 +481,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">安装准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">1
-$ sudo pip install -U pip setuptools
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#-1"><span class="nav-number">4.</span> <span class="nav-text">1
-$ sudo apt-get install virtualbox
-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Cuckoo"><span class="nav-number">5.</span> <span class="nav-text">安装Cuckoo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">6.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%BA%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">客户机安装及配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">8.</span> <span class="nav-text">网络配置</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">访问控制概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">访问控制目标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">访问控制模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">访问控制参考模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">访问控制类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E4%B8%BB%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">3.1.</span> <span class="nav-text">自主访问控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%88%B6%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">强制访问控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">基于角色的访问控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%B1%9E%E6%80%A7%E7%82%B9%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">3.4.</span> <span class="nav-text">基于属性点访问控制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AD%96%E7%95%A5%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">访问控制策略设计与实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AD%96%E7%95%A5"><span class="nav-number">4.1.</span> <span class="nav-text">访问控制策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E8%A7%84%E5%88%99"><span class="nav-number">4.2.</span> <span class="nav-text">访问控制规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E8%BF%87%E7%A8%8B%E4%B8%8E%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">访问控制过程与安全管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E8%BF%87%E7%A8%8B"><span class="nav-number">5.1.</span> <span class="nav-text">访问控制过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E7%89%B9%E6%9D%83%E7%AE%A1%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">最小特权管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E8%AE%BF%E9%97%AE%E7%AE%A1%E7%90%86"><span class="nav-number">5.3.</span> <span class="nav-text">用户访问管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A3%E4%BB%A4%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">5.4.</span> <span class="nav-text">口令安全管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E4%B8%BB%E8%A6%81%E4%BA%A7%E5%93%81%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%8C%87%E6%A0%87"><span class="nav-number">6.</span> <span class="nav-text">访问控制主要产品与技术指标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%BB%84%E8%A6%81%E4%BA%A7%E5%93%81"><span class="nav-number">6.1.</span> <span class="nav-text">访问控制组要产品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E4%B8%BB%E8%A6%81%E6%8A%80%E6%9C%AF%E6%8C%87%E6%A0%87"><span class="nav-number">6.2.</span> <span class="nav-text">访问控制主要技术指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">访问控制技术应用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
