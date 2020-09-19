@@ -1980,4 +1980,126 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
         <tag>学习笔记</tag>
       </tags>
   </entry>
+  <entry>
+    <title>第9章 VPN技术原理与应用</title>
+    <url>/2020/09/19/%E7%AC%AC9%E7%AB%A0-VPN%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="VPN概述"><a href="#VPN概述" class="headerlink" title="VPN概述"></a>VPN概述</h1><p>技术原理：把需要经过公共网传递的报文加密处理后，再由公共网络发送到目的地。</p>
+<h2 id="VPN安全功能"><a href="#VPN安全功能" class="headerlink" title="VPN安全功能"></a>VPN安全功能</h2><p>3种安全服务：</p>
+<ul>
+<li>保密性服务</li>
+<li>完整性服务</li>
+<li>认证服务</li>
+</ul>
+<a id="more"></a>
+<h2 id="VPN技术风险"><a href="#VPN技术风险" class="headerlink" title="VPN技术风险"></a>VPN技术风险</h2><ol>
+<li>VPN产品代码实现的安全缺陷</li>
+<li>VPN密码算法安全缺陷</li>
+<li>VPN管理不当引发的安全缺陷</li>
+</ol>
+<h1 id="VPN类型和实现技术"><a href="#VPN类型和实现技术" class="headerlink" title="VPN类型和实现技术"></a>VPN类型和实现技术</h1><h2 id="VPN类型"><a href="#VPN类型" class="headerlink" title="VPN类型"></a>VPN类型</h2><ul>
+<li>链路层VPN：ATM、Frame Relay、多协议标签交换MPLS</li>
+<li>网络层VPN：受控路由过滤、隧道技术</li>
+<li>传输层VPN：SSL</li>
+</ul>
+<h2 id="密码算法"><a href="#密码算法" class="headerlink" title="密码算法"></a>密码算法</h2><p>DES、AES、RSA、SM1、SM4、SM3</p>
+<h2 id="密钥管理"><a href="#密钥管理" class="headerlink" title="密钥管理"></a>密钥管理</h2><p>密钥分发两种方法：</p>
+<ol>
+<li>手工配置：可靠、更新速度慢</li>
+<li>采用密钥交换协议动态分发：快速更新</li>
+</ol>
+<p>密钥交换与管理标准：SKIP（互联网简单密钥管理协议）、ISAKMP/Oakley（互联网安全联盟和密钥管理协议）</p>
+<h2 id="认证访问控制"><a href="#认证访问控制" class="headerlink" title="认证访问控制"></a>认证访问控制</h2><p>两种形式的认证：</p>
+<ol>
+<li>用户身份认证</li>
+<li>数据完整性和合法性认证</li>
+</ol>
+<h2 id="IPSec"><a href="#IPSec" class="headerlink" title="IPSec"></a>IPSec</h2><p>IP安全系列规范：认证头（AH）、封装安全有效负荷（ESP）、密钥交换协议</p>
+<ol>
+<li><p>IP AH：保证IP包的完整性、提供数据源认证和抗重放攻击</p>
+</li>
+<li><p>IP ESP：保证IP包的保密性</p>
+<p>IP AH和IP ESP有两种工作模式：透明模式（只保护IP包种的数据域），隧道模式（保护IP包头和数据域）</p>
+</li>
+<li><p>密钥交换协议：基于IPSec技术主要优点是透明性，但是会增加网络安全管理难度和降低网络传输性能</p>
+</li>
+</ol>
+<h2 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h2><p>SSl应用于传输层，包含：</p>
+<ul>
+<li>握手协议（身份鉴别和安全参数协商）</li>
+<li>密码规格变更协议（通知安全参数变更）</li>
+<li>报警协议（关闭通知和对错误进行报警）</li>
+<li>记录层协议（传输数据的分段、压缩机解压缩、加密及解密、完整性校验）。</li>
+</ul>
+<p>SSL协议提供三种安全通信服务：</p>
+<ol>
+<li>保密性通信</li>
+<li>点对点之间的身份认证</li>
+<li>可靠性通信</li>
+</ol>
+<p>SSL记录协议的数据处理过程：</p>
+<ol>
+<li>SSL将数据分割成可管理的区块长度</li>
+<li>选择是否要将已分割的数据压缩</li>
+<li>加上消息验证码（MAC）</li>
+<li>将数据加密，生成即将发送的消息</li>
+<li>接收端将收到的消息解密、验证、解压缩，再重组后传送至较高层（如应用层），即完成接收</li>
+</ol>
+<h2 id="PPTP"><a href="#PPTP" class="headerlink" title="PPTP"></a>PPTP</h2><p>点到点安全隧道协议</p>
+<h2 id="L2TP"><a href="#L2TP" class="headerlink" title="L2TP"></a>L2TP</h2><p>UDP 1701端口</p>
+<h1 id="VPN主要产品与技术指标"><a href="#VPN主要产品与技术指标" class="headerlink" title="VPN主要产品与技术指标"></a>VPN主要产品与技术指标</h1><h2 id="VPN主要产品"><a href="#VPN主要产品" class="headerlink" title="VPN主要产品"></a>VPN主要产品</h2><p>IPSec VPN、SSL VPN</p>
+<h2 id="VPN产品主要技术指标"><a href="#VPN产品主要技术指标" class="headerlink" title="VPN产品主要技术指标"></a>VPN产品主要技术指标</h2><ol>
+<li>密码算法要求</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">IPSec VPN</th>
+<th style="text-align:center">SSL VPN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">非对称密码<br>（实体验证、数字签名、数字信封）</td>
+<td style="text-align:center">1024比特RSA<br>256比特SM2椭圆曲线算法</td>
+<td style="text-align:center">256位群阶ECC椭圆曲线SM2<br>IBC标识密码算法SM9<br>1024位以上RSA</td>
+</tr>
+<tr>
+<td style="text-align:center">对称密码<br>（密钥协商数据和报文数据加密）</td>
+<td style="text-align:center">128比特分支的SM1</td>
+<td style="text-align:center">SM1</td>
+</tr>
+<tr>
+<td style="text-align:center">密码杂凑算法<br>（对称密钥生成和完整性校验）</td>
+<td style="text-align:center">SHA-1或SM3<br>SM3输出为256比特</td>
+<td style="text-align:center">SM3和SHA-1</td>
+</tr>
+<tr>
+<td style="text-align:center">随机数生成算法</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ol>
+<li><p>VPN产品功能要求</p>
+<p>IPSec VPN：随机数生成、密钥协商、安全报文封装、NAT穿越、身份鉴别</p>
+<p>SSL VPN：随机数生成、密钥协商、安全报文传输、身份鉴别、访问控制、密钥更新、客户端主机安全检查</p>
+</li>
+<li><p>VPN产品性能要求</p>
+<p>IPSec VPN：加解密吞吐率、加解密时延、加解密丢包率、每秒新建连接数</p>
+<p>SSL VPN：最大并发用户数、最大并发连接数、每秒新建连接数、吞吐率</p>
+</li>
+</ol>
+<h1 id="VPN技术应用"><a href="#VPN技术应用" class="headerlink" title="VPN技术应用"></a>VPN技术应用</h1><p>三种类型：远程访问虚拟网、企业内部虚拟网、企业扩展虚拟网</p>
+<p>应用场景类型：远程安全访问、构建内部安全专网、外部网络安全互联详见P191-P192</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
 </search>
