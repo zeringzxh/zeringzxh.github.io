@@ -23,26 +23,22 @@
     var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="防火墙概述安全区域：  公共外部网络 内联网 外联网，用作组织与合作伙伴之间进行通信 军事缓冲区域，DMZ，介于内部网络和外部网络之间，放置公共服务设备，向外提供服务">
+  <meta name="description" content="入侵检测概述通用入侵检测模型：CIDF（事件产生器、事件分析器、响应单元、事件数据库） 入侵检测作用表现：  发现受保护系统中的入侵行为或异常行为 检验安全保护措施的有效性 分析受保护系统所面临的威胁 有利于阻止安全事件扩大，及时报警触发网络安全应急响应 可以为网络安全策略的制定提供重要指导 报警信息可用作网络犯罪取证">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第8章 防火墙技术原理与应用">
-<meta property="og:url" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:title" content="第10章 入侵检测技术原理与应用">
+<meta property="og:url" content="https://fl4g.cn/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="zering的博客">
-<meta property="og:description" content="防火墙概述安全区域：  公共外部网络 内联网 外联网，用作组织与合作伙伴之间进行通信 军事缓冲区域，DMZ，介于内部网络和外部网络之间，放置公共服务设备，向外提供服务">
+<meta property="og:description" content="入侵检测概述通用入侵检测模型：CIDF（事件产生器、事件分析器、响应单元、事件数据库） 入侵检测作用表现：  发现受保护系统中的入侵行为或异常行为 检验安全保护措施的有效性 分析受保护系统所面临的威胁 有利于阻止安全事件扩大，及时报警触发网络安全应急响应 可以为网络安全策略的制定提供重要指导 报警信息可用作网络犯罪取证">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/状态防火墙.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/代理服务.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/防火墙安全功能指标.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/代理型防火墙.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/屏蔽子网.jpg">
-<meta property="article:published_time" content="2020-09-18T07:02:06.000Z">
-<meta property="article:modified_time" content="2020-09-18T09:04:30.063Z">
+<meta property="og:image" content="https://fl4g.cn/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/入侵检测系统.png">
+<meta property="article:published_time" content="2020-09-21T06:38:02.000Z">
+<meta property="article:modified_time" content="2020-09-21T09:48:45.052Z">
 <meta property="article:author" content="zering">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/状态防火墙.jpg">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/入侵检测系统.png">
 
-<link rel="canonical" href="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/">
+<link rel="canonical" href="https://fl4g.cn/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -55,7 +51,7 @@
   };
 </script>
 
-  <title>第8章 防火墙技术原理与应用 | zering的博客</title>
+  <title>第10章 入侵检测技术原理与应用 | zering的博客</title>
   
 
 
@@ -213,7 +209,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -226,7 +222,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          第8章 防火墙技术原理与应用
+          第10章 入侵检测技术原理与应用
         </h1>
 
         <div class="post-meta">
@@ -237,7 +233,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-18 15:02:06 / 修改时间：17:04:30" itemprop="dateCreated datePublished" datetime="2020-09-18T15:02:06+08:00">2020-09-18</time>
+              <time title="创建时间：2020-09-21 14:38:02 / 修改时间：17:48:45" itemprop="dateCreated datePublished" datetime="2020-09-21T14:38:02+08:00">2020-09-21</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -265,8 +261,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -276,7 +272,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
+              <span>2.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -295,119 +291,141 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="防火墙概述"><a href="#防火墙概述" class="headerlink" title="防火墙概述"></a>防火墙概述</h1><p>安全区域：</p>
-<ul>
-<li>公共外部网络</li>
-<li>内联网</li>
-<li>外联网，用作组织与合作伙伴之间进行通信</li>
-<li>军事缓冲区域，DMZ，介于内部网络和外部网络之间，放置公共服务设备，向外提供服务</li>
-</ul>
+        <h1 id="入侵检测概述"><a href="#入侵检测概述" class="headerlink" title="入侵检测概述"></a>入侵检测概述</h1><p>通用入侵检测模型：CIDF（事件产生器、事件分析器、响应单元、事件数据库）</p>
+<h2 id="入侵检测作用"><a href="#入侵检测作用" class="headerlink" title="入侵检测作用"></a>入侵检测作用</h2><p>表现：</p>
+<ol>
+<li>发现受保护系统中的入侵行为或异常行为</li>
+<li>检验安全保护措施的有效性</li>
+<li>分析受保护系统所面临的威胁</li>
+<li>有利于阻止安全事件扩大，及时报警触发网络安全应急响应</li>
+<li>可以为网络安全策略的制定提供重要指导</li>
+<li>报警信息可用作网络犯罪取证</li>
+</ol>
 <a id="more"></a>
-<h2 id="防火墙工作原理"><a href="#防火墙工作原理" class="headerlink" title="防火墙工作原理"></a>防火墙工作原理</h2><p>两种类型安全策略：白名单策略、黑名单策略</p>
-<p>功能：</p>
-<ul>
-<li>过滤非安全网络访问</li>
-<li>限制网络访问：只允许访问指定主机或网络服务</li>
-<li>网络访问审计</li>
-<li>网络带宽控制</li>
-<li>协同防御</li>
-</ul>
-<h2 id="防火墙安全风险"><a href="#防火墙安全风险" class="headerlink" title="防火墙安全风险"></a>防火墙安全风险</h2><ol>
-<li>网络安全旁路。只能对通过它对网络通信包进行访问控制。</li>
-<li>防火墙功能缺陷，导致一些网络威胁无法阻断。<ul>
-<li>不能完全防止感染病毒的软件或文件传输</li>
-<li>不能防止基于数据驱动式的攻击</li>
-<li>不能完全防止后门攻击</li>
-</ul>
+<h1 id="入侵检测技术"><a href="#入侵检测技术" class="headerlink" title="入侵检测技术"></a>入侵检测技术</h1><h2 id="基于误用的入侵检测技术"><a href="#基于误用的入侵检测技术" class="headerlink" title="基于误用的入侵检测技术"></a>基于误用的入侵检测技术</h2><p>通常称为基于特征的入侵检测方法，常用的误用检测方法：</p>
+<ol>
+<li><p>基于条件概率的误用检测方法</p>
+<p>先验概率：P(Intrusion)、后验概率：P(ES|Intrusion)、事件序列出现概率：P(ES)</p>
+<script type="math/tex; mode=display">P(Intrusion|ES)=P(ES|Intrusion)*\frac{P(Intrusion)}{P(ES)}</script><p>缺点：先验概率难以给出，事件的独立性难以满足</p>
 </li>
-<li>防火墙安全机制形成单点故障和特权威胁</li>
-<li>防火墙无法有效防范内部威胁</li>
-<li>防火墙效用受限于安全规则</li>
-</ol>
-<h1 id="防火墙类型于实现技术"><a href="#防火墙类型于实现技术" class="headerlink" title="防火墙类型于实现技术"></a>防火墙类型于实现技术</h1><h2 id="包过滤"><a href="#包过滤" class="headerlink" title="包过滤"></a>包过滤</h2><p>IP层（网络层）：根据包的源IP地址、目的IP地址、源端口、目的端口及包传递方向等包头信息判断是否允许包通过。</p>
-<p>控制依据：规则集</p>
-<p>过滤规则表示格式由“规则号、匹配条件、匹配操作”三部分组成。</p>
-<p>优点：低负载、高通过率、对用户透明</p>
-<p>弱点：不能在用户级别进行过滤，IP伪装绕过</p>
-<h2 id="状态检查技术"><a href="#状态检查技术" class="headerlink" title="状态检查技术"></a>状态检查技术</h2><p>通过利用TCP会话和UDP“伪”会话的状态信息进行网络访问机制。</p>
-<p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/状态防火墙.jpg" style="zoom:50%;"></p>
-<h2 id="应用服务代理"><a href="#应用服务代理" class="headerlink" title="应用服务代理"></a>应用服务代理</h2><p>代替受保护网络的主机向外部网发送服务请求，并将响应结果返回。提供在应用级的网络安全访问控制。</p>
-<p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/代理服务.jpg" style="zoom:50%;"></p>
-<p>优点：</p>
-<ul>
-<li>不允许外部主机直接访问内部主机</li>
-<li>支持多种用户认证方案</li>
-<li>可以分析数据包内部的应用命令</li>
-<li>可以提供详细的审计记录</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>速度比包过滤慢</li>
-<li>对用户不透明</li>
-<li>与特定应用协议相关联，代理服务器并不能支持所有的网络协议</li>
-</ul>
-<h2 id="网络地址转换技术"><a href="#网络地址转换技术" class="headerlink" title="网络地址转换技术"></a>网络地址转换技术</h2><p>实现网络地址转换的方式主要有三种类型：</p>
-<ul>
-<li>静态NAT：内部每个主机被永久映射成外部网络某个合法地址</li>
-<li>NAT池：采用动态分配的方法映射内部网络</li>
-<li>端口NAT（PAT）：把内部地址映射到外部网络一个IP地址的不同端口上</li>
-</ul>
-<h2 id="Web防火墙技术"><a href="#Web防火墙技术" class="headerlink" title="Web防火墙技术"></a>Web防火墙技术</h2><p>常见功能：允许/禁止HTTP请求类型、HTTP协议头各个字段的长度限制、后缀名过滤、URL内容关键字过滤、Web服务器返回内容过滤</p>
-<p>开源Web应用防火墙有：ModSecurity、WebKnight、ShadowDaemon等</p>
-<h2 id="数据库防火墙技术"><a href="#数据库防火墙技术" class="headerlink" title="数据库防火墙技术"></a>数据库防火墙技术</h2><p>技术原理：基于数据通信协议深度分析和虚拟补丁，根据安全规则对数据库访问操作及通信进行安全访问控制，防止数据库系统受到攻击威胁。</p>
-<h2 id="工控防火墙技术"><a href="#工控防火墙技术" class="headerlink" title="工控防火墙技术"></a>工控防火墙技术</h2><p>技术原理：深度分析工控协议，监控访问请求和响应</p>
-<p>工控协议：Modbus TCP协议、IEC61850、OPC、Ethernet/IP和DNP3协议</p>
-<h2 id="下一代防火墙技术"><a href="#下一代防火墙技术" class="headerlink" title="下一代防火墙技术"></a>下一代防火墙技术</h2><p>除传统翻获取功能外，还具有：</p>
-<ul>
-<li>应用识别和管控</li>
-<li>入侵防护（IPS）</li>
-<li>数据防泄漏</li>
-<li>恶意代码防护</li>
-<li>URL分类与过滤</li>
-<li>带宽管理与Qos优化</li>
-<li>加密通信分析</li>
-</ul>
-<h2 id="防火墙共性关键技术"><a href="#防火墙共性关键技术" class="headerlink" title="防火墙共性关键技术"></a>防火墙共性关键技术</h2><ol>
-<li>深度包检测（DPI）：对包的数据内容及包头信息进行检查分析，运用模式（特征）匹配、协议异常检测等方法。</li>
-<li>操作系统</li>
-<li>网络协议分析</li>
-</ol>
-<h1 id="防火墙主要产品与技术指标"><a href="#防火墙主要产品与技术指标" class="headerlink" title="防火墙主要产品与技术指标"></a>防火墙主要产品与技术指标</h1><h2 id="防火墙主要产品"><a href="#防火墙主要产品" class="headerlink" title="防火墙主要产品"></a>防火墙主要产品</h2><p>网络防火墙、Web应用防火墙、数据库防火墙、主机防火墙、工控防火墙、下一代防火墙、家庭防火墙</p>
-<h2 id="防火墙主要技术指标"><a href="#防火墙主要技术指标" class="headerlink" title="防火墙主要技术指标"></a>防火墙主要技术指标</h2><ol>
-<li><p>防火墙安全功能指标</p>
-<p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/防火墙安全功能指标.jpg" style="zoom:50%;"></p>
+<li><p>基于状态迁移的误用检测方法</p>
+<p>利用状态图表示攻击特征，通过检查系统状态变化发现入侵行为。示例：STAT和USTAT</p>
 </li>
-<li><p>防火墙性能指标：最大吞吐量、最大连接速率、最大规则数、并发连接数</p>
+<li><p>基于键盘监控的误用检测方法</p>
+<p>缺点：没有系统支持下，缺少捕获用户击键的可靠方法；多种击键方式表示同一种攻击；没有击键语义分析；不能检测恶意程序自动攻击</p>
 </li>
-<li><p>防火墙安全保障指标：主要包括开发、指导性文档、生命周期支持、测试、脆弱性评定</p>
-</li>
-<li><p>环境适应性指标</p>
-</li>
-<li><p>防火墙自身安全指标</p>
+<li><p>基于规则的误用检测方法</p>
+<p>优点：检测起来比较简单；缺点：受规则库限制，无法发现新攻击，容易受干扰。示例：Snort</p>
 </li>
 </ol>
-<h1 id="防火墙防御体系结构类型"><a href="#防火墙防御体系结构类型" class="headerlink" title="防火墙防御体系结构类型"></a>防火墙防御体系结构类型</h1><h2 id="基于双宿主主机防火墙机构"><a href="#基于双宿主主机防火墙机构" class="headerlink" title="基于双宿主主机防火墙机构"></a>基于双宿主主机防火墙机构</h2><p>使用具有两个网络接口卡的主机，分别连接内外网，从一块网卡上送来IP包，经过安全模块检查，合法则转发到另一块网卡。</p>
-<h2 id="基于代理型防火墙机构"><a href="#基于代理型防火墙机构" class="headerlink" title="基于代理型防火墙机构"></a>基于代理型防火墙机构</h2><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/代理型防火墙.jpg" style="zoom:50%;"></p>
-<p>主要缺点：只要攻破代理主机，整个内部网络与代理主机之间没有任何障碍</p>
-<h2 id="基于屏蔽子网的防火墙结构"><a href="#基于屏蔽子网的防火墙结构" class="headerlink" title="基于屏蔽子网的防火墙结构"></a>基于屏蔽子网的防火墙结构</h2><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/屏蔽子网.jpg" style="zoom:50%;"></p>
-<p>特点：</p>
-<ul>
-<li>应用代理、公开服务器位于屏蔽子网，外部只能访问屏蔽子网，不能进入内部网络</li>
-<li>包过滤路由器A：过滤外部网对屏蔽子网的访问，B：过滤被屏蔽子网对内部网络的访问。所有外部网络访问都必须经过应用代理的检查和认证</li>
-<li>优点：安全级别最高</li>
-<li>缺点：成本高，配置复杂</li>
-</ul>
-<h1 id="防火墙技术应用"><a href="#防火墙技术应用" class="headerlink" title="防火墙技术应用"></a>防火墙技术应用</h1><h2 id="防火墙应用场景类型"><a href="#防火墙应用场景类型" class="headerlink" title="防火墙应用场景类型"></a>防火墙应用场景类型</h2><p>常见场景：上网保护、网站保护、数据保护、网络边界保护、终端保护、网络安全应急响应</p>
-<h2 id="防火墙部署基本方法"><a href="#防火墙部署基本方法" class="headerlink" title="防火墙部署基本方法"></a>防火墙部署基本方法</h2><ol>
-<li>根据安全策略要求，划分网络安全区域</li>
-<li>在安全区域之间设置针对网络通行的访问控制点</li>
-<li>针对不同访问控制点的通信业务需求，制定相应的边界安全策略</li>
-<li>依据控制点的边界安全策略，采用合适的防火墙技术和防范结构</li>
-<li>在防火墙上，配置实现对应的网络安全策略</li>
-<li>测试验证边界安全策略是否正常执行</li>
-<li>允许和维护防火墙</li>
+<h2 id="基于异常的入侵检测技术"><a href="#基于异常的入侵检测技术" class="headerlink" title="基于异常的入侵检测技术"></a>基于异常的入侵检测技术</h2><p>基本思路：构造异常行为集合，从中发现入侵行为。</p>
+<p>常见的异常检测方法：</p>
+<ol>
+<li><p>基于统计的异常检测方法</p>
+<p>典型的系统主体特征有：系统登录与注销时间，资源被占用的时间以及处理机、内存和外设的使用情况。</p>
+</li>
+<li><p>基于模式预测的异常检测方法</p>
+<p>前提条件：事件序列服从某种可辨别的模式；特点：考虑了事件序列之间的相互联系；优点：能较好的处理变化多样的用户行为，集中考察少数几个相关安全事件，容易发现针对检测系统的攻击。</p>
+</li>
+<li><p>基于文本分类的异常检测方法</p>
+<p>利用K-最近邻聚类文本分类算法，分析相似性，发现异常的系统调用</p>
+</li>
+<li><p>基于贝叶斯推理的异常检测方法</p>
+<p>任意时刻，测量$A_1$到$A_n$变量值，推断系统是否发生入侵，$A_i$表示系统某一方面特征。</p>
+</li>
 </ol>
-<p>IPtables防火墙应用参考、Web应用防火墙应用参考、包过滤防火墙应用参考、工控防火墙应用参考见P176-P82</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ol>
+<li><p>基于规范的检测方法</p>
+<p>优点：不仅能够发现已知攻击，而且也能发现未知攻击。</p>
+</li>
+<li><p>基于生物免疫的检测方法</p>
+<p>关键：构造系统“自我”标志以及标志演变方法</p>
+</li>
+<li><p>基于攻击诱骗的检测方法</p>
+<p>提供虚假系统或漏洞诱惑入侵者</p>
+</li>
+<li><p>基于入侵报警的关联检测方法</p>
+<ul>
+<li>基于报警数据的相似性进行报警关联分析</li>
+<li>通过人为设置参数或机器学习进行报警关联分析</li>
+<li>根据某种攻击的前提条件与结果进行报警关联分析</li>
+</ul>
+</li>
+<li><p>基于沙箱动态分析的检测方法</p>
+</li>
+<li><p>基于大数据分析的检测方法</p>
+<p>常见技术：数据挖掘、深度学习、数据关联、数据可视化分析</p>
+</li>
+</ol>
+<h1 id="入侵检测系统组成与分类"><a href="#入侵检测系统组成与分类" class="headerlink" title="入侵检测系统组成与分类"></a>入侵检测系统组成与分类</h1><h2 id="入侵检测系统组成"><a href="#入侵检测系统组成" class="headerlink" title="入侵检测系统组成"></a>入侵检测系统组成</h2><p><img src="/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/入侵检测系统.png" style="zoom:50%;"></p>
+<h2 id="基于主机的入侵检测系统"><a href="#基于主机的入侵检测系统" class="headerlink" title="基于主机的入侵检测系统"></a>基于主机的入侵检测系统</h2><p>HIDS一般适合检测以下入侵行为：</p>
+<ul>
+<li>针对主机的端口或漏洞扫描</li>
+<li>重复失败的登入尝试</li>
+<li>远程口令破解</li>
+<li>主机系统的用户账号添加</li>
+<li>服务启动或停止</li>
+<li>系统重启动</li>
+<li>文件的完整性或许可权变化</li>
+<li>注册表修改</li>
+<li>重要系统启动文件变更</li>
+<li>程序的异常调用</li>
+<li>拒绝服务攻击</li>
+</ul>
+<p>HIDS软件：SWATCH、Tripwire、网页防篡改系统</p>
+<p>优点：检测基于网络入侵检测系统不能检测的攻击；可以运行在应用加密系统的网络上，只要加密信息在到达被监控的主机时或到达前解密；可以运行在交换网络中。</p>
+<p>缺点：必须在每个监控的主机上都安装和维护信息收集模块；HIDS可能受到攻击并被破坏者破坏；占用主机系统资源，降低系统性能；不能有效地检测针对网络中所有主机的网络扫描；不能有效地检测和处理拒绝服务攻击；只能使用它所监控的主机的计算资源。</p>
+<h2 id="基于网络的入侵检测系统"><a href="#基于网络的入侵检测系统" class="headerlink" title="基于网络的入侵检测系统"></a>基于网络的入侵检测系统</h2><p>NIDS构成：探测器和管理控制器。能检测以下入侵行为：</p>
+<ul>
+<li>同步风暴（SYN Flood）</li>
+<li>分布式拒绝服务攻击（DDoS）</li>
+<li>网络扫描</li>
+<li>缓冲区溢出</li>
+<li>协议攻击</li>
+<li>流量异常</li>
+<li>非法网络访问</li>
+</ul>
+<p>优点：适当的配置可以监控一个大型网络的安全状况；安装队网络影响很小；可以很好地避免攻击</p>
+<p>缺点：在高速网络中很难处理所有网络包；交换机不提供统一监测端口，减少监测范围；网络流量被加密，探测器无法对数据包中的协议进行有效分析；仅依靠网络流量无法推知命令的执行结果，无法判断攻击是否成功。</p>
+<h2 id="分布式入侵检测系统"><a href="#分布式入侵检测系统" class="headerlink" title="分布式入侵检测系统"></a>分布式入侵检测系统</h2><ol>
+<li><p>基于主机检测的分布式入侵检测系统</p>
+<p>HDIDS结构分为两部分：主机探测器和入侵管理控制器。</p>
+</li>
+<li><p>基于网络的分布式入侵检测系统</p>
+<p>NDIDS结构分为两部分：网络探测器和管理控制器</p>
+</li>
+</ol>
+<h1 id="入侵检测系统主要产品与技术指标"><a href="#入侵检测系统主要产品与技术指标" class="headerlink" title="入侵检测系统主要产品与技术指标"></a>入侵检测系统主要产品与技术指标</h1><h2 id="入侵检测相关产品"><a href="#入侵检测相关产品" class="headerlink" title="入侵检测相关产品"></a>入侵检测相关产品</h2><ol>
+<li><p>主机入侵检测系统</p>
+<p>技术方法：特征匹配、系统文件监测、安全规则符合检查、文件数字指纹、大数据分析</p>
+</li>
+<li><p>网络入侵检测系统</p>
+<p>技术原理：根据网络流量数据进行分析，利用特征检测、协议异常检测等技术方法发现入侵行为</p>
+</li>
+<li><p>统一威胁管理</p>
+<p>UTM部署在内外网边界。部署方式：透明网桥、路由转发和NAT网关</p>
+</li>
+<li><p>高级持续威胁检测</p>
+<p>高级持续威胁APT通常将恶意代码嵌入文档或电子邮件中，以隐蔽网络攻击。</p>
+<p>技术原理：基于静态/动态分析检测可疑恶意电子文件及关联分析网络安全大数据以发现高级持续威胁活动</p>
+</li>
+<li><p>其他</p>
+<p>根据入侵检测应用对象，常见产品类型：Web IDS、数据库IDS、工控IDS</p>
+</li>
+</ol>
+<h2 id="入侵检测相关指标"><a href="#入侵检测相关指标" class="headerlink" title="入侵检测相关指标"></a>入侵检测相关指标</h2><p>可靠性、可用性、可扩展性、时效性、准确性和安全性</p>
+<h1 id="入侵检测系统应用"><a href="#入侵检测系统应用" class="headerlink" title="入侵检测系统应用"></a>入侵检测系统应用</h1><h2 id="入侵检测应用场景类型"><a href="#入侵检测应用场景类型" class="headerlink" title="入侵检测应用场景类型"></a>入侵检测应用场景类型</h2><p>上网保护、网络入侵检测与保护、网络攻击阻断、主机/终端恶意代码检测、网络安全监测预警与应急处置、网络安全等级保护</p>
+<h2 id="入侵检测系统部署方法"><a href="#入侵检测系统部署方法" class="headerlink" title="入侵检测系统部署方法"></a>入侵检测系统部署方法</h2><p>IDS部署基本过程：</p>
+<ol>
+<li>根据组织或公司等安全策略要求，确定IDS要监测等对象或保护网断</li>
+<li>在监测对象或保护网段，安装IDS检测器，采集网络入侵检测所需要的信息</li>
+<li>针对监测对象或保护网段的安全需求，制定相应的检测策略</li>
+<li>依据检测策略，选用合适的IDS结构类型</li>
+<li>在IDS上，配置入侵检测规则</li>
+<li>测试验证IDS的安全策略是否正常执行</li>
+<li>运行和维护IDS</li>
+</ol>
+<p>基于HIDS的主机威胁检测（应用方式：单机应用；分布式应用）、基于NIDS的内网威胁检测、基于NIDS的网络边界威胁检测、网络安全态势感知应用参考、开源网络入侵检测系统、华为CIS网络安全智能系统应用详见P209-P214</p>
 
     </div>
 
@@ -453,7 +471,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" title="第8章 防火墙技术原理与应用">https://fl4g.cn/2020/09/18/第8章-防火墙技术原理与应用/</a>
+    <a href="https://fl4g.cn/2020/09/21/%E7%AC%AC10%E7%AB%A0-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" title="第10章 入侵检测技术原理与应用">https://fl4g.cn/2020/09/21/第10章-入侵检测技术原理与应用/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -474,13 +492,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/18/%E7%AC%AC7%E7%AB%A0-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" rel="prev" title="第7章 访问控制技术原理与应用">
-      <i class="fa fa-chevron-left"></i> 第7章 访问控制技术原理与应用
+    <a href="/2020/09/19/%E7%AC%AC9%E7%AB%A0-VPN%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" rel="prev" title="第9章 VPN技术原理与应用">
+      <i class="fa fa-chevron-left"></i> 第9章 VPN技术原理与应用
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/19/%E7%AC%AC9%E7%AB%A0-VPN%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/" rel="next" title="第9章 VPN技术原理与应用">
-      第9章 VPN技术原理与应用 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -540,7 +555,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">防火墙概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">防火墙工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9"><span class="nav-number">1.2.</span> <span class="nav-text">防火墙安全风险</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E7%B1%BB%E5%9E%8B%E4%BA%8E%E5%AE%9E%E7%8E%B0%E6%8A%80%E6%9C%AF"><span class="nav-number">2.</span> <span class="nav-text">防火墙类型于实现技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E8%BF%87%E6%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text">包过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A3%80%E6%9F%A5%E6%8A%80%E6%9C%AF"><span class="nav-number">2.2.</span> <span class="nav-text">状态检查技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E4%BB%A3%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">应用服务代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E6%8A%80%E6%9C%AF"><span class="nav-number">2.4.</span> <span class="nav-text">网络地址转换技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF"><span class="nav-number">2.5.</span> <span class="nav-text">Web防火墙技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF"><span class="nav-number">2.6.</span> <span class="nav-text">数据库防火墙技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E6%8E%A7%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF"><span class="nav-number">2.7.</span> <span class="nav-text">工控防火墙技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E4%B8%80%E4%BB%A3%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF"><span class="nav-number">2.8.</span> <span class="nav-text">下一代防火墙技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E5%85%B1%E6%80%A7%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-number">2.9.</span> <span class="nav-text">防火墙共性关键技术</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E4%B8%BB%E8%A6%81%E4%BA%A7%E5%93%81%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%8C%87%E6%A0%87"><span class="nav-number">3.</span> <span class="nav-text">防火墙主要产品与技术指标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E4%B8%BB%E8%A6%81%E4%BA%A7%E5%93%81"><span class="nav-number">3.1.</span> <span class="nav-text">防火墙主要产品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E4%B8%BB%E8%A6%81%E6%8A%80%E6%9C%AF%E6%8C%87%E6%A0%87"><span class="nav-number">3.2.</span> <span class="nav-text">防火墙主要技术指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E9%98%B2%E5%BE%A1%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">防火墙防御体系结构类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8F%8C%E5%AE%BF%E4%B8%BB%E4%B8%BB%E6%9C%BA%E9%98%B2%E7%81%AB%E5%A2%99%E6%9C%BA%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">基于双宿主主机防火墙机构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%BB%A3%E7%90%86%E5%9E%8B%E9%98%B2%E7%81%AB%E5%A2%99%E6%9C%BA%E6%9E%84"><span class="nav-number">4.2.</span> <span class="nav-text">基于代理型防火墙机构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%B1%8F%E8%94%BD%E5%AD%90%E7%BD%91%E7%9A%84%E9%98%B2%E7%81%AB%E5%A2%99%E7%BB%93%E6%9E%84"><span class="nav-number">4.3.</span> <span class="nav-text">基于屏蔽子网的防火墙结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">防火墙技术应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.1.</span> <span class="nav-text">防火墙应用场景类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E9%83%A8%E7%BD%B2%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">防火墙部署基本方法</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">入侵检测概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E4%BD%9C%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">入侵检测作用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF"><span class="nav-number">2.</span> <span class="nav-text">入侵检测技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E8%AF%AF%E7%94%A8%E7%9A%84%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF"><span class="nav-number">2.1.</span> <span class="nav-text">基于误用的入侵检测技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%BC%82%E5%B8%B8%E7%9A%84%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF"><span class="nav-number">2.2.</span> <span class="nav-text">基于异常的入侵检测技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">2.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">入侵检测系统组成与分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90"><span class="nav-number">3.1.</span> <span class="nav-text">入侵检测系统组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%B8%BB%E6%9C%BA%E7%9A%84%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.2.</span> <span class="nav-text">基于主机的入侵检测系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%BD%91%E7%BB%9C%E7%9A%84%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.3.</span> <span class="nav-text">基于网络的入侵检测系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.4.</span> <span class="nav-text">分布式入侵检测系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E4%B8%BB%E8%A6%81%E4%BA%A7%E5%93%81%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%8C%87%E6%A0%87"><span class="nav-number">4.</span> <span class="nav-text">入侵检测系统主要产品与技术指标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%9B%B8%E5%85%B3%E4%BA%A7%E5%93%81"><span class="nav-number">4.1.</span> <span class="nav-text">入侵检测相关产品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%9B%B8%E5%85%B3%E6%8C%87%E6%A0%87"><span class="nav-number">4.2.</span> <span class="nav-text">入侵检测相关指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">入侵检测系统应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.1.</span> <span class="nav-text">入侵检测应用场景类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">入侵检测系统部署方法</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
