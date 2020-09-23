@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>python学习-argparse模块</title>
+    <url>/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/</url>
+    <content><![CDATA[<p>  argparse模块是python中用于解析命令行参数和选项的标准模块，方便用户在命令行中输入参数。</p>
+<h2 id="argparse使用"><a href="#argparse使用" class="headerlink" title="argparse使用"></a>argparse使用</h2><a id="more"></a>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>先看一个简单的例子<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.parse_args()</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>创建 ArgumentParser() 对象</li>
+<li>使用 parse_args() 解析</li>
+</ul>
+<p>将上述代码保存并命名为test.py,运行：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py</span><br><span class="line">$ python test.py -h</span><br><span class="line">usage: t.py [-h]</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>  show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>不添加任何参数，无回显</li>
+<li>添加-h参数，获取帮助，-h为默认预设参数</li>
+</ul>
+<h3 id="ArgumentParser函数解析"><a href="#ArgumentParser函数解析" class="headerlink" title="ArgumentParser函数解析"></a>ArgumentParser函数解析</h3><p>  使用help(argparse.ArgumentParser())查看函数帮助，如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">class ArgumentParser(_AttributeHolder, _ActionsContainer)</span><br><span class="line"> |  Object <span class="keyword">for</span> parsing <span class="built_in">command</span> line strings into Python objects.</span><br><span class="line"> |</span><br><span class="line"> |  Keyword Arguments:</span><br><span class="line"> |      - prog -- The name of the program (default: sys.argv[0])</span><br><span class="line"> |      - usage -- A usage message (default: auto-generated from arguments)</span><br><span class="line"> |      - description -- A description of what the program does</span><br><span class="line"> |      - epilog -- Text following the argument descriptions</span><br><span class="line"> |      - parents -- Parsers whose arguments should be copied into this one</span><br><span class="line"> |      - formatter_class -- HelpFormatter class <span class="keyword">for</span> printing <span class="built_in">help</span> messages</span><br><span class="line"> |      - prefix_chars -- Characters that prefix optional arguments</span><br><span class="line"> |      - fromfile_prefix_chars -- Characters that prefix files containing</span><br><span class="line"> |          additional arguments</span><br><span class="line"> |      - argument_default -- The default value <span class="keyword">for</span> all arguments</span><br><span class="line"> |      - conflict_handler -- String indicating how to handle conflicts</span><br><span class="line"> |      - add_help -- Add a -h/-<span class="built_in">help</span> option</span><br><span class="line"> |</span><br><span class="line">......</span><br><span class="line"> |</span><br><span class="line"> |  Methods defined here:</span><br><span class="line"> |</span><br><span class="line"> |  __init__(self, prog=None, usage=None, description=None, epilog=None, version=None, parents=[], formatter_class=&lt;class <span class="string">&#x27;argparse.HelpFormatter&#x27;</span>&gt;, prefix_chars=<span class="string">&#x27;-&#x27;</span>, fromfile_prefix_chars=None, argument_default=None, conflict_handler=<span class="string">&#x27;error&#x27;</span>, add_help=True)</span><br><span class="line"> ......</span><br></pre></td></tr></table></figure><br>常用参数解析：</p>
+<ul>
+<li>prog：程序名（默认为sys.argv[0]）</li>
+<li>usage：程序的使用用例，默认情况下会自动生成</li>
+<li>description：简短的描述这个程序的用途，help参数之前显示的信息。</li>
+<li>parents：ArgumentParser对象组成列表，这些对象中的参数也要包含进来。</li>
+<li>formatter_class：一个自定义帮助信息格式化输出的类。</li>
+<li>prefix_chars：可选参数之前的前缀（默认为-)。</li>
+<li>fromfile_prefix_chars：如果是从文件中读取参数，这个文件名参数的前缀（默认为None）。</li>
+<li>conflict_handler：通常不需要，定义了处理冲突选项的策略。</li>
+</ul>
+<h3 id="add-argument-方法"><a href="#add-argument-方法" class="headerlink" title="add_argument() 方法"></a>add_argument() 方法</h3><p>使用add_argument()方法，用来定义程序可接受的命令行参数。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ArgumentParser.add_argument(name or flags...[, action][, nargs][, const][, default][, type][, choices][, required][, help][, metavar][, dest])</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>name or flags - 选项字符串的名字或者列表，例如 foo 或者 -f, —foo。</li>
+<li>action - 命令行中该参数存在时的操作，默认值是 store<ul>
+<li>store_ture，表示赋值为true；</li>
+<li>append，将遇到的值存储成列表，也就是如果参数重复则会保存多个值;</li>
+<li>append_const，将参数规范中定义的一个值保存到一个列表；</li>
+<li>count，存储遇到的次数；</li>
+</ul>
+</li>
+<li>default - 不指定参数时的默认值；</li>
+<li>nargs - 应该读取的命令行参数个数，可以是具体的数字，或者是?号，当不指定值时对于 Positional argument 使用 default，对于 Optional argument 使用 const；或者是 * 号，表示 0 或多个参数；或者是 + 号表示 1 或多个参数。</li>
+<li>required - 可选参数是否可以省略 (仅针对可选参数),默认为False；</li>
+<li>const - action 和 nargs 所需要的常量值。</li>
+<li>metavar - 对于必选参数默认就是参数名称，对于可选参数默认是必须存在参数后；</li>
+<li>dest - 解析后的参数名称，默认情况下，对于可选参数选取最长的名称，中划线转换为下划线。</li>
+</ul>
+<h3 id="添加位置参数"><a href="#添加位置参数" class="headerlink" title="添加位置参数"></a>添加位置参数</h3><p>先看如下例子：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">&quot;square&quot;</span>, help=<span class="string">&quot;display a square of a given number&quot;</span>,</span><br><span class="line">                    type=int)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="keyword">print</span> args</span><br><span class="line"><span class="keyword">print</span> args.square**<span class="number">2</span></span><br></pre></td></tr></table></figure><br>运行结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py</span><br><span class="line">usage: test.py [-h] square</span><br><span class="line">t.py: error: too few arguments</span><br><span class="line"></span><br><span class="line">$ python test.py -h</span><br><span class="line">usage: test.py [-h] square</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  square      display a square of a given number</span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>  show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">$ python test.py 3</span><br><span class="line">Namespace(square=3)</span><br><span class="line">9</span><br><span class="line">$ python test.py three</span><br><span class="line">usage: test.py [-h] square</span><br><span class="line">t.py: error: argument square: invalid int value: <span class="string">&#x27;three&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>运行程序，就必须设置一个参数。</li>
+<li>parse_args()方法获取Namespace。</li>
+</ul>
+<h3 id="可选参数"><a href="#可选参数" class="headerlink" title="可选参数"></a>可选参数</h3><p>通过两种方式指定</p>
+<ol>
+<li>通过<span style="background:#BDD3F7"> - </span>来指定短参数，如：<span style="background:#BDD3F7">-h</span></li>
+<li>通过<span style="background:#BDD3F7"> — </span>来指定长参数，如：<span style="background:#BDD3F7">—help</span><br>修改test.py文件：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, prog=<span class="string">&#x27;python test.py &lt;OPTIONS&gt;&#x27;</span>,description=<span class="string">&#x27;test&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;-a&#x27;</span>, <span class="string">&#x27;--all&#x27;</span>, help=<span class="string">&quot;Perform all operations&quot;</span>,metavar=<span class="string">&#x27;xx&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;-d&#x27;</span>, <span class="string">&#x27;--dns&#x27;</span>, help=<span class="string">&quot;Perform&quot;</span>,required=<span class="literal">False</span>, action=<span class="string">&#x27;store_true&#x27;</span>)</span><br><span class="line">par=parser.parse_args()</span><br><span class="line"><span class="keyword">print</span> vars(par)</span><br><span class="line"><span class="keyword">print</span> vars(par)[<span class="string">&#x27;all&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> vars(par):</span><br><span class="line">    <span class="keyword">print</span> v</span><br><span class="line">    <span class="keyword">print</span> vars(par)[v]</span><br></pre></td></tr></table></figure>
+运行结果：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py</span><br><span class="line">&#123;<span class="string">&#x27;all&#x27;</span>: None, <span class="string">&#x27;dns&#x27;</span>: False&#125;</span><br><span class="line">None</span><br><span class="line">all</span><br><span class="line">None</span><br><span class="line">dns</span><br><span class="line">False</span><br><span class="line">$ python test.py -h</span><br><span class="line">usage: python Stealth.py &lt;OPTIONS&gt; [-h] [-a xx] [-d]</span><br><span class="line"></span><br><span class="line">collect</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>       show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  -a xx, --all xx  Perform all operations</span><br><span class="line">  -d, --dns        Perform</span><br><span class="line"></span><br><span class="line">$ python test.py -a</span><br><span class="line">usage: python Stealth.py &lt;OPTIONS&gt; [-h] [-a xx] [-d]</span><br><span class="line">python Stealth.py &lt;OPTIONS&gt;: error: argument -a/--all: expected one argument</span><br><span class="line">$ python test.py -a test1 -d</span><br><span class="line">&#123;<span class="string">&#x27;all&#x27;</span>: <span class="string">&#x27;test1&#x27;</span>, <span class="string">&#x27;dns&#x27;</span>: True&#125;</span><br><span class="line">test1</span><br><span class="line">all</span><br><span class="line">test1</span><br><span class="line">dns</span><br><span class="line">True</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>存在metavar参数时，可选参数后必须接值</li>
+<li>存在action=’store_true’，默认值为False</li>
+<li>metavar和action=’store_true’不能共存</li>
+</ul>
+<h3 id="混合参数使用"><a href="#混合参数使用" class="headerlink" title="混合参数使用"></a>混合参数使用</h3><p>计算一个整数数列的最大值或求和：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(description=<span class="string">&#x27;Process some integers.&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;integers&#x27;</span>, metavar=<span class="string">&#x27;N&#x27;</span>, type=int, nargs=<span class="string">&#x27;+&#x27;</span>,</span><br><span class="line">                   help=<span class="string">&#x27;an integer for the accumulator&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;--sum&#x27;</span>, dest=<span class="string">&#x27;accumulate&#x27;</span>, action=<span class="string">&#x27;store_const&#x27;</span>,</span><br><span class="line">                   const=sum, default=max,</span><br><span class="line">                   help=<span class="string">&#x27;sum the integers (default: find the max)&#x27;</span>)</span><br><span class="line"></span><br><span class="line">args = parser.parse_args()</span><br><span class="line">print(args.accumulate(args.integers))</span><br></pre></td></tr></table></figure><br>运行结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py 1 2 3 4</span><br><span class="line">4</span><br><span class="line">$ python test.py 1 2 3 4 --sum</span><br><span class="line">10</span><br></pre></td></tr></table></figure><br>上述示例使用accumulate来重命名sum参数，与下面代码实现功能一样：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(description=<span class="string">&#x27;Process some integers.&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;integers&#x27;</span>, metavar=<span class="string">&#x27;N&#x27;</span>, type=int, nargs=<span class="string">&#x27;+&#x27;</span>,</span><br><span class="line">                   help=<span class="string">&#x27;an integer for the accumulator&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;--sum&#x27;</span>, action=<span class="string">&#x27;store_const&#x27;</span>,</span><br><span class="line">                   const=sum, default=max,</span><br><span class="line">                   help=<span class="string">&#x27;sum the integers (default: find the max)&#x27;</span>)</span><br><span class="line"></span><br><span class="line">args = parser.parse_args()</span><br><span class="line">print(args.sum(args.integers))</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>argparse</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>URL去重去似</title>
     <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
     <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
@@ -192,74 +260,6 @@
       <tags>
         <tag>逆向</tag>
         <tag>android</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>python学习-argparse模块</title>
-    <url>/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/</url>
-    <content><![CDATA[<p>  argparse模块是python中用于解析命令行参数和选项的标准模块，方便用户在命令行中输入参数。</p>
-<h2 id="argparse使用"><a href="#argparse使用" class="headerlink" title="argparse使用"></a>argparse使用</h2><a id="more"></a>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>先看一个简单的例子<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.parse_args()</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>创建 ArgumentParser() 对象</li>
-<li>使用 parse_args() 解析</li>
-</ul>
-<p>将上述代码保存并命名为test.py,运行：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py</span><br><span class="line">$ python test.py -h</span><br><span class="line">usage: t.py [-h]</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>  show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>不添加任何参数，无回显</li>
-<li>添加-h参数，获取帮助，-h为默认预设参数</li>
-</ul>
-<h3 id="ArgumentParser函数解析"><a href="#ArgumentParser函数解析" class="headerlink" title="ArgumentParser函数解析"></a>ArgumentParser函数解析</h3><p>  使用help(argparse.ArgumentParser())查看函数帮助，如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">class ArgumentParser(_AttributeHolder, _ActionsContainer)</span><br><span class="line"> |  Object <span class="keyword">for</span> parsing <span class="built_in">command</span> line strings into Python objects.</span><br><span class="line"> |</span><br><span class="line"> |  Keyword Arguments:</span><br><span class="line"> |      - prog -- The name of the program (default: sys.argv[0])</span><br><span class="line"> |      - usage -- A usage message (default: auto-generated from arguments)</span><br><span class="line"> |      - description -- A description of what the program does</span><br><span class="line"> |      - epilog -- Text following the argument descriptions</span><br><span class="line"> |      - parents -- Parsers whose arguments should be copied into this one</span><br><span class="line"> |      - formatter_class -- HelpFormatter class <span class="keyword">for</span> printing <span class="built_in">help</span> messages</span><br><span class="line"> |      - prefix_chars -- Characters that prefix optional arguments</span><br><span class="line"> |      - fromfile_prefix_chars -- Characters that prefix files containing</span><br><span class="line"> |          additional arguments</span><br><span class="line"> |      - argument_default -- The default value <span class="keyword">for</span> all arguments</span><br><span class="line"> |      - conflict_handler -- String indicating how to handle conflicts</span><br><span class="line"> |      - add_help -- Add a -h/-<span class="built_in">help</span> option</span><br><span class="line"> |</span><br><span class="line">......</span><br><span class="line"> |</span><br><span class="line"> |  Methods defined here:</span><br><span class="line"> |</span><br><span class="line"> |  __init__(self, prog=None, usage=None, description=None, epilog=None, version=None, parents=[], formatter_class=&lt;class <span class="string">&#x27;argparse.HelpFormatter&#x27;</span>&gt;, prefix_chars=<span class="string">&#x27;-&#x27;</span>, fromfile_prefix_chars=None, argument_default=None, conflict_handler=<span class="string">&#x27;error&#x27;</span>, add_help=True)</span><br><span class="line"> ......</span><br></pre></td></tr></table></figure><br>常用参数解析：</p>
-<ul>
-<li>prog：程序名（默认为sys.argv[0]）</li>
-<li>usage：程序的使用用例，默认情况下会自动生成</li>
-<li>description：简短的描述这个程序的用途，help参数之前显示的信息。</li>
-<li>parents：ArgumentParser对象组成列表，这些对象中的参数也要包含进来。</li>
-<li>formatter_class：一个自定义帮助信息格式化输出的类。</li>
-<li>prefix_chars：可选参数之前的前缀（默认为-)。</li>
-<li>fromfile_prefix_chars：如果是从文件中读取参数，这个文件名参数的前缀（默认为None）。</li>
-<li>conflict_handler：通常不需要，定义了处理冲突选项的策略。</li>
-</ul>
-<h3 id="add-argument-方法"><a href="#add-argument-方法" class="headerlink" title="add_argument() 方法"></a>add_argument() 方法</h3><p>使用add_argument()方法，用来定义程序可接受的命令行参数。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ArgumentParser.add_argument(name or flags...[, action][, nargs][, const][, default][, type][, choices][, required][, help][, metavar][, dest])</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>name or flags - 选项字符串的名字或者列表，例如 foo 或者 -f, —foo。</li>
-<li>action - 命令行中该参数存在时的操作，默认值是 store<ul>
-<li>store_ture，表示赋值为true；</li>
-<li>append，将遇到的值存储成列表，也就是如果参数重复则会保存多个值;</li>
-<li>append_const，将参数规范中定义的一个值保存到一个列表；</li>
-<li>count，存储遇到的次数；</li>
-</ul>
-</li>
-<li>default - 不指定参数时的默认值；</li>
-<li>nargs - 应该读取的命令行参数个数，可以是具体的数字，或者是?号，当不指定值时对于 Positional argument 使用 default，对于 Optional argument 使用 const；或者是 * 号，表示 0 或多个参数；或者是 + 号表示 1 或多个参数。</li>
-<li>required - 可选参数是否可以省略 (仅针对可选参数),默认为False；</li>
-<li>const - action 和 nargs 所需要的常量值。</li>
-<li>metavar - 对于必选参数默认就是参数名称，对于可选参数默认是必须存在参数后；</li>
-<li>dest - 解析后的参数名称，默认情况下，对于可选参数选取最长的名称，中划线转换为下划线。</li>
-</ul>
-<h3 id="添加位置参数"><a href="#添加位置参数" class="headerlink" title="添加位置参数"></a>添加位置参数</h3><p>先看如下例子：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">&quot;square&quot;</span>, help=<span class="string">&quot;display a square of a given number&quot;</span>,</span><br><span class="line">                    type=int)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="keyword">print</span> args</span><br><span class="line"><span class="keyword">print</span> args.square**<span class="number">2</span></span><br></pre></td></tr></table></figure><br>运行结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py</span><br><span class="line">usage: test.py [-h] square</span><br><span class="line">t.py: error: too few arguments</span><br><span class="line"></span><br><span class="line">$ python test.py -h</span><br><span class="line">usage: test.py [-h] square</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  square      display a square of a given number</span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>  show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">$ python test.py 3</span><br><span class="line">Namespace(square=3)</span><br><span class="line">9</span><br><span class="line">$ python test.py three</span><br><span class="line">usage: test.py [-h] square</span><br><span class="line">t.py: error: argument square: invalid int value: <span class="string">&#x27;three&#x27;</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>运行程序，就必须设置一个参数。</li>
-<li>parse_args()方法获取Namespace。</li>
-</ul>
-<h3 id="可选参数"><a href="#可选参数" class="headerlink" title="可选参数"></a>可选参数</h3><p>通过两种方式指定</p>
-<ol>
-<li>通过<span style="background:#BDD3F7"> - </span>来指定短参数，如：<span style="background:#BDD3F7">-h</span></li>
-<li>通过<span style="background:#BDD3F7"> — </span>来指定长参数，如：<span style="background:#BDD3F7">—help</span><br>修改test.py文件：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, prog=<span class="string">&#x27;python test.py &lt;OPTIONS&gt;&#x27;</span>,description=<span class="string">&#x27;test&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;-a&#x27;</span>, <span class="string">&#x27;--all&#x27;</span>, help=<span class="string">&quot;Perform all operations&quot;</span>,metavar=<span class="string">&#x27;xx&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;-d&#x27;</span>, <span class="string">&#x27;--dns&#x27;</span>, help=<span class="string">&quot;Perform&quot;</span>,required=<span class="literal">False</span>, action=<span class="string">&#x27;store_true&#x27;</span>)</span><br><span class="line">par=parser.parse_args()</span><br><span class="line"><span class="keyword">print</span> vars(par)</span><br><span class="line"><span class="keyword">print</span> vars(par)[<span class="string">&#x27;all&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> vars(par):</span><br><span class="line">    <span class="keyword">print</span> v</span><br><span class="line">    <span class="keyword">print</span> vars(par)[v]</span><br></pre></td></tr></table></figure>
-运行结果：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py</span><br><span class="line">&#123;<span class="string">&#x27;all&#x27;</span>: None, <span class="string">&#x27;dns&#x27;</span>: False&#125;</span><br><span class="line">None</span><br><span class="line">all</span><br><span class="line">None</span><br><span class="line">dns</span><br><span class="line">False</span><br><span class="line">$ python test.py -h</span><br><span class="line">usage: python Stealth.py &lt;OPTIONS&gt; [-h] [-a xx] [-d]</span><br><span class="line"></span><br><span class="line">collect</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>       show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  -a xx, --all xx  Perform all operations</span><br><span class="line">  -d, --dns        Perform</span><br><span class="line"></span><br><span class="line">$ python test.py -a</span><br><span class="line">usage: python Stealth.py &lt;OPTIONS&gt; [-h] [-a xx] [-d]</span><br><span class="line">python Stealth.py &lt;OPTIONS&gt;: error: argument -a/--all: expected one argument</span><br><span class="line">$ python test.py -a test1 -d</span><br><span class="line">&#123;<span class="string">&#x27;all&#x27;</span>: <span class="string">&#x27;test1&#x27;</span>, <span class="string">&#x27;dns&#x27;</span>: True&#125;</span><br><span class="line">test1</span><br><span class="line">all</span><br><span class="line">test1</span><br><span class="line">dns</span><br><span class="line">True</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ul>
-<li>存在metavar参数时，可选参数后必须接值</li>
-<li>存在action=’store_true’，默认值为False</li>
-<li>metavar和action=’store_true’不能共存</li>
-</ul>
-<h3 id="混合参数使用"><a href="#混合参数使用" class="headerlink" title="混合参数使用"></a>混合参数使用</h3><p>计算一个整数数列的最大值或求和：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(description=<span class="string">&#x27;Process some integers.&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;integers&#x27;</span>, metavar=<span class="string">&#x27;N&#x27;</span>, type=int, nargs=<span class="string">&#x27;+&#x27;</span>,</span><br><span class="line">                   help=<span class="string">&#x27;an integer for the accumulator&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;--sum&#x27;</span>, dest=<span class="string">&#x27;accumulate&#x27;</span>, action=<span class="string">&#x27;store_const&#x27;</span>,</span><br><span class="line">                   const=sum, default=max,</span><br><span class="line">                   help=<span class="string">&#x27;sum the integers (default: find the max)&#x27;</span>)</span><br><span class="line"></span><br><span class="line">args = parser.parse_args()</span><br><span class="line">print(args.accumulate(args.integers))</span><br></pre></td></tr></table></figure><br>运行结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ python test.py 1 2 3 4</span><br><span class="line">4</span><br><span class="line">$ python test.py 1 2 3 4 --sum</span><br><span class="line">10</span><br></pre></td></tr></table></figure><br>上述示例使用accumulate来重命名sum参数，与下面代码实现功能一样：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(description=<span class="string">&#x27;Process some integers.&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;integers&#x27;</span>, metavar=<span class="string">&#x27;N&#x27;</span>, type=int, nargs=<span class="string">&#x27;+&#x27;</span>,</span><br><span class="line">                   help=<span class="string">&#x27;an integer for the accumulator&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;--sum&#x27;</span>, action=<span class="string">&#x27;store_const&#x27;</span>,</span><br><span class="line">                   const=sum, default=max,</span><br><span class="line">                   help=<span class="string">&#x27;sum the integers (default: find the max)&#x27;</span>)</span><br><span class="line"></span><br><span class="line">args = parser.parse_args()</span><br><span class="line">print(args.sum(args.integers))</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>argparse</tag>
       </tags>
   </entry>
   <entry>
@@ -951,6 +951,7 @@
 <p><a href="https://fl4g.cn/2020/09/21/第10章-入侵检测技术原理与应用/">第10章 入侵检测技术原理与应用</a></p>
 <p><a href="https://fl4g.cn/2020/09/22/第11章-网络物理隔离技术原理与应用/">第11章 网络物理隔离技术原理与应用</a></p>
 <p><a href="https://fl4g.cn/2020/09/23/第12章-网络安全技术原理与应用/">第12章 网络安全技术原理与应用</a></p>
+<p><a href="https://fl4g.cn/2020/09/23/第13章-网络安全漏洞防护技术原理与应用/">第13章 网络安全漏洞防护技术原理与应用</a></p>
 <p>推荐看信管网最新解读视频：</p>
 <p><a href="https://www.cnitpm.com/shipin/play.aspx?id=218">信息安全工程师教程（第2版）解读视频</a></p>
 ]]></content>
@@ -2414,6 +2415,106 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <h2 id="数据访问监测"><a href="#数据访问监测" class="headerlink" title="数据访问监测"></a>数据访问监测</h2><p>分析数据库访问日志，可以自动发现违规访问的问题。</p>
 <h2 id="网络入侵检测"><a href="#网络入侵检测" class="headerlink" title="网络入侵检测"></a>网络入侵检测</h2><p>对网络设备、安全设备、应用系统的日志信息进行实时收集和分析，可检测发现攻击行为</p>
 <h2 id="网络电子取证"><a href="#网络电子取证" class="headerlink" title="网络电子取证"></a>网络电子取证</h2><p>日志分析技术</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第13章 网络安全漏洞防护技术原理与应用</title>
+    <url>/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="网络安全漏洞概述"><a href="#网络安全漏洞概述" class="headerlink" title="网络安全漏洞概述"></a>网络安全漏洞概述</h1><p>影响：机密性受损、完整性破坏、可用性降低、抗抵赖性缺失、可控性下降、真实性不保等</p>
+<h2 id="网络安全漏洞威胁"><a href="#网络安全漏洞威胁" class="headerlink" title="网络安全漏洞威胁"></a>网络安全漏洞威胁</h2><p><img src="/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/漏洞利用.jpg" style="zoom:50%;"></p>
+<a id="more"></a>
+<h1 id="网络安全漏洞分类与管理"><a href="#网络安全漏洞分类与管理" class="headerlink" title="网络安全漏洞分类与管理"></a>网络安全漏洞分类与管理</h1><h2 id="网络安全漏洞来源"><a href="#网络安全漏洞来源" class="headerlink" title="网络安全漏洞来源"></a>网络安全漏洞来源</h2><ul>
+<li>非技术安全漏洞：涉及管理组织结构、管理制度、管理流程、人员管理<ol>
+<li>网络安全责任主体不明确</li>
+<li>网络安全策略不完备</li>
+<li>网络安全操作技能不足</li>
+<li>网络安全监督缺失</li>
+<li>网络安全特权控制不完备</li>
+</ol>
+</li>
+<li>技术性安全漏洞：涉及网络结构、通信协议、设备、软件产品、系统配置、应用系统<ol>
+<li>设计错误</li>
+<li>输入验证错误</li>
+<li>缓冲区溢出</li>
+<li>意外情况处置错误</li>
+<li>访问验证错误</li>
+<li>配置错误</li>
+<li>竞争条件</li>
+<li>环境错误</li>
+</ol>
+</li>
+</ul>
+<h2 id="网络安全漏洞分类"><a href="#网络安全漏洞分类" class="headerlink" title="网络安全漏洞分类"></a>网络安全漏洞分类</h2><ol>
+<li>CVE漏洞分类</li>
+<li>CVSS（通用漏洞计分系统，由基本度量计分、时序度量计分、环境度量计分组成）</li>
+<li>我国信息安全漏洞分类<ol>
+<li>国家信息安全漏洞库（CNNVD）漏洞分类</li>
+<li>国家信息安全漏洞共享平台（CNVD）漏洞分类</li>
+</ol>
+</li>
+<li>OWASP TOP 10 漏洞分类</li>
+</ol>
+<h2 id="网络安全漏洞发布"><a href="#网络安全漏洞发布" class="headerlink" title="网络安全漏洞发布"></a>网络安全漏洞发布</h2><p>发布方式：网站、电子邮件以及安全论坛</p>
+<h2 id="网络安全漏洞信息获取"><a href="#网络安全漏洞信息获取" class="headerlink" title="网络安全漏洞信息获取"></a>网络安全漏洞信息获取</h2><p>国内外漏洞信息来源主要有四个方面：网络安全应急响应机构；网络安全厂商；IT产品或系统提供商；网络安全组织。</p>
+<p>国内外网络安全漏洞信息发布等主要来源：CERT；Security Focus Vulnerability Database；国家信息安全漏洞库CNNVD；国家信息安全漏洞共享平台CNVD；厂商漏洞信息</p>
+<h2 id="网络安全漏洞管理过程"><a href="#网络安全漏洞管理过程" class="headerlink" title="网络安全漏洞管理过程"></a>网络安全漏洞管理过程</h2><p>主要包含以下环节：</p>
+<ol>
+<li>网络信息系统资产确认</li>
+<li>网络安全漏洞信息采集</li>
+<li>网络安全漏洞评估</li>
+<li>网络安全漏洞消除和控制</li>
+<li>网络安全漏洞变化跟踪</li>
+</ol>
+<h1 id="网络安全漏洞扫描技术与应用"><a href="#网络安全漏洞扫描技术与应用" class="headerlink" title="网络安全漏洞扫描技术与应用"></a>网络安全漏洞扫描技术与应用</h1><h2 id="网络安全漏洞扫描"><a href="#网络安全漏洞扫描" class="headerlink" title="网络安全漏洞扫描"></a>网络安全漏洞扫描</h2><p>漏洞扫描器一般包括用户界面、扫描引擎、漏洞扫描结果分析、漏洞信息及配置参数库等主要功能模块</p>
+<ol>
+<li><p>主机漏洞扫描器</p>
+<p>技术原理：通过检查本地系统中关键性文件等内容及安全属性，来发现漏洞。</p>
+</li>
+<li><p>网络漏洞扫描器</p>
+<p>技术原理：通过与待扫描等目标机建立网络连接后，发送特定网络请求进行漏洞检查</p>
+</li>
+<li><p>专用漏洞扫描器</p>
+</li>
+</ol>
+<h2 id="网络安全漏洞扫描应用"><a href="#网络安全漏洞扫描应用" class="headerlink" title="网络安全漏洞扫描应用"></a>网络安全漏洞扫描应用</h2><p>常用于：网络信息系统安全检查和风险评估。</p>
+<h1 id="网络安全漏洞处置技术与应用"><a href="#网络安全漏洞处置技术与应用" class="headerlink" title="网络安全漏洞处置技术与应用"></a>网络安全漏洞处置技术与应用</h1><h2 id="网络安全漏洞发现技术"><a href="#网络安全漏洞发现技术" class="headerlink" title="网络安全漏洞发现技术"></a>网络安全漏洞发现技术</h2><p>发现方法主要依赖于人工安全性分析、工具自动化检测及人工智能辅助分析。</p>
+<p>发现技术：文本搜索、词法分析、范围检查、状态机检查、错误注入、模糊测试、动态污点分析、形式化验证等</p>
+<h2 id="网络安全漏洞修补技术"><a href="#网络安全漏洞修补技术" class="headerlink" title="网络安全漏洞修补技术"></a>网络安全漏洞修补技术</h2><p><img src="/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/补丁管理.jpg" style="zoom:50%;"></p>
+<h2 id="网络安全漏洞利用防范技术"><a href="#网络安全漏洞利用防范技术" class="headerlink" title="网络安全漏洞利用防范技术"></a>网络安全漏洞利用防范技术</h2><ol>
+<li>地址空间随机化技术（ASLR）</li>
+<li>数据执行阻止（DEP）：保护程序堆栈区域，防止执行</li>
+<li>SEHOP：防止攻击者利用SEH重写</li>
+<li>堆栈保护：设置完整性标记检测函数调用返回地址是否被篡改</li>
+<li>虚拟补丁：对未进行补丁修复的程序，过滤漏洞攻击数据包</li>
+</ol>
+<h1 id="网络安全漏洞防护主要产品与技术指标"><a href="#网络安全漏洞防护主要产品与技术指标" class="headerlink" title="网络安全漏洞防护主要产品与技术指标"></a>网络安全漏洞防护主要产品与技术指标</h1><h2 id="网络安全漏洞扫描器"><a href="#网络安全漏洞扫描器" class="headerlink" title="网络安全漏洞扫描器"></a>网络安全漏洞扫描器</h2><p>常见技术指标：</p>
+<ul>
+<li>漏洞扫描主机数量</li>
+<li>漏洞扫描并发数</li>
+<li>漏洞扫描速度</li>
+<li>漏洞检测能力</li>
+<li>数据库漏洞检查功能</li>
+<li>Web应用漏洞检查功能</li>
+<li>口令检查功能</li>
+<li>标准兼容性</li>
+<li>部署环境难易程度</li>
+</ul>
+<h2 id="网络安全漏洞服务平台"><a href="#网络安全漏洞服务平台" class="headerlink" title="网络安全漏洞服务平台"></a>网络安全漏洞服务平台</h2><p>相关的产品与服务，如：漏洞盒子、补天漏洞响应平台、网络威胁情报服务等</p>
+<h2 id="网络安全漏洞防护网关"><a href="#网络安全漏洞防护网关" class="headerlink" title="网络安全漏洞防护网关"></a>网络安全漏洞防护网关</h2><p>原理：从网络流量中提取和识别漏洞利用特征模式，阻止攻击者对目标系统等漏洞利用</p>
+<p>常见形式：IPS、WAF、UTM</p>
+<p>技术指标：</p>
+<ul>
+<li>阻断安全漏洞攻击等种类与数量</li>
+<li>阻断安全漏洞攻击等准确率</li>
+<li>阻断安全漏洞攻击等性能</li>
+<li>支持网络带宽的能力</li>
+</ul>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
