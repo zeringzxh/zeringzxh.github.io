@@ -945,6 +945,7 @@
 <p><a href="https://fl4g.cn/2020/09/14/第3章-密码学基本理论/">第3章 密码学基本理论</a></p>
 <p><a href="https://fl4g.cn/2020/09/16/第4章-网络安全体系与网络安全模型/">第4章 网络安全体系与网络安全模型</a></p>
 <p><a href="https://fl4g.cn/2020/09/17/第5章-物理环境安全技术/">第5章 物理环境安全技术</a></p>
+<p><a href="https://fl4g.cn/2020/09/17/第6章-认证技术原理与应用/">第6章 认证技术原理与应用</a></p>
 <p><a href="https://fl4g.cn/2020/09/18/第7章-访问控制技术原理与应用/">第7章 访问控制技术原理与应用</a></p>
 <p><a href="https://fl4g.cn/2020/09/18/第8章-防火墙技术原理与应用/">第8章 防火墙技术原理与应用</a></p>
 <p><a href="https://fl4g.cn/2020/09/19/第9章-VPN技术原理与应用/">第9章 VPN技术原理与应用</a></p>
@@ -1694,8 +1695,8 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
-    <title>第6章 认证技术原理应用</title>
-    <url>/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/</url>
+    <title>第6章 认证技术原理与应用</title>
+    <url>/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
     <content><![CDATA[<h1 id="认证概述"><a href="#认证概述" class="headerlink" title="认证概述"></a>认证概述</h1><p>认证由标识和鉴别两部分组成。</p>
 <h2 id="认证依据"><a href="#认证依据" class="headerlink" title="认证依据"></a>认证依据</h2><p>主要有四类：</p>
 <ol>
@@ -1716,12 +1717,12 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 </li>
 </ol>
 <h2 id="双向认证"><a href="#双向认证" class="headerlink" title="双向认证"></a>双向认证</h2><p>双方互相认证。</p>
-<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/双向认证.jpg" alt></p>
+<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/双向认证.jpg" alt></p>
 <h2 id="第三方认证"><a href="#第三方认证" class="headerlink" title="第三方认证"></a>第三方认证</h2><p>实体A和实体B与第三方共享密钥$K_{PA}$，$K_{PB}$，实体A发送认证请求时，向第三方申请实体AB的密钥$K_{AB}$，然后A和B使用$K_{AB}$加密保护双方的认证信息。</p>
-<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/第三方认证.jpg" alt></p>
+<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/第三方认证.jpg" alt></p>
 <h1 id="认证技术方法"><a href="#认证技术方法" class="headerlink" title="认证技术方法"></a>认证技术方法</h1><h2 id="口令认证技术"><a href="#口令认证技术" class="headerlink" title="口令认证技术"></a>口令认证技术</h2><p>主要攻击方式：窃听、重放、中间人攻击、口令猜测</p>
 <p>口令认证安全：加密存储、安全传输、符合协议设计要求、避免弱口令</p>
-<h2 id="智能卡技术"><a href="#智能卡技术" class="headerlink" title="智能卡技术"></a>智能卡技术</h2><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/智能卡技术.jpg" alt></p>
+<h2 id="智能卡技术"><a href="#智能卡技术" class="headerlink" title="智能卡技术"></a>智能卡技术</h2><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/智能卡技术.jpg" alt></p>
 <h2 id="基于生物特征认证技术"><a href="#基于生物特征认证技术" class="headerlink" title="基于生物特征认证技术"></a>基于生物特征认证技术</h2><p>生物特征：指纹、人脸、视网膜、语音</p>
 <p><strong>虹膜识别的错误率是各种生物特征识别中最低的</strong></p>
 <h2 id="Kerberos认证技术"><a href="#Kerberos认证技术" class="headerlink" title="Kerberos认证技术"></a>Kerberos认证技术</h2><p>四个基本实体</p>
@@ -1732,7 +1733,7 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <li>应用服务器，为用户提供服务的设备或系统</li>
 </ul>
 <p>kerberos V5认证协议主要由六步构成（AS与TGS统称为KDC）</p>
-<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8/Kerberos工作流程.jpg" alt></p>
+<p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/Kerberos工作流程.jpg" alt></p>
 <ol>
 <li>Kerberos客户（已知自己用户名密码）向AS（已知所有用户和服务名所有密码）申请票据TGT</li>
 <li>当AS收到Kerberos客户消息后，在认证数据库检查确认后产生一个会话密钥，同时使用客户秘密密钥对会话密钥加密，生成票据TGT（实体名、地址、时间戳、限制时间、会话密钥组成）。然后发送给Kerberos客户。</li>
