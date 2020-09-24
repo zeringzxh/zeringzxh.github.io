@@ -23,23 +23,23 @@
     var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="网络信息安全基本属性 机密性：信息不被未授权者知晓的属性  完整性： 信息或系统未授权则不能被篡改  可用性： 信息或服务可以随时被合法用户正常使用">
+  <meta name="description" content="入侵阻断技术与应用入侵防御系统（IPS）工作原理：根据网络包的特性及上下文进行攻击行为判断来控制包转发 旁路阻断（SPS）：以旁路的方式监测网络流量，然后通过旁路注入豹纹，实现对攻击流量的阻断 入侵阻断技术应用IPS&#x2F;SPS主要功能：  屏蔽指定IP地址 屏蔽指定网络端口 屏蔽指定域名 封锁指定URL、阻断特定攻击类型 为零日漏洞提供热补丁">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第1章 网络信息安全概述">
-<meta property="og:url" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:title" content="第15章 网络安全主动防御技术与应用">
+<meta property="og:url" content="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="zering的博客">
-<meta property="og:description" content="网络信息安全基本属性 机密性：信息不被未授权者知晓的属性  完整性： 信息或系统未授权则不能被篡改  可用性： 信息或服务可以随时被合法用户正常使用">
+<meta property="og:description" content="入侵阻断技术与应用入侵防御系统（IPS）工作原理：根据网络包的特性及上下文进行攻击行为判断来控制包转发 旁路阻断（SPS）：以旁路的方式监测网络流量，然后通过旁路注入豹纹，实现对攻击流量的阻断 入侵阻断技术应用IPS&#x2F;SPS主要功能：  屏蔽指定IP地址 屏蔽指定网络端口 屏蔽指定域名 封锁指定URL、阻断特定攻击类型 为零日漏洞提供热补丁">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/生命周期.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/数据保护.jpg">
-<meta property="article:published_time" content="2020-09-09T08:49:00.000Z">
-<meta property="article:modified_time" content="2020-09-10T03:04:45.000Z">
+<meta property="og:image" content="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/白名单.jpg">
+<meta property="og:image" content="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/可信密码平台.jpg">
+<meta property="article:published_time" content="2020-09-24T02:27:43.000Z">
+<meta property="article:modified_time" content="2020-09-24T07:59:45.038Z">
 <meta property="article:author" content="zering">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/生命周期.jpg">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/白名单.jpg">
 
-<link rel="canonical" href="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/">
+<link rel="canonical" href="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -52,7 +52,7 @@
   };
 </script>
 
-  <title>第1章 网络信息安全概述 | zering的博客</title>
+  <title>第15章 网络安全主动防御技术与应用 | zering的博客</title>
   
 
 
@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -223,7 +223,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          第1章 网络信息安全概述
+          第15章 网络安全主动防御技术与应用
         </h1>
 
         <div class="post-meta">
@@ -232,16 +232,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-09-09 16:49:00" itemprop="dateCreated datePublished" datetime="2020-09-09T16:49:00+08:00">2020-09-09</time>
+              <time title="创建时间：2020-09-24 10:27:43 / 修改时间：15:59:45" itemprop="dateCreated datePublished" datetime="2020-09-24T10:27:43+08:00">2020-09-24</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-10 11:04:45" itemprop="dateModified" datetime="2020-09-10T11:04:45+08:00">2020-09-10</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -253,7 +247,7 @@
             </span>
 
           
-            <span id="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/" class="post-meta-item leancloud_visitors" data-flag-title="第1章 网络信息安全概述" title="阅读次数">
+            <span id="/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/" class="post-meta-item leancloud_visitors" data-flag-title="第15章 网络安全主动防御技术与应用" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -268,8 +262,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -279,14 +273,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
+              <span>1.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -298,115 +292,106 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="网络信息安全基本属性"><a href="#网络信息安全基本属性" class="headerlink" title="网络信息安全基本属性"></a>网络信息安全基本属性</h1><ul>
-<li><p>机密性：信息不被未授权者知晓的属性</p>
-</li>
-<li><p>完整性： 信息或系统未授权则不能被篡改</p>
-</li>
-<li><p>可用性： 信息或服务可以随时被合法用户正常使用</p>
+        <h1 id="入侵阻断技术与应用"><a href="#入侵阻断技术与应用" class="headerlink" title="入侵阻断技术与应用"></a>入侵阻断技术与应用</h1><p>入侵防御系统（IPS）工作原理：根据网络包的特性及上下文进行攻击行为判断来控制包转发</p>
+<p>旁路阻断（SPS）：以旁路的方式监测网络流量，然后通过旁路注入豹纹，实现对攻击流量的阻断</p>
+<h2 id="入侵阻断技术应用"><a href="#入侵阻断技术应用" class="headerlink" title="入侵阻断技术应用"></a>入侵阻断技术应用</h2><p>IPS/SPS主要功能：</p>
+<ul>
+<li>屏蔽指定IP地址</li>
+<li>屏蔽指定网络端口</li>
+<li>屏蔽指定域名</li>
+<li>封锁指定URL、阻断特定攻击类型</li>
+<li>为零日漏洞提供热补丁</li>
+</ul>
 <a id="more"></a>
-</li>
-<li><p>抗抵赖性： 防止网络信息系统相关用户否认其活动行为</p>
-</li>
-<li><p>可控性： 管理者对系统能够进行有效的掌握和控制</p>
-</li>
-<li><p>其他</p>
-<ul>
-<li>真实性： 信息和客观事实保持一致</li>
-<li>时效性： 信息、服务及系统满足时间约束要求</li>
-<li>合规性： 信息、服务及系统符合法律政策规范的要求</li>
-<li>公平性： 相关主体处于同等地位处理相关任务</li>
-<li>可靠性： 信息系统能有效完成预定功能</li>
-<li>可生存性： 信息系统在受损情况下能最小化支撑业务运行</li>
-<li>隐私性： 敏感信息不对外公开</li>
-</ul>
-</li>
-</ul>
-<h1 id="网络信息安全基本功能"><a href="#网络信息安全基本功能" class="headerlink" title="网络信息安全基本功能"></a>网络信息安全基本功能</h1><ol>
-<li>网络信息安全防御</li>
-<li>网络信息安全监测</li>
-<li>网络信息安全应急</li>
-<li>网络信息安全恢复</li>
-</ol>
-<h1 id="网络信息安全基本技术需求"><a href="#网络信息安全基本技术需求" class="headerlink" title="网络信息安全基本技术需求"></a>网络信息安全基本技术需求</h1><ol>
-<li>物理环境安全： 环境、设备、存储介质安全</li>
-<li>网络信息安全认证：实现网络资源访问控制的前提和依据</li>
-<li>网络信息访问控制： 限制非法用户，防止越权</li>
-<li>网络信息安全保密： 安全隔离，防止敏感信息泄露</li>
-<li>网络信息安全漏洞扫描</li>
-<li>恶意代码防护</li>
-<li>网络信息内容安全： 信息符合法律法规</li>
-<li>网络信息安全监测与预警</li>
-<li>网络信息安全应急响应</li>
-</ol>
-<h1 id="网络信息安全管理内容与方法"><a href="#网络信息安全管理内容与方法" class="headerlink" title="网络信息安全管理内容与方法"></a>网络信息安全管理内容与方法</h1><p><strong>相关技术：</strong></p>
-<p>风险分析、密码算法、身份认证、访问控制、安全审计、漏洞扫描、防火墙、入侵检测和应急响应</p>
-<p><strong>网络安全管理方法：</strong></p>
-<p>风险管理、等级保护、纵深防御、层次化保护、应急响应以及PDCA（Plan-Do-Check-Act）</p>
-<p><strong>网络安全管理要素</strong></p>
+<h1 id="软件白名单技术与应用"><a href="#软件白名单技术与应用" class="headerlink" title="软件白名单技术与应用"></a>软件白名单技术与应用</h1><h2 id="软件白名单技术原理"><a href="#软件白名单技术原理" class="headerlink" title="软件白名单技术原理"></a>软件白名单技术原理</h2><p><img src="/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/白名单.jpg" style="zoom:50%;"></p>
+<h2 id="软件白名单技术应用"><a href="#软件白名单技术应用" class="headerlink" title="软件白名单技术应用"></a>软件白名单技术应用</h2><p>应用案例：详见P298-P300</p>
+<p>构建安全、可信的移动互联网安全生态环境；恶意代码防护；“白环境”保护</p>
+<h1 id="网络流量清洗技术与应用"><a href="#网络流量清洗技术与应用" class="headerlink" title="网络流量清洗技术与应用"></a>网络流量清洗技术与应用</h1><h2 id="网络流量清洗技术原理"><a href="#网络流量清洗技术原理" class="headerlink" title="网络流量清洗技术原理"></a>网络流量清洗技术原理</h2><p>技术方法：</p>
 <ol>
-<li>管理对象： 硬件、软件、存储介质、网络信息资产、支持保障系统</li>
-<li>网络信息安全威胁：属性分类（自然威胁和人为威胁），威胁对象分类（物理、网络通信、网络服务、网络管理等威胁）</li>
-<li>网络信息安全脆弱性： 与安全策略相冲突的状态或错误</li>
-<li>网络信息安全风险： 网络威胁发生概率和所造成影响的乘积</li>
+<li>流量检测（基于深度数据包检测技术（DPI））</li>
+<li>流量牵引与清洗（牵引方法主要有：BGP、DNS）</li>
+<li>流量回注</li>
 </ol>
-<blockquote>
-<p>风险控制方法：</p>
-<ul>
-<li>避免风险。例如,通过物理隔离设备将内部网和外部网分开,避免受到外部网的攻击。</li>
-<li>转移风险。例如,购买商业保险计划或安全外包。</li>
-<li>减少威胁。例如,安装防病毒软件包,防止病毒攻击。</li>
-<li>消除脆弱点。例如,给操作系统打补丁或强化工作人员的安全意识。</li>
-<li>减少威胁的影响。例如,采取多条通信线路进行备份或制定应急预案。</li>
-<li>风险监测。例如,定期对网络系统中的安全状况进行风险分析,监测潜在的威胁行为。</li>
-</ul>
-</blockquote>
+<h2 id="网络流量清洗技术应用"><a href="#网络流量清洗技术应用" class="headerlink" title="网络流量清洗技术应用"></a>网络流量清洗技术应用</h2><p>应用场景：</p>
 <ol>
-<li>网络信息安全保护措施： 目的是对网络管理对象进行风险控制</li>
+<li>畸形数据报文过滤</li>
+<li>抗拒绝服务攻击</li>
+<li>Web应用保护</li>
+<li>DDoS高防IP服务</li>
 </ol>
-<p><strong>网络信息安全管理流程</strong></p>
-<p>​    步骤1，确定网络信息安全管理对象</p>
-<p>​    步骤2，评估网络信息安全管理对象的价值</p>
-<p>​    步骤3，识别网络信息安全管理对象的威胁</p>
-<p>​    步骤4，识别网络信息安全管理对象的脆弱性</p>
-<p>​    步骤5，确定网络信息安全管理对象的风险级别</p>
-<p>​    步骤6，制定网络信息安全防范体系及防范措施</p>
-<p>​    步骤7，实施和落实网络信息安全防范措施</p>
-<p>​    步骤8，运行/维护网络信息安全设备、配置</p>
-<p><img src="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/生命周期.jpg" alt></p>
-<p><strong>网络安全管理工具</strong></p>
-<p>SOC、IT资产管理系统、网络安全态势感知系统、漏洞扫描器、协议分析器、上网行为管理等</p>
-<p><strong>网络信息安全管理评估</strong></p>
+<h1 id="可信计算技术与应用"><a href="#可信计算技术与应用" class="headerlink" title="可信计算技术与应用"></a>可信计算技术与应用</h1><h2 id="可信计算技术原理"><a href="#可信计算技术原理" class="headerlink" title="可信计算技术原理"></a>可信计算技术原理</h2><p>组成：可信根-可信硬件平台-可信操作系统-可信应用系统，一级认证并信任一级</p>
+<p>可行平台信任根：TPM</p>
+<p>TCG定义可信计算平台信任根包括三个：可信度量根RTM、可信存储根RTS和可信报告根RTR</p>
+<p>可信密码平台组成：可信密码模块（TCM）和TCM服务模块（TSM）</p>
+<p><img src="/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/可信密码平台.jpg" style="zoom:50%;"></p>
+<p>TCM组成：</p>
 <ul>
-<li>网络安全等级保护</li>
-<li>信息安全管理体系认证（ISMS）：依据：GB/T22080、ISO/IEC27001</li>
-<li>系统安全工程能力成熟度模型（SSE-CMM）：组织过程、工程过程、项目过程来评价系统安全能力</li>
+<li>I/O</li>
+<li>SMS4引擎</li>
+<li>SM2引擎</li>
+<li>SM3引擎</li>
+<li>随机数产生器</li>
+<li>HMAC引擎：基于SM3引擎来计算消息认证码</li>
+<li>执行引擎：TCM的运算执行单元</li>
+<li>非易失性存储器：存储永久数据</li>
+<li>易失性存储器：存储TCM运行时的临时数据</li>
 </ul>
-<h1 id="网络信息安全法律与政策文件"><a href="#网络信息安全法律与政策文件" class="headerlink" title="网络信息安全法律与政策文件"></a>网络信息安全法律与政策文件</h1><p>《中华人民共和国密码法》于2020年1月1日起实施。</p>
-<p><strong>网络安全等级保护</strong></p>
-<p>工作：定级、备案、建设整改、等级测评、运营维护。</p>
-<p>保护义务：</p>
+<h2 id="可信计算技术应用"><a href="#可信计算技术应用" class="headerlink" title="可信计算技术应用"></a>可信计算技术应用</h2><p>计算平台安全保护、可信网络连接、可信验证详见P305-P308</p>
+<h1 id="数字水印技术与应用"><a href="#数字水印技术与应用" class="headerlink" title="数字水印技术与应用"></a>数字水印技术与应用</h1><h2 id="数字水印技术原理"><a href="#数字水印技术原理" class="headerlink" title="数字水印技术原理"></a>数字水印技术原理</h2><p>通过数字信号处理方法，在数字化的媒体文件中嵌入特定标记。</p>
+<p>组成：水印的嵌入和水印的提取</p>
+<p>嵌入方法分为：</p>
+<ol>
+<li>空间域方法：直接叠加到数字载体空间域上，典型算法有Schyndel算法和Patchwork算法</li>
+<li>变换域方法：利用扩展频谱通信技术，先计算图像的离散余弦变换（DCT），再叠加到DCT域中幅值最大的L个系数上（不包括直流分量），通常为图像的低频分量。算法为NEC算法</li>
+</ol>
+<h2 id="数字水印技术应用"><a href="#数字水印技术应用" class="headerlink" title="数字水印技术应用"></a>数字水印技术应用</h2><ol>
+<li>版权保护    </li>
+<li>信息隐藏</li>
+<li>信息溯源</li>
+<li>访问控制</li>
+</ol>
+<h1 id="网络攻击陷阱技术与应用"><a href="#网络攻击陷阱技术与应用" class="headerlink" title="网络攻击陷阱技术与应用"></a>网络攻击陷阱技术与应用</h1><h2 id="网络攻击陷阱技术原理"><a href="#网络攻击陷阱技术原理" class="headerlink" title="网络攻击陷阱技术原理"></a>网络攻击陷阱技术原理</h2><p>网络攻击诱骗技术有：</p>
+<ol>
+<li><p>蜜罐主机技术</p>
+<p>包括：空系统、镜像系统、虚拟系统</p>
+</li>
+<li><p>陷阱网络技术</p>
+<p>由多个蜜罐主机、路由器、防火墙、IDS、审计系统共同组成。</p>
+<p>功能实现：蜜罐系统、数据控制系统、数据捕获系统、数据记录、数据分析、数据管理等功能</p>
+</li>
+</ol>
+<p>开源网络攻击陷阱系统有Honeyd、工业控制系统蜜罐Conpot、口令蜜罐Honeywords等</p>
+<h2 id="网络攻击陷阱技术应用"><a href="#网络攻击陷阱技术应用" class="headerlink" title="网络攻击陷阱技术应用"></a>网络攻击陷阱技术应用</h2><ol>
+<li>恶意代码监测</li>
+<li>增强抗攻击能力</li>
+<li>网络态势感知</li>
+</ol>
+<h1 id="入侵容忍及系统生存技术与应用"><a href="#入侵容忍及系统生存技术与应用" class="headerlink" title="入侵容忍及系统生存技术与应用"></a>入侵容忍及系统生存技术与应用</h1><h2 id="入侵容忍及系统生存技术原理"><a href="#入侵容忍及系统生存技术原理" class="headerlink" title="入侵容忍及系统生存技术原理"></a>入侵容忍及系统生存技术原理</h2><p>入侵容忍及系统生存技术主要有</p>
 <ul>
-<li>制定内部安全管理制度和操作规程，确定网络安全负责人，落实网络安全保护责任；</li>
-<li>采取防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施；</li>
-<li>采取监测、记录网络运行状态、网络安全事件的技术措施，并按照规定留存相关的网络日志不少于六个月；</li>
-<li>采取数据分类、重要数据备份和加密等措施；</li>
-<li>法律、行政法规规定的其他义务。</li>
+<li>分布式共识：避免单一缺陷</li>
+<li>主动恢复：通过自我清除技术，周期性让系统迁移转变到可信状态，破坏攻击链条</li>
+<li>门限密码：用于保护秘密</li>
+<li>多样性设计：避免通用模式到失效</li>
 </ul>
-<p><strong>网络产品和服务审查</strong></p>
-<p>安全审查和认证机构：中国网络安全审查技术与认证中心（CCRC）</p>
-<p><strong>网络安全产品管理</strong></p>
-<p>由测评机构进行测评。</p>
-<p>国家保密科技测评中心、中国信息安全认证中心、国家网络与信息系统安全产品质量监督检验中心、公安部计算机信息系统安全产品质量监督检验中心等。</p>
-<p><strong>个人信息与重要数据保护制度</strong></p>
-<p><img src="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/数据保护.jpg" alt></p>
-<p><strong>网络安全标准规范与测评</strong></p>
-<p>标准化工作组织：全国信息安全标准化技术委员会</p>
-<p><strong>网络安全事件与应急响应制度</strong></p>
-<p>国家应急中心：国际计算机网络应急技术处理协调中心（CNCERT）</p>
-<h1 id="网络信息安全科技信息获取"><a href="#网络信息安全科技信息获取" class="headerlink" title="网络信息安全科技信息获取"></a>网络信息安全科技信息获取</h1><p><strong>网络信息安全会议</strong></p>
-<p>四大顶级学术会议：S&amp;P、CCS、NDSS、USENIX Security</p>
-<p>USENIX Security被中国计算机学会（CCF）归为“网络与信息安全”A类会议。</p>
+<h2 id="入侵容忍及系统生存技术应用"><a href="#入侵容忍及系统生存技术应用" class="headerlink" title="入侵容忍及系统生存技术应用"></a>入侵容忍及系统生存技术应用</h2><p>弹性CA系统、区块链</p>
+<h1 id="隐私保护技术与应用"><a href="#隐私保护技术与应用" class="headerlink" title="隐私保护技术与应用"></a>隐私保护技术与应用</h1><h2 id="隐私保护类型及技术原理"><a href="#隐私保护类型及技术原理" class="headerlink" title="隐私保护类型及技术原理"></a>隐私保护类型及技术原理</h2><p>隐私分为：身份隐私、属性隐私、社交关系隐私、未知轨迹等</p>
+<p>隐私保护等方法：</p>
+<ol>
+<li>k-匿名方法：对数据中的所有元组进行泛化处理，使得其不再与任何人一一对应</li>
+<li>差分隐私方法：对保护数据集添加随机噪声而构成新数据集</li>
+</ol>
+<p>常见技术措施：抑制、泛化、置换、扰动、裁剪等</p>
+<h2 id="隐私保护技术应用"><a href="#隐私保护技术应用" class="headerlink" title="隐私保护技术应用"></a>隐私保护技术应用</h2><p>常见应用场景：匿名化处理个人信息、对个人信息去标识化处理</p>
+<h1 id="网络安全前沿技术发展动向"><a href="#网络安全前沿技术发展动向" class="headerlink" title="网络安全前沿技术发展动向"></a>网络安全前沿技术发展动向</h1><h2 id="网络威胁情报服务"><a href="#网络威胁情报服务" class="headerlink" title="网络威胁情报服务"></a>网络威胁情报服务</h2><p>主要包括：安全漏洞、攻击来源IP地址、恶意邮箱、恶意域名、攻击工具</p>
+<h2 id="域名服务安全保障"><a href="#域名服务安全保障" class="headerlink" title="域名服务安全保障"></a>域名服务安全保障</h2><p>域名服务常见安全风险：</p>
+<ol>
+<li>域名信息篡改</li>
+<li>域名解析配置错误</li>
+<li>域名劫持</li>
+<li>域名软件安全漏洞</li>
+</ol>
+<h2 id="同态加密技术"><a href="#同态加密技术" class="headerlink" title="同态加密技术"></a>同态加密技术</h2><script type="math/tex; mode=display">
+Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$代表假发，则为加同态加密，当$⊙$代表乘法，则为乘同态加密。同时满足则为全同态加密。</p>
 
     </div>
 
@@ -430,6 +415,9 @@
       <div class="popular-posts-title"><a href="/2020/09/09/2020年软考-信息安全工程师学习笔记/" rel="bookmark">2020年软考--信息安全工程师学习笔记</a></div>
     </li>
     <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/09/09/第1章-网络信息安全概述/" rel="bookmark">第1章 网络信息安全概述</a></div>
+    </li>
+    <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2020/09/10/第2章-网络攻击原理与常用方法/" rel="bookmark">第2章 网络攻击原理与常用方法</a></div>
     </li>
     <li class="popular-posts-item">
@@ -437,9 +425,6 @@
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2020/09/14/第3章-密码学基本理论/" rel="bookmark">第3章 密码学基本理论</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/17/第5章-物理环境安全技术/" rel="bookmark">第5章 物理环境安全技术</a></div>
     </li>
   </ul>
 
@@ -452,7 +437,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/" title="第1章 网络信息安全概述">https://fl4g.cn/2020/09/09/第1章-网络信息安全概述/</a>
+    <a href="https://fl4g.cn/2020/09/24/%E7%AC%AC15%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8/" title="第15章 网络安全主动防御技术与应用">https://fl4g.cn/2020/09/24/第15章-网络安全主动防御技术与应用/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -473,13 +458,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="2020年软考--信息安全工程师学习笔记">
-      <i class="fa fa-chevron-left"></i> 2020年软考--信息安全工程师学习笔记
+    <a href="/2020/09/23/%E7%AC%AC14%E7%AB%A0-%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E9%98%B2%E8%8C%83%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/" rel="prev" title="第14章 恶意代码防范技术原理">
+      <i class="fa fa-chevron-left"></i> 第14章 恶意代码防范技术原理
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" rel="next" title="第2章 网络攻击原理与常用方法">
-      第2章 网络攻击原理与常用方法 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -539,7 +521,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">网络信息安全基本属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">网络信息安全基本功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF%E9%9C%80%E6%B1%82"><span class="nav-number">3.</span> <span class="nav-text">网络信息安全基本技术需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E5%86%85%E5%AE%B9%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">网络信息安全管理内容与方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%B3%95%E5%BE%8B%E4%B8%8E%E6%94%BF%E7%AD%96%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">网络信息安全法律与政策文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%A7%91%E6%8A%80%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96"><span class="nav-number">6.</span> <span class="nav-text">网络信息安全科技信息获取</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E9%98%BB%E6%96%AD%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">入侵阻断技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E9%98%BB%E6%96%AD%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">入侵阻断技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%99%BD%E5%90%8D%E5%8D%95%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">软件白名单技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%99%BD%E5%90%8D%E5%8D%95%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">软件白名单技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%99%BD%E5%90%8D%E5%8D%95%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">软件白名单技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%B5%81%E9%87%8F%E6%B8%85%E6%B4%97%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">网络流量清洗技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%B5%81%E9%87%8F%E6%B8%85%E6%B4%97%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">网络流量清洗技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%B5%81%E9%87%8F%E6%B8%85%E6%B4%97%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">3.2.</span> <span class="nav-text">网络流量清洗技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E4%BF%A1%E8%AE%A1%E7%AE%97%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">可信计算技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E4%BF%A1%E8%AE%A1%E7%AE%97%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">可信计算技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E4%BF%A1%E8%AE%A1%E7%AE%97%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">4.2.</span> <span class="nav-text">可信计算技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E6%B0%B4%E5%8D%B0%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">数字水印技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E6%B0%B4%E5%8D%B0%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">5.1.</span> <span class="nav-text">数字水印技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E6%B0%B4%E5%8D%B0%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">5.2.</span> <span class="nav-text">数字水印技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E9%99%B7%E9%98%B1%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">网络攻击陷阱技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E9%99%B7%E9%98%B1%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">6.1.</span> <span class="nav-text">网络攻击陷阱技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E9%99%B7%E9%98%B1%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">6.2.</span> <span class="nav-text">网络攻击陷阱技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E5%AE%B9%E5%BF%8D%E5%8F%8A%E7%B3%BB%E7%BB%9F%E7%94%9F%E5%AD%98%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">入侵容忍及系统生存技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E5%AE%B9%E5%BF%8D%E5%8F%8A%E7%B3%BB%E7%BB%9F%E7%94%9F%E5%AD%98%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">7.1.</span> <span class="nav-text">入侵容忍及系统生存技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E4%BE%B5%E5%AE%B9%E5%BF%8D%E5%8F%8A%E7%B3%BB%E7%BB%9F%E7%94%9F%E5%AD%98%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">7.2.</span> <span class="nav-text">入侵容忍及系统生存技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">隐私保护技术与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E7%B1%BB%E5%9E%8B%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">8.1.</span> <span class="nav-text">隐私保护类型及技术原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8"><span class="nav-number">8.2.</span> <span class="nav-text">隐私保护技术应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E5%8A%A8%E5%90%91"><span class="nav-number">9.</span> <span class="nav-text">网络安全前沿技术发展动向</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5%E6%9C%8D%E5%8A%A1"><span class="nav-number">9.1.</span> <span class="nav-text">网络威胁情报服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%AE%89%E5%85%A8%E4%BF%9D%E9%9A%9C"><span class="nav-number">9.2.</span> <span class="nav-text">域名服务安全保障</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E6%8A%80%E6%9C%AF"><span class="nav-number">9.3.</span> <span class="nav-text">同态加密技术</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
