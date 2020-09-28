@@ -3790,4 +3790,185 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
         <tag>学习笔记</tag>
       </tags>
   </entry>
+  <entry>
+    <title>第21章 网络设备安全</title>
+    <url>/2020/09/28/%E7%AC%AC21%E7%AB%A0-%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8/</url>
+    <content><![CDATA[<h1 id="网络设备安全概况"><a href="#网络设备安全概况" class="headerlink" title="网络设备安全概况"></a>网络设备安全概况</h1><h2 id="交换机安全威胁"><a href="#交换机安全威胁" class="headerlink" title="交换机安全威胁"></a>交换机安全威胁</h2><p>面临威胁：</p>
+<ol>
+<li>MAC地址泛洪</li>
+<li>ARP欺骗</li>
+<li>口令威胁</li>
+<li>漏洞利用</li>
+</ol>
+<a id="more"></a>
+<h2 id="路由器安全威胁"><a href="#路由器安全威胁" class="headerlink" title="路由器安全威胁"></a>路由器安全威胁</h2><p>面临威胁：</p>
+<ol>
+<li>漏洞利用</li>
+<li>口令安全威胁</li>
+<li>路由协议安全威胁</li>
+<li>DoS/DDoS威胁</li>
+<li>依赖性威胁</li>
+</ol>
+<h1 id="网络设备安全机制与实现技术"><a href="#网络设备安全机制与实现技术" class="headerlink" title="网络设备安全机制与实现技术"></a>网络设备安全机制与实现技术</h1><h2 id="认证机制"><a href="#认证机制" class="headerlink" title="认证机制"></a>认证机制</h2><p>交换机、路由器等设置支持：</p>
+<ul>
+<li><p>TACACS+（Terminal Access Controller Access Control System）认证</p>
+<p><img src="/2020/09/28/%E7%AC%AC21%E7%AB%A0-%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8/TACACS+.jpg" style="zoom:50%;"></p>
+</li>
+<li><p>RADIUS（Remote Authentication Dial In User Service）认证</p>
+<p><img src="/2020/09/28/%E7%AC%AC21%E7%AB%A0-%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8/RADIUS.jpg" style="zoom:50%;"></p>
+</li>
+</ul>
+<h2 id="访问控制"><a href="#访问控制" class="headerlink" title="访问控制"></a>访问控制</h2><p>网络设备等访问分为：带外访问（不依赖网络）和带内访问（需要网络支持）</p>
+<p>访问方法：控制端口（Console Port）、辅助端口（AUX port）、VTY、HTTP、TFTP、SNMP</p>
+<ol>
+<li><p>Con端口访问：限制特定主机访问路由器</p>
+</li>
+<li><p>VTY访问控制：指定固定IP地址，并增加时间约束</p>
+</li>
+<li><p>HTTP访问控制：限制指定IP地址</p>
+</li>
+<li><p>SNMP访问控制</p>
+</li>
+<li><p>设置管理专网</p>
+<p>具体方法：</p>
+<ul>
+<li>将管理主机和路由器之间的全部通信进行加密，使用SSH替换Telnet</li>
+<li>在路由器设置包过滤规则，只运行管理主机远程访问路由器</li>
+</ul>
+</li>
+<li><p>特权分级</p>
+</li>
+</ol>
+<p><strong>以上配置命令见P453-P456</strong></p>
+<h2 id="信息加密"><a href="#信息加密" class="headerlink" title="信息加密"></a>信息加密</h2><p>启用service password-encryption配置</p>
+<h2 id="安全通信"><a href="#安全通信" class="headerlink" title="安全通信"></a>安全通信</h2><p>两种方式：</p>
+<ol>
+<li><p>SSH</p>
+<p>配置步骤</p>
+<p>（1）使用hostname指定设备名称</p>
+<p>（2）使用ip domain-name配置设备域</p>
+<p>（3）使用crypto key generate rsa生成RSA加密密钥。最小1024位</p>
+<p>（4）使用ip ssh设置SSH访问</p>
+<p>（5）使用transport input命令配置使用SSH，见P457</p>
+</li>
+<li><p>IPSec VPN</p>
+<p><img src="/2020/09/28/%E7%AC%AC21%E7%AB%A0-%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8/IPsec配置过程.jpg" style="zoom:50%;"></p>
+<h2 id="日志审计"><a href="#日志审计" class="headerlink" title="日志审计"></a>日志审计</h2></li>
+</ol>
+<p>网络设备提供控制台日志审计、缓冲区日志审计、终端审计、SNMP traps、AAA审计、Syslog审计</p>
+<h2 id="安全增强"><a href="#安全增强" class="headerlink" title="安全增强"></a>安全增强</h2><ol>
+<li><p>关闭非安全的网络服务及功能</p>
+</li>
+<li><p>信息过滤：命令见P459</p>
+</li>
+<li><p>协议认证</p>
+<p>安全措施：</p>
+<ul>
+<li>启用OSPF路由协议的认证：命令见P460</li>
+<li>RIP协议的认证：命令见P460</li>
+<li>启用IP Unicast Reverse-Path Verification：命令见P461</li>
+</ul>
+</li>
+</ol>
+<h2 id="物理安全"><a href="#物理安全" class="headerlink" title="物理安全"></a>物理安全</h2><p>策略：</p>
+<ul>
+<li>指定授权人安装、卸载和移动网络设备</li>
+<li>指定授权人进行维护以及改变网络设备的物理设备</li>
+<li>指定授权人进行网络设备的物理连接</li>
+<li>指定授权人进行网络设备的控制台使用以及其他的直接访问端口连接</li>
+<li>明确网络设备受到物理顺坏时的恢复过程或者出现网络设备被篡改配置后的恢复过程</li>
+</ul>
+<h1 id="网络设备安全增强技术方法"><a href="#网络设备安全增强技术方法" class="headerlink" title="网络设备安全增强技术方法"></a>网络设备安全增强技术方法</h1><h2 id="交换机安全增强技术方法"><a href="#交换机安全增强技术方法" class="headerlink" title="交换机安全增强技术方法"></a>交换机安全增强技术方法</h2><ol>
+<li><p>配置交换机访问口令和ACL，限制安全登录</p>
+<p>交换机的安全访问控制分为两级：通过控制用户的连接实现；通过用户口令认证实现</p>
+</li>
+<li><p>利用镜像技术检测网络流量</p>
+</li>
+<li><p>MAC地址控制技术</p>
+<ul>
+<li>设置最多可学习到的MAC地址数</li>
+<li>设置系统MAC地址老化时间</li>
+</ul>
+</li>
+<li><p>安全增强</p>
+<p>主要方法：关闭交换机不必要的网络服务、限制安全远程访问、限制控制台的访问、启动登录安全检查、安全审计</p>
+<p><strong>以思科交换机位例，命令见P463-P465</strong></p>
+</li>
+</ol>
+<h2 id="路由器安全增强技术方法（命令见P466-P469）"><a href="#路由器安全增强技术方法（命令见P466-P469）" class="headerlink" title="路由器安全增强技术方法（命令见P466-P469）"></a>路由器安全增强技术方法（命令见P466-P469）</h2><ol>
+<li><p>及时升级操作系统和打补丁</p>
+</li>
+<li><p>关闭不需要的网络服务</p>
+<p>操作方法</p>
+<ul>
+<li>禁止CDP</li>
+<li>禁止其他的TCP、UDP Small服务</li>
+<li>禁止Finger服务</li>
+<li>禁止HTTP服务</li>
+<li>禁止BOOTP服务</li>
+<li>禁止从网络启动和自动从网络下载初始配置文件</li>
+<li>禁止ARP-Proxy服务</li>
+<li>明确地禁止IP Directed Broadcast</li>
+<li>禁止IP Classless</li>
+<li>禁止ICMP协议的IP Unreachables、Redirects、Mask Replies</li>
+<li>禁止SNMP协议服务</li>
+<li>禁止WINS和DNS服务</li>
+</ul>
+</li>
+<li><p>明确禁止不使用的端口</p>
+</li>
+<li><p>禁止IP直接广播和源路由</p>
+</li>
+<li><p>增强路由器VTY安全</p>
+</li>
+<li><p>阻断恶意数据包</p>
+<p>常见恶意数据包类型：</p>
+<ul>
+<li>源地址声称来自内部网</li>
+<li>loopback数据包</li>
+<li>ICMP重定向</li>
+<li>广播包</li>
+<li>源地址和目标地址相同</li>
+</ul>
+</li>
+<li><p>路由器口令安全</p>
+</li>
+<li><p>传输加密</p>
+</li>
+<li><p>增强路由器SNMP的安全</p>
+</li>
+</ol>
+<h1 id="网络设备常见漏洞与解决方法"><a href="#网络设备常见漏洞与解决方法" class="headerlink" title="网络设备常见漏洞与解决方法"></a>网络设备常见漏洞与解决方法</h1><h2 id="网络设备常见漏洞"><a href="#网络设备常见漏洞" class="headerlink" title="网络设备常见漏洞"></a>网络设备常见漏洞</h2><ol>
+<li>拒绝服务漏洞</li>
+<li>跨站伪造请求CSRF</li>
+<li>格式化字符串漏洞</li>
+<li>XSS</li>
+<li>旁路</li>
+<li>代码执行</li>
+<li>溢出</li>
+<li>内存破坏</li>
+</ol>
+<h2 id="网络设备漏洞解决方法"><a href="#网络设备漏洞解决方法" class="headerlink" title="网络设备漏洞解决方法"></a>网络设备漏洞解决方法</h2><ol>
+<li><p>及时获取网络设备漏洞信息</p>
+</li>
+<li><p>网络设备漏洞扫描：端口扫描工具、通用漏洞扫描器、专用漏洞扫描器</p>
+</li>
+<li><p>网络设备漏洞修补</p>
+<p>处理方法：</p>
+<ul>
+<li>修改配置文件</li>
+<li>安全漏洞利用限制</li>
+<li>服务替换</li>
+<li>软件包升级</li>
+</ul>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
 </search>
