@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-09-28T04:06:19.265Z</updated>
+  <updated>2020-09-28T08:31:02.539Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>第22章 网站安全需求分析与安全保护工程</title>
+    <link href="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/"/>
+    <id>https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/</id>
+    <published>2020-09-28T06:25:58.000Z</published>
+    <updated>2020-09-28T08:31:02.539Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="网站安全威胁与需求分析"><a href="#网站安全威胁与需求分析" class="headerlink" title="网站安全威胁与需求分析"></a>网站安全威胁与需求分析</h1><p>网站安全主要是：机密性、完整性、可用性及可控性</p><h2 id="网站安全分析"><a href="#网站安全分析" class="headerlink" title="网站安全分析"></a>网站安全分析</h2><p>主要威胁：</p><ol><li><p>非授权访问</p></li><li><p>网页篡改</p></li><li><p>数据泄露</p></li><li><p>恶意代码</p><a id="more"></a></li><li><p>网站假冒</p></li><li><p>拒绝服务</p></li><li><p>网站后台管理安全威胁</p><p>常见问题：</p><ul><li>网站管理员身份及密码被窃取</li><li>后台管理网页存在安全漏洞</li><li>内部管理权限分配不合理</li></ul></li></ol><h2 id="网站安全需求"><a href="#网站安全需求" class="headerlink" title="网站安全需求"></a>网站安全需求</h2><p>包括：网络环境、网络通信、操作系统、数据库、应用服务器、Web服务软件、Web应用程序、数据等安全威胁防护</p><h1 id="Apache-Web安全分析与增强"><a href="#Apache-Web安全分析与增强" class="headerlink" title="Apache Web安全分析与增强"></a>Apache Web安全分析与增强</h1><h2 id="Apache-Web概述"><a href="#Apache-Web概述" class="headerlink" title="Apache Web概述"></a>Apache Web概述</h2><p>Apache Httpd配置文件如下：</p><ol><li>httpd.conf：设定Apache服务器一般的属性、端口、执行者身份</li><li>conf/srm.conf：数据配置文件</li><li>conf/access.conf：负责基本的读取文件控制</li><li>conf/mime.conf：设定Apache所能辨别的MIME格式</li></ol><h2 id="Apache-Web安全分析"><a href="#Apache-Web安全分析" class="headerlink" title="Apache Web安全分析"></a>Apache Web安全分析</h2><p>面临威胁：</p><ul><li>Apache Web软件程序威胁</li><li>Apache Web软件配置威胁</li><li>Apache Web安全机制威胁</li><li>Apache Web应用程序威胁</li><li>Apache Web服务通信威胁</li><li>Apache Web服务内容威胁</li><li>Apache Web服务器拒绝服务威胁</li></ul><h2 id="Apache-Web安全机制"><a href="#Apache-Web安全机制" class="headerlink" title="Apache Web安全机制"></a>Apache Web安全机制</h2><ol><li><p>Apache Web本地文件安全</p></li><li><p>Apache Web模块管理机制</p></li><li><p>Apache Web认证机制</p><p>对/user/local/apache/htdocs/secret目录进行访问控制详见P478</p></li><li><p>连接耗尽应对机制</p><p>解决办法：</p><ul><li>减少Apache超时（Timeout）设置、增大MaxClients设置</li><li>限制同一IP的最大连接数</li><li>多线程下载保护机制</li></ul></li><li><p>Apache Web自带的访问机制</p></li><li><p>Apache Web审计和日志：access.log和error.log</p></li><li><p>Apache Web服务器防范DoS</p></li></ol><h2 id="Apache-Web安全增强"><a href="#Apache-Web安全增强" class="headerlink" title="Apache Web安全增强"></a>Apache Web安全增强</h2><p>措施：</p><ol><li><p>及时安装Apache Web补丁</p></li><li><p>启用.htaccess文件保护网页</p></li><li><p>为Apache Web服务软件设置专门的用户和组</p></li><li><p>隐藏Apache Web软件的版本号</p></li><li><p>Apache Web目录访问安全增强</p><ul><li>设定禁止使用目录索引文件</li><li>禁止默认访问</li><li>禁止用户重载</li></ul></li><li><p>Apache Web文件目录保护</p><p>最佳安全实践：</p><ul><li>ServerRoot保存配置文件（conf子目录）、二进制文件和其他服务器配置文件</li><li>DocumentRoot保存Web站点的内容，包括HTML文件和图片等</li><li>Apache服务CGI目录的属主和权限设置555</li><li>Apache服务器执行目录的属主和权限设置550</li><li>Apache服务器日志目录的属主和权限设置664</li></ul><p>详细命令见P482</p></li><li><p>删除Apache Web默认目录或不必要的文件</p><p>需要删除的文件：</p><ul><li>Apache源代码文件</li><li>默认HTML文件</li><li>CGI程序样例</li><li>默认用户文件</li></ul></li><li><p>使用第三方软件安全增强Apache Web服务</p><ul><li>构建Apache Web服务器“安全沙箱”</li><li>使用OpenSSL增强Apache Web安全通信</li><li>增强Apache Web服务器访问控制</li></ul></li></ol><h1 id="IIS安全分析与增强"><a href="#IIS安全分析与增强" class="headerlink" title="IIS安全分析与增强"></a>IIS安全分析与增强</h1><h2 id="IIS概述"><a href="#IIS概述" class="headerlink" title="IIS概述"></a>IIS概述</h2><p>IIS处理HTTP请求的步骤：</p><ol><li>HTTP.sys接收到客户的HTTP请求</li><li>HTTP.sys联系WAS（Windows Process Activation Service），从配置库中获取信息</li><li>WAS从配置库applicationHost.config中请求配置信息</li><li>WWW Service接收配置信息，例如应用池和站点配置</li><li>WWW Service使用这些配置信息设置HTTP.sys</li><li>WAS针对请求，为应用池启动工作进程</li><li>工作进程处理请求和返回HTTP.sys的响应</li><li>客户接收到响应</li></ol><h2 id="IIS安全分析"><a href="#IIS安全分析" class="headerlink" title="IIS安全分析"></a>IIS安全分析</h2><p>典型威胁：</p><ul><li>非授权访问</li><li>网络蠕虫</li><li>网页篡改</li><li>拒绝服务</li><li>IIS软件漏洞</li></ul><h2 id="IIS安全机制"><a href="#IIS安全机制" class="headerlink" title="IIS安全机制"></a>IIS安全机制</h2><ol><li><p>IIS认证机制</p><p>认证方式：</p><ul><li>匿名认证</li><li>基本验证</li><li>证书认证</li><li>数字签名认证</li><li>IIS证书认证</li><li>Windows认证</li></ul></li><li><p>IIS访问控制</p><p>访问控制措施：请求过滤、URL授权控制、IP地址限制、文件授权</p><p>IIS访问控制流程：</p><p><img src="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/IIS访问控制流程.jpg" style="zoom:50%;"></p></li><li><p>IIS日志审计</p></li></ol><h2 id="IIS安全增强"><a href="#IIS安全增强" class="headerlink" title="IIS安全增强"></a>IIS安全增强</h2><p>IIS安全增强措施：</p><ol><li>及时安装IIS补丁</li><li>启用动态IP限制</li><li>启用URLScan</li><li>启用IIS Web应用防火墙</li><li>启用SSL服务</li></ol><h1 id="Web应用漏洞分析与防护"><a href="#Web应用漏洞分析与防护" class="headerlink" title="Web应用漏洞分析与防护"></a>Web应用漏洞分析与防护</h1><h2 id="OWASP-Top-10"><a href="#OWASP-Top-10" class="headerlink" title="OWASP Top 10"></a>OWASP Top 10</h2><ol><li>A1-注入漏洞</li><li>A2-遭受破坏的认证</li><li>A3-敏感数据暴露漏洞</li><li>A4-XML外部实体引用漏洞</li><li>A5-受损害的访问控制漏洞</li><li>A6-安全配置错误</li><li>A7-跨站脚本漏洞</li><li>A8-非安全反序列化漏洞</li><li>A9-使用含有已知漏洞的组件</li><li>A10-非充分的日志记录和监控</li></ol><h2 id="Web应用漏洞防护"><a href="#Web应用漏洞防护" class="headerlink" title="Web应用漏洞防护"></a>Web应用漏洞防护</h2><ol><li><p>SQL注入漏洞分析与防护</p><ul><li>对应用程序输入进行安全过滤</li><li>设置应用程序最小化权限</li><li>屏蔽应用程序错误提示信息</li><li>对开源Web应用程序做安全适应性改造</li></ul></li><li><p>文件上传漏洞分析与防护</p><p>防护措施：</p><ul><li>将上传目录设置为不可执行，避免上传文件远程触发执行</li><li>检查上传文件的安全性，阻断恶意文件上传</li></ul></li><li><p>跨站脚本攻击</p><p>典型的攻击方式：</p><ul><li>HTML内容替换</li><li>嵌入脚本内容</li><li>强制网页加载外部脚本</li></ul></li></ol><h1 id="网站安全保护机制与技术方案"><a href="#网站安全保护机制与技术方案" class="headerlink" title="网站安全保护机制与技术方案"></a>网站安全保护机制与技术方案</h1><h2 id="网站安全保护机制"><a href="#网站安全保护机制" class="headerlink" title="网站安全保护机制"></a>网站安全保护机制</h2><ol><li>身份鉴别：用户名/口令、U盾、人脸识别以及基于证书的统一用户身份管理</li><li>访问控制</li><li>网站内容安全：网站文字内容安全检查、网页防篡改、敏感词汇过滤</li><li>网站数据安全：用户数据隔离、数据加密、SSL、数据备份以及隐私保护</li><li>网站安全防护</li><li>网站安全审计与监控</li><li>网站应急响应：网页防篡改、网站域名服务灾备、网络流量清洗、灾备中心、网络攻击取证</li><li>网站合规管理：网站备案、网站防伪标识、网站等保测评</li><li>网站安全测评：漏洞扫描、渗透测试、代码审核、风险分析</li><li>网站安全管理机制：网站安全保障工作的总体方针和安全策略，建立网站建设、网站运维、网站内容、网站域名、网站应急预案等方面的安全管理制度</li></ol><h2 id="网站构成组件安全加固"><a href="#网站构成组件安全加固" class="headerlink" title="网站构成组件安全加固"></a>网站构成组件安全加固</h2><p>安全加固方面：</p><ul><li>操作系统安全加固</li><li>数据库系统安全加固</li><li>Web服务器软件安全加固</li><li>Web应用程序安全加固</li><li>Web通信安全加固</li><li>网站域名服务安全加固</li><li>网站后台管理安全加固</li></ul><h2 id="网站攻击防护及安全监测"><a href="#网站攻击防护及安全监测" class="headerlink" title="网站攻击防护及安全监测"></a>网站攻击防护及安全监测</h2><ol><li><p>防火墙</p></li><li><p>漏洞扫描</p></li><li><p>网站防篡改</p><p>实现技术：</p><ul><li>利用操作系统的文件调用事件来检测网页文件的完整性变化</li><li>利用密码学的单向函数检测</li></ul></li><li><p>网络流量清洗</p></li><li><p>网站安全监测</p><p>主要内容：</p><ul><li>网站安全漏洞监测</li><li>网站挂马监测</li><li>网站ICP备案监测</li><li>网站合规性监测</li><li>网站性能监测</li><li>网站DNS监测</li><li>网站入侵检测</li></ul></li></ol><h1 id="网站安全综合应用案例分析"><a href="#网站安全综合应用案例分析" class="headerlink" title="网站安全综合应用案例分析"></a>网站安全综合应用案例分析</h1><p>政务网站安全保护、网上银行安全保护详见P499-P501</p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;网站安全威胁与需求分析&quot;&gt;&lt;a href=&quot;#网站安全威胁与需求分析&quot; class=&quot;headerlink&quot; title=&quot;网站安全威胁与需求分析&quot;&gt;&lt;/a&gt;网站安全威胁与需求分析&lt;/h1&gt;&lt;p&gt;网站安全主要是：机密性、完整性、可用性及可控性&lt;/p&gt;
+&lt;h2 id=&quot;网站安全分析&quot;&gt;&lt;a href=&quot;#网站安全分析&quot; class=&quot;headerlink&quot; title=&quot;网站安全分析&quot;&gt;&lt;/a&gt;网站安全分析&lt;/h2&gt;&lt;p&gt;主要威胁：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;非授权访问&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;网页篡改&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;数据泄露&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;恶意代码&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;</summary>
+    
+    
+    
+    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
+    
+    
+    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>第21章 网络设备安全</title>
@@ -485,28 +515,6 @@
     
     
     <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hexo及next主题使用问题记录</title>
-    <link href="https://fl4g.cn/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
-    <id>https://fl4g.cn/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</id>
-    <published>2020-09-11T11:53:00.000Z</published>
-    <updated>2020-09-15T09:58:14.836Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p><p>使用版本：hexo 5.1&amp;&amp;next 7.8</p><a id="more"></a><h1 id="问题一："><a href="#问题一：" class="headerlink" title="问题一："></a>问题一：</h1><p>点击“阅读全文”后，会直接滚动到原文中\<!-- more -->下，且config里面没有scroll_to_more配置，如何从头开始阅读。</p><p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p><p>修改\themes\next\layout_macro\post.swig中</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure><p>为</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure><h1 id="问题二："><a href="#问题二：" class="headerlink" title="问题二："></a>问题二：</h1><p>markdown语法嵌入数学公式无法正常显示</p><p>参考<a href="https://www.jianshu.com/p/7ab21c7f0674">在Hexo中渲染MathJax数学公式</a></p><p>更换渲染引擎：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure><p>更改node_modules\kramed\lib\rules\inline.js文件中第11行和第20行</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  escape: /^\\([\\`*&#123;&#125;\[\]()#$+\-.!_&gt;])/,</span></span><br><span class="line">  <span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()#$+\-.!_&gt;])/</span>，</span><br></pre></td></tr></table></figure><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span></span><br><span class="line">  em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure><p>在主题中配置文件中开启mathjax开关</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line">mathjax:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  per_page: <span class="literal">true</span></span><br></pre></td></tr></table></figure><p>还需要在文章的Front-matter里打开mathjax开关</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2016-12-28 21:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;&lt;strong&gt;不定期更新各类使用过程中遇到的问题&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;使用版本：hexo 5.1&amp;amp;&amp;amp;next 7.8&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="hexo" scheme="https://fl4g.cn/categories/hexo/"/>
-    
-    
-    <category term="next" scheme="https://fl4g.cn/tags/next/"/>
     
   </entry>
   

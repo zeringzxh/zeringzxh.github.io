@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>URL去重去似</title>
+    <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
+    <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
+<ul>
+<li>布隆过滤器去重</li>
+<li><p>Hash表去重</p>
+<a id="more"></a>
+<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
+<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
+<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
+<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
+</ol>
+<p>python有两个第三方插件实现了此功能：</p>
+<ul>
+<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
+<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
+</ul>
+<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
+<p>布隆过滤器存在一定的误判率。</p>
+<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
+<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
+<ul>
+<li>btree：树结构，存储任意复杂key和value</li>
+<li>hash：hash存储，访问量巨大时，效果好</li>
+<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
+<li>recno：与queue相似，但支持边长value</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
+<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
+</li>
+</ul>
+<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
+<ul>
+<li>协议相同（protocol）</li>
+<li>主机名相同（host）</li>
+<li>端口相同（port）</li>
+<li>资源路劲相同（path）</li>
+<li>参数名所组成列表相同或包含</li>
+</ul>
+<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>python学习-argparse模块</title>
     <url>/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<p>  argparse模块是python中用于解析命令行参数和选项的标准模块，方便用户在命令行中输入参数。</p>
@@ -66,61 +121,6 @@
       </categories>
       <tags>
         <tag>argparse</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>URL去重去似</title>
-    <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
-    <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
-<ul>
-<li>布隆过滤器去重</li>
-<li><p>Hash表去重</p>
-<a id="more"></a>
-<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
-<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
-<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
-<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
-</ol>
-<p>python有两个第三方插件实现了此功能：</p>
-<ul>
-<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
-<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
-</ul>
-<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
-<p>布隆过滤器存在一定的误判率。</p>
-<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
-<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
-<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
-<ul>
-<li>btree：树结构，存储任意复杂key和value</li>
-<li>hash：hash存储，访问量巨大时，效果好</li>
-<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
-<li>recno：与queue相似，但支持边长value</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
-<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
-</li>
-</ul>
-<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
-<ul>
-<li>协议相同（protocol）</li>
-<li>主机名相同（host）</li>
-<li>端口相同（port）</li>
-<li>资源路劲相同（path）</li>
-<li>参数名所组成列表相同或包含</li>
-</ul>
-<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -387,45 +387,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PhEmail:邮件钓鱼测试工具实际使用踩过的坑</title>
-    <url>/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</url>
-    <content><![CDATA[<h2 id="PhEmail简介"><a href="#PhEmail简介" class="headerlink" title="PhEmail简介"></a>PhEmail简介</h2><p>PhEmail是基于python编写的一款网络钓鱼邮件测试工具。PhEmail可以同时向多个用户发送钓鱼邮件，并记录点击的用户的邮箱和IP等信息。PhEmail可以通过Google收集邮箱，完成邮箱收集工作。该工具可以用于公司内部邮箱钓鱼测试，可结合beef使用。</p>
-<p><strong>PhEmail项目主页：</strong><br><a href="https://github.com/Dionach/PhEmail">PhEmail钓鱼邮件工具</a><br><a id="more"></a></p>
-<h2 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h2><h3 id="PhEmail帮助"><a href="#PhEmail帮助" class="headerlink" title="PhEmail帮助"></a>PhEmail帮助</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">PHishing EMAIL tool v0<span class="number">.13</span></span><br><span class="line">Usage: phemail.py [-e &lt;emails&gt;] [-m &lt;mail_server&gt;] [-f &lt;from_address&gt;] [-r &lt;replay_address&gt;] [-s &lt;subject&gt;] [-b &lt;body&gt;]</span><br><span class="line">          -e    emails: File containing list of emails (Default: emails.txt)</span><br><span class="line">          -f    from_address: Source email address displayed <span class="keyword">in</span> FROM field of the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -r    reply_address: Actual email address used to send the emails <span class="keyword">in</span> case that people reply to the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -s    subject: Subject of the email (Default: Newsletter)</span><br><span class="line">          -b    body: Body of the email (Default: body.txt)</span><br><span class="line">          -p    pages: Specifies number of results pages searched (Default: <span class="number">10</span> pages)</span><br><span class="line">          -v    verbose: Verbose Mode (Default: false)</span><br><span class="line">          -l    layout: Send email <span class="keyword">with</span> no embedded pictures</span><br><span class="line">          -B    BeEF: Add the hook <span class="keyword">for</span> BeEF</span><br><span class="line">          -m    mail_server: SMTP mail server to connect to</span><br><span class="line">          -g    Google: Use a google account username:password</span><br><span class="line">          -t    Time delay: Add deleay between each email (Default: <span class="number">3</span> sec)</span><br><span class="line">          -L    webserverLog: Customise the name of the webserver log file (Default: Date time <span class="keyword">in</span> format <span class="string">&quot;%d_%m_%Y_%H_%M&quot;</span>)</span><br><span class="line">          -S    Search: query on Google</span><br><span class="line">          -d    domain: of email addresses</span><br><span class="line">          -n    number: of emails per connection (Default: <span class="number">10</span> emails)</span><br><span class="line">          -c    clone: Clone a web page</span><br><span class="line">          -w    website: where the phishing email link points to</span><br><span class="line">          -o    save output <span class="keyword">in</span> a file</span><br><span class="line">          -F    Format (Default: <span class="number">0</span>):</span><br><span class="line">                <span class="number">0</span>- firstname surname</span><br><span class="line">                <span class="number">1</span>- firstname.surname@example.com</span><br><span class="line">                <span class="number">2</span>- firstnamesurname@example.com</span><br><span class="line">                <span class="number">3</span>- f.surname@example.com</span><br><span class="line">                <span class="number">4</span>- firstname.s@example.com</span><br><span class="line">                <span class="number">5</span>- surname.firstname@example.com</span><br><span class="line">                <span class="number">6</span>- s.firstname@example.com</span><br><span class="line">                <span class="number">7</span>- surname.f@example.com</span><br><span class="line">                <span class="number">8</span>- surnamefirstname@example.com</span><br><span class="line">                <span class="number">9</span>- firstname_surname@example.com</span><br><span class="line"></span><br><span class="line">Examples: phemail.py -e emails.txt -f <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -r <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -s <span class="string">&quot;Subject&quot;</span> -b body.txt</span><br><span class="line">          phemail.py -S example -d example.com -F <span class="number">1</span> -p <span class="number">12</span></span><br><span class="line">          phemail.py -c https://example.com</span><br></pre></td></tr></table></figure>
-<p>收集邮箱后钓鱼邮件发送常用参数：</p>
-<ul>
-<li>-e 收件人邮箱列表（列表内邮箱必须为同一域名）</li>
-<li>-f 发件人邮箱地址（伪造的邮箱不能与收件人邮箱在同一域名下）</li>
-<li>-r 收件人回复邮件时的接收邮箱，可采用临时邮箱</li>
-<li>-s 伪造的邮件主题</li>
-<li>-b 伪造的邮件内容文件，采用html编码，模板中采用href=”{0}”来代替url地址</li>
-<li>-w 钓鱼网站url地址，发送后会自动添加index.php?email=等内容</li>
-</ul>
-<h3 id="记录邮箱的方式"><a href="#记录邮箱的方式" class="headerlink" title="记录邮箱的方式"></a>记录邮箱的方式</h3><p>钓鱼邮件中的url链接伪造时添加email地址并进行编码，通过钓鱼网站中php文件代码来识别email并记录log文件中。php可以进行重定向到其他网站。</p>
-<h2 id="实际使用需要修改的地方"><a href="#实际使用需要修改的地方" class="headerlink" title="实际使用需要修改的地方"></a>实际使用需要修改的地方</h2><h3 id="BeautifulSoup问题"><a href="#BeautifulSoup问题" class="headerlink" title="BeautifulSoup问题"></a>BeautifulSoup问题</h3><p>安装BeautifulSoup后，运行程序时会报BeautifulSoup问题。</p>
-<ol>
-<li>可以将源代码中如下位置的注释切换<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/beautifulsoup4.PNG" alt><br>修改为如下：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">    <span class="comment">#from bs4 import BeautifulSoup</span></span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">&quot;No BeautifulSoup installed&quot;</span></span><br></pre></td></tr></table></figure></li>
-<li>不修改注释，将所有调用BeautufulSoup的函数的<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx)</span><br></pre></td></tr></table></figure>
-修改为：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx,<span class="string">&#x27;lxml&#x27;</span>)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="中文乱码"><a href="#中文乱码" class="headerlink" title="中文乱码"></a>中文乱码</h3><p>邮件在使用中文时出现中文乱码，需要修改phemail.py内容进行调整。</p>
-<h4 id="邮件标题乱码"><a href="#邮件标题乱码" class="headerlink" title="邮件标题乱码"></a>邮件标题乱码</h4><p>在导入包时添加如下内容<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf8&#x27;</span>)</span><br></pre></td></tr></table></figure><br>对邮件标题进行unicode编码，在发送邮件时添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> isinstance(SUBJECT):</span><br><span class="line">      SUBJECT = unicode(SUBJECT,unicode)</span><br><span class="line">msg[<span class="string">&#x27;subject&#x27;</span>] = SUBJECT</span><br></pre></td></tr></table></figure></p>
-<h4 id="邮件内容乱码"><a href="#邮件内容乱码" class="headerlink" title="邮件内容乱码"></a>邮件内容乱码</h4><p>添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msg[<span class="string">&quot;Accept-Language&quot;</span>]=<span class="string">&quot;zh-CN&quot;</span></span><br><span class="line">msg[<span class="string">&quot;Accept-Charset&quot;</span>]=<span class="string">&quot;ISO-8859-1,utf-8&quot;</span></span><br></pre></td></tr></table></figure><br>并将<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>))</span><br></pre></td></tr></table></figure><br>修改为<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>))</span><br></pre></td></tr></table></figure></p>
-<h3 id="index-php内容修改"><a href="#index-php内容修改" class="headerlink" title="index.php内容修改"></a>index.php内容修改</h3><h4 id="修改域名"><a href="#修改域名" class="headerlink" title="修改域名"></a>修改域名</h4><p>修改位置在index.php中有提示：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/change_domain.PNG" alt><br>将其中的dionach.com修改为收件人邮箱的域名。</p>
-<h4 id="修改重定向"><a href="#修改重定向" class="headerlink" title="修改重定向"></a>修改重定向</h4><p>在index.php末尾存在重定向方法，可以将此url改为你想要重定向的url，如www.baidu.com<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/重定向.PNG" alt></p>
-<h4 id="修改记录log文件保存位置"><a href="#修改记录log文件保存位置" class="headerlink" title="修改记录log文件保存位置"></a>修改记录log文件保存位置</h4><p>index.php中将log文件保存在/tmp目录中，若使用windows搭建网站服务，则不存在/tmp目录,直接将log文件保存在当前目录，删除下面代码中的”/tmp/“<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log文件位置.PNG" alt></p>
-<h2 id="整理log日志"><a href="#整理log日志" class="headerlink" title="整理log日志"></a>整理log日志</h2><p>若收件人点击后php获取了如下一系列信息：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log信息.PNG" alt><br>若存在多个文件，并想提取其中的email地址，并去重，于是写了一个小脚本进行提取email去重：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#-*- conding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">regex = <span class="string">r&quot;([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)&quot;</span></span><br><span class="line"></span><br><span class="line">filepth = sys.argv[<span class="number">1</span>]</span><br><span class="line">file = os.listdir(filepth)</span><br><span class="line">allinemail = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> file:</span><br><span class="line">    <span class="keyword">with</span> open(filepth+filename,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        emails = re.findall(regex,f.read())</span><br><span class="line">        allemail = list(set(emails))</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> allemail:</span><br><span class="line">            <span class="keyword">if</span> e <span class="keyword">not</span> <span class="keyword">in</span> allinemail:</span><br><span class="line">                allinemail.append(e)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;email_result.txt&#x27;</span>,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> w:</span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> allinemail:</span><br><span class="line">        w.write(email+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">w.close()</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>工具使用</category>
-      </categories>
-      <tags>
-        <tag>PhEmail</tag>
-        <tag>邮件钓鱼</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hexo博客迁移到其他电脑</title>
     <url>/2018/08/03/Hexo%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E5%88%B0%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91/</url>
     <content><![CDATA[<h2 id="备份原文件"><a href="#备份原文件" class="headerlink" title="备份原文件"></a>备份原文件</h2><p>需要转移的文件有：</p>
@@ -517,6 +478,45 @@
       </categories>
       <tags>
         <tag>博客迁移</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PhEmail:邮件钓鱼测试工具实际使用踩过的坑</title>
+    <url>/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</url>
+    <content><![CDATA[<h2 id="PhEmail简介"><a href="#PhEmail简介" class="headerlink" title="PhEmail简介"></a>PhEmail简介</h2><p>PhEmail是基于python编写的一款网络钓鱼邮件测试工具。PhEmail可以同时向多个用户发送钓鱼邮件，并记录点击的用户的邮箱和IP等信息。PhEmail可以通过Google收集邮箱，完成邮箱收集工作。该工具可以用于公司内部邮箱钓鱼测试，可结合beef使用。</p>
+<p><strong>PhEmail项目主页：</strong><br><a href="https://github.com/Dionach/PhEmail">PhEmail钓鱼邮件工具</a><br><a id="more"></a></p>
+<h2 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h2><h3 id="PhEmail帮助"><a href="#PhEmail帮助" class="headerlink" title="PhEmail帮助"></a>PhEmail帮助</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">PHishing EMAIL tool v0<span class="number">.13</span></span><br><span class="line">Usage: phemail.py [-e &lt;emails&gt;] [-m &lt;mail_server&gt;] [-f &lt;from_address&gt;] [-r &lt;replay_address&gt;] [-s &lt;subject&gt;] [-b &lt;body&gt;]</span><br><span class="line">          -e    emails: File containing list of emails (Default: emails.txt)</span><br><span class="line">          -f    from_address: Source email address displayed <span class="keyword">in</span> FROM field of the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -r    reply_address: Actual email address used to send the emails <span class="keyword">in</span> case that people reply to the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -s    subject: Subject of the email (Default: Newsletter)</span><br><span class="line">          -b    body: Body of the email (Default: body.txt)</span><br><span class="line">          -p    pages: Specifies number of results pages searched (Default: <span class="number">10</span> pages)</span><br><span class="line">          -v    verbose: Verbose Mode (Default: false)</span><br><span class="line">          -l    layout: Send email <span class="keyword">with</span> no embedded pictures</span><br><span class="line">          -B    BeEF: Add the hook <span class="keyword">for</span> BeEF</span><br><span class="line">          -m    mail_server: SMTP mail server to connect to</span><br><span class="line">          -g    Google: Use a google account username:password</span><br><span class="line">          -t    Time delay: Add deleay between each email (Default: <span class="number">3</span> sec)</span><br><span class="line">          -L    webserverLog: Customise the name of the webserver log file (Default: Date time <span class="keyword">in</span> format <span class="string">&quot;%d_%m_%Y_%H_%M&quot;</span>)</span><br><span class="line">          -S    Search: query on Google</span><br><span class="line">          -d    domain: of email addresses</span><br><span class="line">          -n    number: of emails per connection (Default: <span class="number">10</span> emails)</span><br><span class="line">          -c    clone: Clone a web page</span><br><span class="line">          -w    website: where the phishing email link points to</span><br><span class="line">          -o    save output <span class="keyword">in</span> a file</span><br><span class="line">          -F    Format (Default: <span class="number">0</span>):</span><br><span class="line">                <span class="number">0</span>- firstname surname</span><br><span class="line">                <span class="number">1</span>- firstname.surname@example.com</span><br><span class="line">                <span class="number">2</span>- firstnamesurname@example.com</span><br><span class="line">                <span class="number">3</span>- f.surname@example.com</span><br><span class="line">                <span class="number">4</span>- firstname.s@example.com</span><br><span class="line">                <span class="number">5</span>- surname.firstname@example.com</span><br><span class="line">                <span class="number">6</span>- s.firstname@example.com</span><br><span class="line">                <span class="number">7</span>- surname.f@example.com</span><br><span class="line">                <span class="number">8</span>- surnamefirstname@example.com</span><br><span class="line">                <span class="number">9</span>- firstname_surname@example.com</span><br><span class="line"></span><br><span class="line">Examples: phemail.py -e emails.txt -f <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -r <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -s <span class="string">&quot;Subject&quot;</span> -b body.txt</span><br><span class="line">          phemail.py -S example -d example.com -F <span class="number">1</span> -p <span class="number">12</span></span><br><span class="line">          phemail.py -c https://example.com</span><br></pre></td></tr></table></figure>
+<p>收集邮箱后钓鱼邮件发送常用参数：</p>
+<ul>
+<li>-e 收件人邮箱列表（列表内邮箱必须为同一域名）</li>
+<li>-f 发件人邮箱地址（伪造的邮箱不能与收件人邮箱在同一域名下）</li>
+<li>-r 收件人回复邮件时的接收邮箱，可采用临时邮箱</li>
+<li>-s 伪造的邮件主题</li>
+<li>-b 伪造的邮件内容文件，采用html编码，模板中采用href=”{0}”来代替url地址</li>
+<li>-w 钓鱼网站url地址，发送后会自动添加index.php?email=等内容</li>
+</ul>
+<h3 id="记录邮箱的方式"><a href="#记录邮箱的方式" class="headerlink" title="记录邮箱的方式"></a>记录邮箱的方式</h3><p>钓鱼邮件中的url链接伪造时添加email地址并进行编码，通过钓鱼网站中php文件代码来识别email并记录log文件中。php可以进行重定向到其他网站。</p>
+<h2 id="实际使用需要修改的地方"><a href="#实际使用需要修改的地方" class="headerlink" title="实际使用需要修改的地方"></a>实际使用需要修改的地方</h2><h3 id="BeautifulSoup问题"><a href="#BeautifulSoup问题" class="headerlink" title="BeautifulSoup问题"></a>BeautifulSoup问题</h3><p>安装BeautifulSoup后，运行程序时会报BeautifulSoup问题。</p>
+<ol>
+<li>可以将源代码中如下位置的注释切换<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/beautifulsoup4.PNG" alt><br>修改为如下：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">    <span class="comment">#from bs4 import BeautifulSoup</span></span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">&quot;No BeautifulSoup installed&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li>不修改注释，将所有调用BeautufulSoup的函数的<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx)</span><br></pre></td></tr></table></figure>
+修改为：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx,<span class="string">&#x27;lxml&#x27;</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="中文乱码"><a href="#中文乱码" class="headerlink" title="中文乱码"></a>中文乱码</h3><p>邮件在使用中文时出现中文乱码，需要修改phemail.py内容进行调整。</p>
+<h4 id="邮件标题乱码"><a href="#邮件标题乱码" class="headerlink" title="邮件标题乱码"></a>邮件标题乱码</h4><p>在导入包时添加如下内容<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf8&#x27;</span>)</span><br></pre></td></tr></table></figure><br>对邮件标题进行unicode编码，在发送邮件时添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> isinstance(SUBJECT):</span><br><span class="line">      SUBJECT = unicode(SUBJECT,unicode)</span><br><span class="line">msg[<span class="string">&#x27;subject&#x27;</span>] = SUBJECT</span><br></pre></td></tr></table></figure></p>
+<h4 id="邮件内容乱码"><a href="#邮件内容乱码" class="headerlink" title="邮件内容乱码"></a>邮件内容乱码</h4><p>添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msg[<span class="string">&quot;Accept-Language&quot;</span>]=<span class="string">&quot;zh-CN&quot;</span></span><br><span class="line">msg[<span class="string">&quot;Accept-Charset&quot;</span>]=<span class="string">&quot;ISO-8859-1,utf-8&quot;</span></span><br></pre></td></tr></table></figure><br>并将<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>))</span><br></pre></td></tr></table></figure><br>修改为<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>))</span><br></pre></td></tr></table></figure></p>
+<h3 id="index-php内容修改"><a href="#index-php内容修改" class="headerlink" title="index.php内容修改"></a>index.php内容修改</h3><h4 id="修改域名"><a href="#修改域名" class="headerlink" title="修改域名"></a>修改域名</h4><p>修改位置在index.php中有提示：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/change_domain.PNG" alt><br>将其中的dionach.com修改为收件人邮箱的域名。</p>
+<h4 id="修改重定向"><a href="#修改重定向" class="headerlink" title="修改重定向"></a>修改重定向</h4><p>在index.php末尾存在重定向方法，可以将此url改为你想要重定向的url，如www.baidu.com<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/重定向.PNG" alt></p>
+<h4 id="修改记录log文件保存位置"><a href="#修改记录log文件保存位置" class="headerlink" title="修改记录log文件保存位置"></a>修改记录log文件保存位置</h4><p>index.php中将log文件保存在/tmp目录中，若使用windows搭建网站服务，则不存在/tmp目录,直接将log文件保存在当前目录，删除下面代码中的”/tmp/“<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log文件位置.PNG" alt></p>
+<h2 id="整理log日志"><a href="#整理log日志" class="headerlink" title="整理log日志"></a>整理log日志</h2><p>若收件人点击后php获取了如下一系列信息：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log信息.PNG" alt><br>若存在多个文件，并想提取其中的email地址，并去重，于是写了一个小脚本进行提取email去重：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#-*- conding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">regex = <span class="string">r&quot;([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)&quot;</span></span><br><span class="line"></span><br><span class="line">filepth = sys.argv[<span class="number">1</span>]</span><br><span class="line">file = os.listdir(filepth)</span><br><span class="line">allinemail = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> file:</span><br><span class="line">    <span class="keyword">with</span> open(filepth+filename,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        emails = re.findall(regex,f.read())</span><br><span class="line">        allemail = list(set(emails))</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> allemail:</span><br><span class="line">            <span class="keyword">if</span> e <span class="keyword">not</span> <span class="keyword">in</span> allinemail:</span><br><span class="line">                allinemail.append(e)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;email_result.txt&#x27;</span>,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> w:</span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> allinemail:</span><br><span class="line">        w.write(email+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">w.close()</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>PhEmail</tag>
+        <tag>邮件钓鱼</tag>
       </tags>
   </entry>
   <entry>
@@ -767,6 +767,25 @@
       </tags>
   </entry>
   <entry>
+    <title>任意用户密码重置</title>
+    <url>/2019/04/28/%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/</url>
+    <content><![CDATA[<div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="" />
+    <label for="hbePass">输入密码，查看文章。</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="9c0f3a2c34d77fabfd872821a82785a27c129dd92d69ef33c38a22d4cf277bd8">a0c75c8d75e1ac906489f75c7391f8dab563c6e3d9d92740bc0fb5b4a1798c9104febd470a64ff880f0a2d482be0fc7316aae6a77a5d377943df79583b59baa51eea6c9f94f6553b9d6f616110eac7310a4f398ca6201d18dd937b7199259db0640de663c987714b8d01d8c3c74f31610813e7041821e7e9afcabc76f1a1d2936d3077a0b101939fb009637a5207bd37d304c03387372f2f3d049f798a7cec365d3e3a7514613789360b11d3f156a46fe27f14b20be432886c06e3592507f28395b113b60085f13b4b705679fa00d0b5e6843de9db97769d81282242b00a2ca582286b5794a129dbd8e4d2ea5e97b31d4c3e04992774dfeacfbfc9096104b1b24d05541a5a14274d93a93d60941288e142e72db3f57e33e140779c37dadb9ff76713c33eb05aa7aeb4984086ac0b98d39ffa9dac2e410404470201414af46f28fa5c54b46e737eed7606a1ded873e4bb668e0c7e3e43e9677d9b962afe4a7d135d93ab210803c6318e9485c4b6c22bae538d616ff518c5ef3b42c5f49f5a83564ad2ccba477b224f186621227fd684d1a586ed846708b01557238f3eaa5bd9d0667d2ebc19ca18795bfee55409f9c54f53a913b7a600d114bde93f0884f9f7eca7a12068958eea95988c73c6185b4f29b100ade7f1a99e415b2a605b8ca27c0e2a2c3717cc0198b8a7db0885b9d05b8040df53732e28e470db4e235b921424ac6fdfe2ad1d56776d74a34cf76478ea9d14844c81fab1e1b78531e4841a518cfd83dc25bef51beacc86fd43e983ba876ac3e6b163c797e264ca4cf8262a0207846f51c5c1dfc8c133184973ede3cdec8dd1ef8a19bfdf93e2c129117ab900f177d9bcf0dc936602e4dd043374811c8e31e742684ef2fe8e48a8a4edb9c1b3b2edce360505d7cb959c871dced051303e2d3ecd079885b7293e6dfa4ace667c428afdb7be706587e6d466c103118e1f8ab01dce1b86b658693958f5e532b23cf29a93e54adb45e35d43073801772cce0f8c9c5dcc2f2e86e3ba83eea397264a6ecfb4458c89b75d8ced724f3d0d9fa65084dfec021c083100b408777e33b7908914cc6b6484abb2cd10acc7cb7299d6a95775ba504abcc72a2c45aaa8bacd24f43ac65a17284450fb8a123486b48993cb0fd22c884a6f3bf845ae8aeda45aebb89106cb13b3374285e5e558bc9f80d32d2c25032271f8cd4b08d447d8c0c245c4ed352c4caa5ccf41bff4fbbf4143178923d67cf8e033891e11f7229a92842579f8c184689e3827dc75ce873d19b30f8d4b15698482cfb7de0a5ec24c28a2709af5b508629e3b9c52a8d3d8854ae3a40f697390880f486298ede4d60c94740d7d1a4e6bd73b0867ad4c6953133080ab72e729131104f2b51078a0e8a54bb4c5d4511d456e89dbf19571e4f147c27a09dbb0201b1bd6daf0d6b01856b198a79cc171bf6219034a5c0e640e71ba91f56579a62639666a4e157bb0dc053ad0ae4e6f36f4baa7b455e4d38a5c77b7722fe1ed9f4e34e203fb95c33fd9e494358d9379be2d0853f138876e8deec5abff06a696ee8dead3fa7ae08fc12f110c8e1402142a151eba4bb8a89cd691d37afa4653939d0585b5997727cc72394368a592fc3d87deff8df22d2e1fc4a949d1124b1e098608e7333d18005bfac8f7e533bf1e2ca4b027f05a2b6bb1f885b4b3502389abfbb8c615e898e216b7748de1cbf9bfd5fa103fd060634f7bd5910641be440cea668c39f6f9379fafd84e16ce8159fe3ddd5c264f1e4ef22b16c9836311e259ebc7d70cb7f307dc0e9864ae113928507859e9b3a5f1515599b55af7fcc2b66b13e54260a5ce379ec63cde65b2959d08af28532f8ed29d6f74b76affbf1b87231f3e620ba2a6f307fcc001bc21b7e796fe8c2537f7f3f24286790e233a7caeef5431eee1c0284e1b2ef6b35257439c4fbdfcdfcffdaf8cfbcb220bf262ea0e7730442afdc8f622ddb22e238294256d05225c7e494e50923cae332d0793194caca3131b3391fe40ab0a7b3df23285de4b713b6f8134442c1dad6859259fe548941885573ea72f6bddbf3c52decbbafa36bc4d0860c70dc21c962f2766a7e5da37fb72e8e006a0198cb480f2d809a89f44bed761178cd64734157917f39f74ec354ce5ee100f2316c25ed5718ce77e1ffb4d4580d22404c37a1b6f47dc0b72912ed7d404efde99b9ec910911a418440f537b229dc549b427371f7187addccdd1e85f8839e210efc16fcc5d2689259a2a008d849190a3e9073e9e04a4a3fb05a1597581fcb2a1f3e878564cefdf4f33afcb459685ffa522e36caa709176bbf4b4d0e9111d455d9432c5906d3967a44a8a53f63fdeb6c632c29b0602985a16ab5e0b736a1c196a7c52d323a1a6dfcca5756ac12f34401777787e4c6e5a9d0eb9cfbca26a62ff58627911fb49151f2342cb2f719dcac0c093435d3283d0d1e9638ddffccdb48a08f88f2bea5726422c41296e1ce20e9dfb652cad9ed5cd1446f7b8220fdcc0fb5a40c0f4eaadd431bb1e48bed022015c1c634844b566301ff3b6491d0133d846865a71d867a83384ff5138f1da5efcada07cffd93d80e1969c3855b9dc1066c66cf4eafb6f426219ab7dda0f56b7cc254d82e3a1d1d75a142dd5c9dbc95249b25d9ea7b9aefb0e55904325176e5b68f2fec76d9fde2a563bec2493af121e730dd13b79ebd7ed2e23fd994e2a30d9fe0c4b9dc6bbb715898d8085d15579d120a95d551735c697dac576515d6ca6f12460c2c70f9fdef1f395b96e50012d0e83edf435253e7e15ef08b0037d4ee973084d9f694a79e819125352ff4601158e3c74b3c49e195379e5b2d484e670efba60c2513dbcd6c1de1b9cd23de72ce2e7cece4701f7e3c6d947a10ae6441a7229e5157cab6c562b7a9726ff7f502e40aa33a2d0c559411c0933c49a7533bfcab17522d51aa76450ee7264876f0a6b15cedc0b5604b8544d253032e1f24e29361baf6b064abe14ecd47a34ab46893c2b7f4762472507d69d9dad735524f273901d4de8e8d860e0a41a5810d373c36347a78985b788ab1a432037a6e006362322acaff7cb0475a31996f483e71b4e768908c7bf1403b59e12f3a1d13edb7f1a9e67bcdbf7369e8aeb2cfee7937bf5b127fa2aa63b54c5594f56f92d82d97c4b0e8733f4ebafc5a767c38a6dd4f2c112f8efed495f01fb156842fef1fd950c2640921d29ff857badddde7e4311ed1926eb9dd8ae0d2fcaf2ec748a6454adb85990f387a15c91cba991bfea01e157941c9617</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>密码找回</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NSA逆向工具--Ghidra安装及漏洞修复</title>
     <url>/2019/03/07/NSA%E9%80%86%E5%90%91%E5%B7%A5%E5%85%B7-Ghidra%E5%AE%89%E8%A3%85%E5%8F%8A%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/</url>
     <content><![CDATA[<h1 id="0x01-简介"><a href="#0x01-简介" class="headerlink" title="0x01 简介"></a>0x01 简介</h1><p>2019年RSA安全大会上，美国国家安全局（NSA）公布了一款名叫Ghidra的逆向工程工具。Ghidra使用Java编写，具有图形界面，可在Windows，Mac和Linux上运行。</p>
@@ -798,25 +817,6 @@
       </categories>
       <tags>
         <tag>逆向</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>任意用户密码重置</title>
-    <url>/2019/04/28/%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/</url>
-    <content><![CDATA[<div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <div class="hbe-input-container">
-  <input type="password" id="hbePass" placeholder="" />
-    <label for="hbePass">输入密码，查看文章。</label>
-    <div class="bottom-line"></div>
-  </div>
-  <script id="hbeData" type="hbeData" data-hmacdigest="9c0f3a2c34d77fabfd872821a82785a27c129dd92d69ef33c38a22d4cf277bd8">a0c75c8d75e1ac906489f75c7391f8dab563c6e3d9d92740bc0fb5b4a1798c9104febd470a64ff880f0a2d482be0fc7316aae6a77a5d377943df79583b59baa51eea6c9f94f6553b9d6f616110eac7310a4f398ca6201d18dd937b7199259db0640de663c987714b8d01d8c3c74f31610813e7041821e7e9afcabc76f1a1d2936d3077a0b101939fb009637a5207bd37d304c03387372f2f3d049f798a7cec365d3e3a7514613789360b11d3f156a46fe27f14b20be432886c06e3592507f28395b113b60085f13b4b705679fa00d0b5e6843de9db97769d81282242b00a2ca582286b5794a129dbd8e4d2ea5e97b31d4c3e04992774dfeacfbfc9096104b1b24d05541a5a14274d93a93d60941288e142e72db3f57e33e140779c37dadb9ff76713c33eb05aa7aeb4984086ac0b98d39ffa9dac2e410404470201414af46f28fa5c54b46e737eed7606a1ded873e4bb668e0c7e3e43e9677d9b962afe4a7d135d93ab210803c6318e9485c4b6c22bae538d616ff518c5ef3b42c5f49f5a83564ad2ccba477b224f186621227fd684d1a586ed846708b01557238f3eaa5bd9d0667d2ebc19ca18795bfee55409f9c54f53a913b7a600d114bde93f0884f9f7eca7a12068958eea95988c73c6185b4f29b100ade7f1a99e415b2a605b8ca27c0e2a2c3717cc0198b8a7db0885b9d05b8040df53732e28e470db4e235b921424ac6fdfe2ad1d56776d74a34cf76478ea9d14844c81fab1e1b78531e4841a518cfd83dc25bef51beacc86fd43e983ba876ac3e6b163c797e264ca4cf8262a0207846f51c5c1dfc8c133184973ede3cdec8dd1ef8a19bfdf93e2c129117ab900f177d9bcf0dc936602e4dd043374811c8e31e742684ef2fe8e48a8a4edb9c1b3b2edce360505d7cb959c871dced051303e2d3ecd079885b7293e6dfa4ace667c428afdb7be706587e6d466c103118e1f8ab01dce1b86b658693958f5e532b23cf29a93e54adb45e35d43073801772cce0f8c9c5dcc2f2e86e3ba83eea397264a6ecfb4458c89b75d8ced724f3d0d9fa65084dfec021c083100b408777e33b7908914cc6b6484abb2cd10acc7cb7299d6a95775ba504abcc72a2c45aaa8bacd24f43ac65a17284450fb8a123486b48993cb0fd22c884a6f3bf845ae8aeda45aebb89106cb13b3374285e5e558bc9f80d32d2c25032271f8cd4b08d447d8c0c245c4ed352c4caa5ccf41bff4fbbf4143178923d67cf8e033891e11f7229a92842579f8c184689e3827dc75ce873d19b30f8d4b15698482cfb7de0a5ec24c28a2709af5b508629e3b9c52a8d3d8854ae3a40f697390880f486298ede4d60c94740d7d1a4e6bd73b0867ad4c6953133080ab72e729131104f2b51078a0e8a54bb4c5d4511d456e89dbf19571e4f147c27a09dbb0201b1bd6daf0d6b01856b198a79cc171bf6219034a5c0e640e71ba91f56579a62639666a4e157bb0dc053ad0ae4e6f36f4baa7b455e4d38a5c77b7722fe1ed9f4e34e203fb95c33fd9e494358d9379be2d0853f138876e8deec5abff06a696ee8dead3fa7ae08fc12f110c8e1402142a151eba4bb8a89cd691d37afa4653939d0585b5997727cc72394368a592fc3d87deff8df22d2e1fc4a949d1124b1e098608e7333d18005bfac8f7e533bf1e2ca4b027f05a2b6bb1f885b4b3502389abfbb8c615e898e216b7748de1cbf9bfd5fa103fd060634f7bd5910641be440cea668c39f6f9379fafd84e16ce8159fe3ddd5c264f1e4ef22b16c9836311e259ebc7d70cb7f307dc0e9864ae113928507859e9b3a5f1515599b55af7fcc2b66b13e54260a5ce379ec63cde65b2959d08af28532f8ed29d6f74b76affbf1b87231f3e620ba2a6f307fcc001bc21b7e796fe8c2537f7f3f24286790e233a7caeef5431eee1c0284e1b2ef6b35257439c4fbdfcdfcffdaf8cfbcb220bf262ea0e7730442afdc8f622ddb22e238294256d05225c7e494e50923cae332d0793194caca3131b3391fe40ab0a7b3df23285de4b713b6f8134442c1dad6859259fe548941885573ea72f6bddbf3c52decbbafa36bc4d0860c70dc21c962f2766a7e5da37fb72e8e006a0198cb480f2d809a89f44bed761178cd64734157917f39f74ec354ce5ee100f2316c25ed5718ce77e1ffb4d4580d22404c37a1b6f47dc0b72912ed7d404efde99b9ec910911a418440f537b229dc549b427371f7187addccdd1e85f8839e210efc16fcc5d2689259a2a008d849190a3e9073e9e04a4a3fb05a1597581fcb2a1f3e878564cefdf4f33afcb459685ffa522e36caa709176bbf4b4d0e9111d455d9432c5906d3967a44a8a53f63fdeb6c632c29b0602985a16ab5e0b736a1c196a7c52d323a1a6dfcca5756ac12f34401777787e4c6e5a9d0eb9cfbca26a62ff58627911fb49151f2342cb2f719dcac0c093435d3283d0d1e9638ddffccdb48a08f88f2bea5726422c41296e1ce20e9dfb652cad9ed5cd1446f7b8220fdcc0fb5a40c0f4eaadd431bb1e48bed022015c1c634844b566301ff3b6491d0133d846865a71d867a83384ff5138f1da5efcada07cffd93d80e1969c3855b9dc1066c66cf4eafb6f426219ab7dda0f56b7cc254d82e3a1d1d75a142dd5c9dbc95249b25d9ea7b9aefb0e55904325176e5b68f2fec76d9fde2a563bec2493af121e730dd13b79ebd7ed2e23fd994e2a30d9fe0c4b9dc6bbb715898d8085d15579d120a95d551735c697dac576515d6ca6f12460c2c70f9fdef1f395b96e50012d0e83edf435253e7e15ef08b0037d4ee973084d9f694a79e819125352ff4601158e3c74b3c49e195379e5b2d484e670efba60c2513dbcd6c1de1b9cd23de72ce2e7cece4701f7e3c6d947a10ae6441a7229e5157cab6c562b7a9726ff7f502e40aa33a2d0c559411c0933c49a7533bfcab17522d51aa76450ee7264876f0a6b15cedc0b5604b8544d253032e1f24e29361baf6b064abe14ecd47a34ab46893c2b7f4762472507d69d9dad735524f273901d4de8e8d860e0a41a5810d373c36347a78985b788ab1a432037a6e006362322acaff7cb0475a31996f483e71b4e768908c7bf1403b59e12f3a1d13edb7f1a9e67bcdbf7369e8aeb2cfee7937bf5b127fa2aa63b54c5594f56f92d82d97c4b0e8733f4ebafc5a767c38a6dd4f2c112f8efed495f01fb156842fef1fd950c2640921d29ff857badddde7e4311ed1926eb9dd8ae0d2fcaf2ec748a6454adb85990f387a15c91cba991bfea01e157941c9617</script>
-</div>
-<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
-      <categories>
-        <category>渗透测试</category>
-      </categories>
-      <tags>
-        <tag>密码找回</tag>
       </tags>
   </entry>
   <entry>
@@ -971,6 +971,87 @@
       </tags>
   </entry>
   <entry>
+    <title>第2章 网络攻击原理与常用方法</title>
+    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
+<ul>
+<li>信息泄露攻击</li>
+<li>完整性破坏攻击</li>
+<li>拒绝服务攻击</li>
+<li>非法使用攻击</li>
+</ul>
+<a id="more"></a>
+<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
+<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
+<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
+<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
+<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
+</ol>
+<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
+<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
+<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
+<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
+<li>获取目标访问权限。（获取更高权限）</li>
+<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
+<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
+<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
+<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
+</ol>
+<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
+<ul>
+<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
+<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
+<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
+<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
+<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
+<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
+<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
+<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
+<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+</ul>
+<p><strong>口令破解</strong></p>
+<p><strong>缓冲区溢出</strong></p>
+<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
+<p><strong>恶意代码</strong></p>
+<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
+<p><strong>拒绝服务</strong></p>
+<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
+<ul>
+<li>同步包风暴（SYN Flood）</li>
+<li>UDP洪水（UDP Flood）</li>
+<li>Smurf攻击</li>
+<li>垃圾邮件</li>
+<li>消耗CPU和内存资源等拒绝服务攻击</li>
+<li>死亡之ping（ping of death）</li>
+<li>泪滴攻击（Teardrop Attack）</li>
+<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
+</ul>
+<p><strong>网络钓鱼</strong></p>
+<p><strong>网络窃听</strong></p>
+<p>技术手段：网络嗅探、中间人攻击</p>
+<p><strong>SQL注入</strong></p>
+<p><strong>社交工程</strong></p>
+<p><strong>电子监听</strong></p>
+<p><strong>会话劫持</strong></p>
+<p><strong>漏洞扫描</strong></p>
+<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
+<p><strong>代理技术</strong></p>
+<p><strong>数据加密</strong></p>
+<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
+<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
+<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
+<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
+<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>第1章 网络信息安全概述</title>
     <url>/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<h1 id="网络信息安全基本属性"><a href="#网络信息安全基本属性" class="headerlink" title="网络信息安全基本属性"></a>网络信息安全基本属性</h1><ul>
@@ -1082,87 +1163,6 @@
 <h1 id="网络信息安全科技信息获取"><a href="#网络信息安全科技信息获取" class="headerlink" title="网络信息安全科技信息获取"></a>网络信息安全科技信息获取</h1><p><strong>网络信息安全会议</strong></p>
 <p>四大顶级学术会议：S&amp;P、CCS、NDSS、USENIX Security</p>
 <p>USENIX Security被中国计算机学会（CCF）归为“网络与信息安全”A类会议。</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第2章 网络攻击原理与常用方法</title>
-    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
-<ul>
-<li>信息泄露攻击</li>
-<li>完整性破坏攻击</li>
-<li>拒绝服务攻击</li>
-<li>非法使用攻击</li>
-</ul>
-<a id="more"></a>
-<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
-<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
-<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
-<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
-<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
-</ol>
-<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
-<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
-<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
-<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
-<li>获取目标访问权限。（获取更高权限）</li>
-<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
-<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
-<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
-<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
-</ol>
-<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
-<ul>
-<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
-<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
-<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
-<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
-<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
-<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
-<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
-<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
-<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-</ul>
-<p><strong>口令破解</strong></p>
-<p><strong>缓冲区溢出</strong></p>
-<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
-<p><strong>恶意代码</strong></p>
-<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
-<p><strong>拒绝服务</strong></p>
-<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
-<ul>
-<li>同步包风暴（SYN Flood）</li>
-<li>UDP洪水（UDP Flood）</li>
-<li>Smurf攻击</li>
-<li>垃圾邮件</li>
-<li>消耗CPU和内存资源等拒绝服务攻击</li>
-<li>死亡之ping（ping of death）</li>
-<li>泪滴攻击（Teardrop Attack）</li>
-<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
-</ul>
-<p><strong>网络钓鱼</strong></p>
-<p><strong>网络窃听</strong></p>
-<p>技术手段：网络嗅探、中间人攻击</p>
-<p><strong>SQL注入</strong></p>
-<p><strong>社交工程</strong></p>
-<p><strong>电子监听</strong></p>
-<p><strong>会话劫持</strong></p>
-<p><strong>漏洞扫描</strong></p>
-<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
-<p><strong>代理技术</strong></p>
-<p><strong>数据加密</strong></p>
-<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
-<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
-<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
-<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
-<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
@@ -3963,6 +3963,262 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
 </ul>
 </li>
 </ol>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第22章 网站安全需求分析与安全保护工程</title>
+    <url>/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="网站安全威胁与需求分析"><a href="#网站安全威胁与需求分析" class="headerlink" title="网站安全威胁与需求分析"></a>网站安全威胁与需求分析</h1><p>网站安全主要是：机密性、完整性、可用性及可控性</p>
+<h2 id="网站安全分析"><a href="#网站安全分析" class="headerlink" title="网站安全分析"></a>网站安全分析</h2><p>主要威胁：</p>
+<ol>
+<li><p>非授权访问</p>
+</li>
+<li><p>网页篡改</p>
+</li>
+<li><p>数据泄露</p>
+</li>
+<li><p>恶意代码</p>
+<a id="more"></a>
+</li>
+<li><p>网站假冒</p>
+</li>
+<li><p>拒绝服务</p>
+</li>
+<li><p>网站后台管理安全威胁</p>
+<p>常见问题：</p>
+<ul>
+<li>网站管理员身份及密码被窃取</li>
+<li>后台管理网页存在安全漏洞</li>
+<li>内部管理权限分配不合理</li>
+</ul>
+</li>
+</ol>
+<h2 id="网站安全需求"><a href="#网站安全需求" class="headerlink" title="网站安全需求"></a>网站安全需求</h2><p>包括：网络环境、网络通信、操作系统、数据库、应用服务器、Web服务软件、Web应用程序、数据等安全威胁防护</p>
+<h1 id="Apache-Web安全分析与增强"><a href="#Apache-Web安全分析与增强" class="headerlink" title="Apache Web安全分析与增强"></a>Apache Web安全分析与增强</h1><h2 id="Apache-Web概述"><a href="#Apache-Web概述" class="headerlink" title="Apache Web概述"></a>Apache Web概述</h2><p>Apache Httpd配置文件如下：</p>
+<ol>
+<li>httpd.conf：设定Apache服务器一般的属性、端口、执行者身份</li>
+<li>conf/srm.conf：数据配置文件</li>
+<li>conf/access.conf：负责基本的读取文件控制</li>
+<li>conf/mime.conf：设定Apache所能辨别的MIME格式</li>
+</ol>
+<h2 id="Apache-Web安全分析"><a href="#Apache-Web安全分析" class="headerlink" title="Apache Web安全分析"></a>Apache Web安全分析</h2><p>面临威胁：</p>
+<ul>
+<li>Apache Web软件程序威胁</li>
+<li>Apache Web软件配置威胁</li>
+<li>Apache Web安全机制威胁</li>
+<li>Apache Web应用程序威胁</li>
+<li>Apache Web服务通信威胁</li>
+<li>Apache Web服务内容威胁</li>
+<li>Apache Web服务器拒绝服务威胁</li>
+</ul>
+<h2 id="Apache-Web安全机制"><a href="#Apache-Web安全机制" class="headerlink" title="Apache Web安全机制"></a>Apache Web安全机制</h2><ol>
+<li><p>Apache Web本地文件安全</p>
+</li>
+<li><p>Apache Web模块管理机制</p>
+</li>
+<li><p>Apache Web认证机制</p>
+<p>对/user/local/apache/htdocs/secret目录进行访问控制详见P478</p>
+</li>
+<li><p>连接耗尽应对机制</p>
+<p>解决办法：</p>
+<ul>
+<li>减少Apache超时（Timeout）设置、增大MaxClients设置</li>
+<li>限制同一IP的最大连接数</li>
+<li>多线程下载保护机制</li>
+</ul>
+</li>
+<li><p>Apache Web自带的访问机制</p>
+</li>
+<li><p>Apache Web审计和日志：access.log和error.log</p>
+</li>
+<li><p>Apache Web服务器防范DoS</p>
+</li>
+</ol>
+<h2 id="Apache-Web安全增强"><a href="#Apache-Web安全增强" class="headerlink" title="Apache Web安全增强"></a>Apache Web安全增强</h2><p>措施：</p>
+<ol>
+<li><p>及时安装Apache Web补丁</p>
+</li>
+<li><p>启用.htaccess文件保护网页</p>
+</li>
+<li><p>为Apache Web服务软件设置专门的用户和组</p>
+</li>
+<li><p>隐藏Apache Web软件的版本号</p>
+</li>
+<li><p>Apache Web目录访问安全增强</p>
+<ul>
+<li>设定禁止使用目录索引文件</li>
+<li>禁止默认访问</li>
+<li>禁止用户重载</li>
+</ul>
+</li>
+<li><p>Apache Web文件目录保护</p>
+<p>最佳安全实践：</p>
+<ul>
+<li>ServerRoot保存配置文件（conf子目录）、二进制文件和其他服务器配置文件</li>
+<li>DocumentRoot保存Web站点的内容，包括HTML文件和图片等</li>
+<li>Apache服务CGI目录的属主和权限设置555</li>
+<li>Apache服务器执行目录的属主和权限设置550</li>
+<li>Apache服务器日志目录的属主和权限设置664</li>
+</ul>
+<p>详细命令见P482</p>
+</li>
+<li><p>删除Apache Web默认目录或不必要的文件</p>
+<p>需要删除的文件：</p>
+<ul>
+<li>Apache源代码文件</li>
+<li>默认HTML文件</li>
+<li>CGI程序样例</li>
+<li>默认用户文件</li>
+</ul>
+</li>
+<li><p>使用第三方软件安全增强Apache Web服务</p>
+<ul>
+<li>构建Apache Web服务器“安全沙箱”</li>
+<li>使用OpenSSL增强Apache Web安全通信</li>
+<li>增强Apache Web服务器访问控制</li>
+</ul>
+</li>
+</ol>
+<h1 id="IIS安全分析与增强"><a href="#IIS安全分析与增强" class="headerlink" title="IIS安全分析与增强"></a>IIS安全分析与增强</h1><h2 id="IIS概述"><a href="#IIS概述" class="headerlink" title="IIS概述"></a>IIS概述</h2><p>IIS处理HTTP请求的步骤：</p>
+<ol>
+<li>HTTP.sys接收到客户的HTTP请求</li>
+<li>HTTP.sys联系WAS（Windows Process Activation Service），从配置库中获取信息</li>
+<li>WAS从配置库applicationHost.config中请求配置信息</li>
+<li>WWW Service接收配置信息，例如应用池和站点配置</li>
+<li>WWW Service使用这些配置信息设置HTTP.sys</li>
+<li>WAS针对请求，为应用池启动工作进程</li>
+<li>工作进程处理请求和返回HTTP.sys的响应</li>
+<li>客户接收到响应</li>
+</ol>
+<h2 id="IIS安全分析"><a href="#IIS安全分析" class="headerlink" title="IIS安全分析"></a>IIS安全分析</h2><p>典型威胁：</p>
+<ul>
+<li>非授权访问</li>
+<li>网络蠕虫</li>
+<li>网页篡改</li>
+<li>拒绝服务</li>
+<li>IIS软件漏洞</li>
+</ul>
+<h2 id="IIS安全机制"><a href="#IIS安全机制" class="headerlink" title="IIS安全机制"></a>IIS安全机制</h2><ol>
+<li><p>IIS认证机制</p>
+<p>认证方式：</p>
+<ul>
+<li>匿名认证</li>
+<li>基本验证</li>
+<li>证书认证</li>
+<li>数字签名认证</li>
+<li>IIS证书认证</li>
+<li>Windows认证</li>
+</ul>
+</li>
+<li><p>IIS访问控制</p>
+<p>访问控制措施：请求过滤、URL授权控制、IP地址限制、文件授权</p>
+<p>IIS访问控制流程：</p>
+<p><img src="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/IIS访问控制流程.jpg" style="zoom:50%;"></p>
+</li>
+<li><p>IIS日志审计</p>
+</li>
+</ol>
+<h2 id="IIS安全增强"><a href="#IIS安全增强" class="headerlink" title="IIS安全增强"></a>IIS安全增强</h2><p>IIS安全增强措施：</p>
+<ol>
+<li>及时安装IIS补丁</li>
+<li>启用动态IP限制</li>
+<li>启用URLScan</li>
+<li>启用IIS Web应用防火墙</li>
+<li>启用SSL服务</li>
+</ol>
+<h1 id="Web应用漏洞分析与防护"><a href="#Web应用漏洞分析与防护" class="headerlink" title="Web应用漏洞分析与防护"></a>Web应用漏洞分析与防护</h1><h2 id="OWASP-Top-10"><a href="#OWASP-Top-10" class="headerlink" title="OWASP Top 10"></a>OWASP Top 10</h2><ol>
+<li>A1-注入漏洞</li>
+<li>A2-遭受破坏的认证</li>
+<li>A3-敏感数据暴露漏洞</li>
+<li>A4-XML外部实体引用漏洞</li>
+<li>A5-受损害的访问控制漏洞</li>
+<li>A6-安全配置错误</li>
+<li>A7-跨站脚本漏洞</li>
+<li>A8-非安全反序列化漏洞</li>
+<li>A9-使用含有已知漏洞的组件</li>
+<li>A10-非充分的日志记录和监控</li>
+</ol>
+<h2 id="Web应用漏洞防护"><a href="#Web应用漏洞防护" class="headerlink" title="Web应用漏洞防护"></a>Web应用漏洞防护</h2><ol>
+<li><p>SQL注入漏洞分析与防护</p>
+<ul>
+<li>对应用程序输入进行安全过滤</li>
+<li>设置应用程序最小化权限</li>
+<li>屏蔽应用程序错误提示信息</li>
+<li>对开源Web应用程序做安全适应性改造</li>
+</ul>
+</li>
+<li><p>文件上传漏洞分析与防护</p>
+<p>防护措施：</p>
+<ul>
+<li>将上传目录设置为不可执行，避免上传文件远程触发执行</li>
+<li>检查上传文件的安全性，阻断恶意文件上传</li>
+</ul>
+</li>
+<li><p>跨站脚本攻击</p>
+<p>典型的攻击方式：</p>
+<ul>
+<li>HTML内容替换</li>
+<li>嵌入脚本内容</li>
+<li>强制网页加载外部脚本</li>
+</ul>
+</li>
+</ol>
+<h1 id="网站安全保护机制与技术方案"><a href="#网站安全保护机制与技术方案" class="headerlink" title="网站安全保护机制与技术方案"></a>网站安全保护机制与技术方案</h1><h2 id="网站安全保护机制"><a href="#网站安全保护机制" class="headerlink" title="网站安全保护机制"></a>网站安全保护机制</h2><ol>
+<li>身份鉴别：用户名/口令、U盾、人脸识别以及基于证书的统一用户身份管理</li>
+<li>访问控制</li>
+<li>网站内容安全：网站文字内容安全检查、网页防篡改、敏感词汇过滤</li>
+<li>网站数据安全：用户数据隔离、数据加密、SSL、数据备份以及隐私保护</li>
+<li>网站安全防护</li>
+<li>网站安全审计与监控</li>
+<li>网站应急响应：网页防篡改、网站域名服务灾备、网络流量清洗、灾备中心、网络攻击取证</li>
+<li>网站合规管理：网站备案、网站防伪标识、网站等保测评</li>
+<li>网站安全测评：漏洞扫描、渗透测试、代码审核、风险分析</li>
+<li>网站安全管理机制：网站安全保障工作的总体方针和安全策略，建立网站建设、网站运维、网站内容、网站域名、网站应急预案等方面的安全管理制度</li>
+</ol>
+<h2 id="网站构成组件安全加固"><a href="#网站构成组件安全加固" class="headerlink" title="网站构成组件安全加固"></a>网站构成组件安全加固</h2><p>安全加固方面：</p>
+<ul>
+<li>操作系统安全加固</li>
+<li>数据库系统安全加固</li>
+<li>Web服务器软件安全加固</li>
+<li>Web应用程序安全加固</li>
+<li>Web通信安全加固</li>
+<li>网站域名服务安全加固</li>
+<li>网站后台管理安全加固</li>
+</ul>
+<h2 id="网站攻击防护及安全监测"><a href="#网站攻击防护及安全监测" class="headerlink" title="网站攻击防护及安全监测"></a>网站攻击防护及安全监测</h2><ol>
+<li><p>防火墙</p>
+</li>
+<li><p>漏洞扫描</p>
+</li>
+<li><p>网站防篡改</p>
+<p>实现技术：</p>
+<ul>
+<li>利用操作系统的文件调用事件来检测网页文件的完整性变化</li>
+<li>利用密码学的单向函数检测</li>
+</ul>
+</li>
+<li><p>网络流量清洗</p>
+</li>
+<li><p>网站安全监测</p>
+<p>主要内容：</p>
+<ul>
+<li>网站安全漏洞监测</li>
+<li>网站挂马监测</li>
+<li>网站ICP备案监测</li>
+<li>网站合规性监测</li>
+<li>网站性能监测</li>
+<li>网站DNS监测</li>
+<li>网站入侵检测</li>
+</ul>
+</li>
+</ol>
+<h1 id="网站安全综合应用案例分析"><a href="#网站安全综合应用案例分析" class="headerlink" title="网站安全综合应用案例分析"></a>网站安全综合应用案例分析</h1><p>政务网站安全保护、网上银行安全保护详见P499-P501</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>

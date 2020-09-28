@@ -23,23 +23,22 @@
     var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="网络信息安全基本属性 机密性：信息不被未授权者知晓的属性  完整性： 信息或系统未授权则不能被篡改  可用性： 信息或服务可以随时被合法用户正常使用">
+  <meta name="description" content="网站安全威胁与需求分析网站安全主要是：机密性、完整性、可用性及可控性 网站安全分析主要威胁：  非授权访问  网页篡改  数据泄露  恶意代码">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第1章 网络信息安全概述">
-<meta property="og:url" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:title" content="第22章 网站安全需求分析与安全保护工程">
+<meta property="og:url" content="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/index.html">
 <meta property="og:site_name" content="zering的博客">
-<meta property="og:description" content="网络信息安全基本属性 机密性：信息不被未授权者知晓的属性  完整性： 信息或系统未授权则不能被篡改  可用性： 信息或服务可以随时被合法用户正常使用">
+<meta property="og:description" content="网站安全威胁与需求分析网站安全主要是：机密性、完整性、可用性及可控性 网站安全分析主要威胁：  非授权访问  网页篡改  数据泄露  恶意代码">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/生命周期.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/数据保护.jpg">
-<meta property="article:published_time" content="2020-09-09T08:49:00.000Z">
-<meta property="article:modified_time" content="2020-09-10T03:04:45.000Z">
+<meta property="og:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/IIS访问控制流程.jpg">
+<meta property="article:published_time" content="2020-09-28T06:25:58.000Z">
+<meta property="article:modified_time" content="2020-09-28T08:31:02.539Z">
 <meta property="article:author" content="zering">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/生命周期.jpg">
+<meta name="twitter:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/IIS访问控制流程.jpg">
 
-<link rel="canonical" href="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/">
+<link rel="canonical" href="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/">
 
 
 <script id="page-configurations">
@@ -52,7 +51,7 @@
   };
 </script>
 
-  <title>第1章 网络信息安全概述 | zering的博客</title>
+  <title>第22章 网站安全需求分析与安全保护工程 | zering的博客</title>
   
 
 
@@ -144,7 +143,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">35</span></a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">42</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -210,7 +209,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -223,7 +222,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          第1章 网络信息安全概述
+          第22章 网站安全需求分析与安全保护工程
         </h1>
 
         <div class="post-meta">
@@ -232,16 +231,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-09-09 16:49:00" itemprop="dateCreated datePublished" datetime="2020-09-09T16:49:00+08:00">2020-09-09</time>
+              <time title="创建时间：2020-09-28 14:25:58 / 修改时间：16:31:02" itemprop="dateCreated datePublished" datetime="2020-09-28T14:25:58+08:00">2020-09-28</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-10 11:04:45" itemprop="dateModified" datetime="2020-09-10T11:04:45+08:00">2020-09-10</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -253,7 +246,7 @@
             </span>
 
           
-            <span id="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/" class="post-meta-item leancloud_visitors" data-flag-title="第1章 网络信息安全概述" title="阅读次数">
+            <span id="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="第22章 网站安全需求分析与安全保护工程" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -268,8 +261,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -279,7 +272,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -298,115 +291,251 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="网络信息安全基本属性"><a href="#网络信息安全基本属性" class="headerlink" title="网络信息安全基本属性"></a>网络信息安全基本属性</h1><ul>
-<li><p>机密性：信息不被未授权者知晓的属性</p>
+        <h1 id="网站安全威胁与需求分析"><a href="#网站安全威胁与需求分析" class="headerlink" title="网站安全威胁与需求分析"></a>网站安全威胁与需求分析</h1><p>网站安全主要是：机密性、完整性、可用性及可控性</p>
+<h2 id="网站安全分析"><a href="#网站安全分析" class="headerlink" title="网站安全分析"></a>网站安全分析</h2><p>主要威胁：</p>
+<ol>
+<li><p>非授权访问</p>
 </li>
-<li><p>完整性： 信息或系统未授权则不能被篡改</p>
+<li><p>网页篡改</p>
 </li>
-<li><p>可用性： 信息或服务可以随时被合法用户正常使用</p>
+<li><p>数据泄露</p>
+</li>
+<li><p>恶意代码</p>
 <a id="more"></a>
 </li>
-<li><p>抗抵赖性： 防止网络信息系统相关用户否认其活动行为</p>
+<li><p>网站假冒</p>
 </li>
-<li><p>可控性： 管理者对系统能够进行有效的掌握和控制</p>
+<li><p>拒绝服务</p>
 </li>
-<li><p>其他</p>
+<li><p>网站后台管理安全威胁</p>
+<p>常见问题：</p>
 <ul>
-<li>真实性： 信息和客观事实保持一致</li>
-<li>时效性： 信息、服务及系统满足时间约束要求</li>
-<li>合规性： 信息、服务及系统符合法律政策规范的要求</li>
-<li>公平性： 相关主体处于同等地位处理相关任务</li>
-<li>可靠性： 信息系统能有效完成预定功能</li>
-<li>可生存性： 信息系统在受损情况下能最小化支撑业务运行</li>
-<li>隐私性： 敏感信息不对外公开</li>
+<li>网站管理员身份及密码被窃取</li>
+<li>后台管理网页存在安全漏洞</li>
+<li>内部管理权限分配不合理</li>
 </ul>
 </li>
-</ul>
-<h1 id="网络信息安全基本功能"><a href="#网络信息安全基本功能" class="headerlink" title="网络信息安全基本功能"></a>网络信息安全基本功能</h1><ol>
-<li>网络信息安全防御</li>
-<li>网络信息安全监测</li>
-<li>网络信息安全应急</li>
-<li>网络信息安全恢复</li>
 </ol>
-<h1 id="网络信息安全基本技术需求"><a href="#网络信息安全基本技术需求" class="headerlink" title="网络信息安全基本技术需求"></a>网络信息安全基本技术需求</h1><ol>
-<li>物理环境安全： 环境、设备、存储介质安全</li>
-<li>网络信息安全认证：实现网络资源访问控制的前提和依据</li>
-<li>网络信息访问控制： 限制非法用户，防止越权</li>
-<li>网络信息安全保密： 安全隔离，防止敏感信息泄露</li>
-<li>网络信息安全漏洞扫描</li>
-<li>恶意代码防护</li>
-<li>网络信息内容安全： 信息符合法律法规</li>
-<li>网络信息安全监测与预警</li>
-<li>网络信息安全应急响应</li>
-</ol>
-<h1 id="网络信息安全管理内容与方法"><a href="#网络信息安全管理内容与方法" class="headerlink" title="网络信息安全管理内容与方法"></a>网络信息安全管理内容与方法</h1><p><strong>相关技术：</strong></p>
-<p>风险分析、密码算法、身份认证、访问控制、安全审计、漏洞扫描、防火墙、入侵检测和应急响应</p>
-<p><strong>网络安全管理方法：</strong></p>
-<p>风险管理、等级保护、纵深防御、层次化保护、应急响应以及PDCA（Plan-Do-Check-Act）</p>
-<p><strong>网络安全管理要素</strong></p>
+<h2 id="网站安全需求"><a href="#网站安全需求" class="headerlink" title="网站安全需求"></a>网站安全需求</h2><p>包括：网络环境、网络通信、操作系统、数据库、应用服务器、Web服务软件、Web应用程序、数据等安全威胁防护</p>
+<h1 id="Apache-Web安全分析与增强"><a href="#Apache-Web安全分析与增强" class="headerlink" title="Apache Web安全分析与增强"></a>Apache Web安全分析与增强</h1><h2 id="Apache-Web概述"><a href="#Apache-Web概述" class="headerlink" title="Apache Web概述"></a>Apache Web概述</h2><p>Apache Httpd配置文件如下：</p>
 <ol>
-<li>管理对象： 硬件、软件、存储介质、网络信息资产、支持保障系统</li>
-<li>网络信息安全威胁：属性分类（自然威胁和人为威胁），威胁对象分类（物理、网络通信、网络服务、网络管理等威胁）</li>
-<li>网络信息安全脆弱性： 与安全策略相冲突的状态或错误</li>
-<li>网络信息安全风险： 网络威胁发生概率和所造成影响的乘积</li>
+<li>httpd.conf：设定Apache服务器一般的属性、端口、执行者身份</li>
+<li>conf/srm.conf：数据配置文件</li>
+<li>conf/access.conf：负责基本的读取文件控制</li>
+<li>conf/mime.conf：设定Apache所能辨别的MIME格式</li>
 </ol>
-<blockquote>
-<p>风险控制方法：</p>
+<h2 id="Apache-Web安全分析"><a href="#Apache-Web安全分析" class="headerlink" title="Apache Web安全分析"></a>Apache Web安全分析</h2><p>面临威胁：</p>
 <ul>
-<li>避免风险。例如,通过物理隔离设备将内部网和外部网分开,避免受到外部网的攻击。</li>
-<li>转移风险。例如,购买商业保险计划或安全外包。</li>
-<li>减少威胁。例如,安装防病毒软件包,防止病毒攻击。</li>
-<li>消除脆弱点。例如,给操作系统打补丁或强化工作人员的安全意识。</li>
-<li>减少威胁的影响。例如,采取多条通信线路进行备份或制定应急预案。</li>
-<li>风险监测。例如,定期对网络系统中的安全状况进行风险分析,监测潜在的威胁行为。</li>
+<li>Apache Web软件程序威胁</li>
+<li>Apache Web软件配置威胁</li>
+<li>Apache Web安全机制威胁</li>
+<li>Apache Web应用程序威胁</li>
+<li>Apache Web服务通信威胁</li>
+<li>Apache Web服务内容威胁</li>
+<li>Apache Web服务器拒绝服务威胁</li>
 </ul>
-</blockquote>
+<h2 id="Apache-Web安全机制"><a href="#Apache-Web安全机制" class="headerlink" title="Apache Web安全机制"></a>Apache Web安全机制</h2><ol>
+<li><p>Apache Web本地文件安全</p>
+</li>
+<li><p>Apache Web模块管理机制</p>
+</li>
+<li><p>Apache Web认证机制</p>
+<p>对/user/local/apache/htdocs/secret目录进行访问控制详见P478</p>
+</li>
+<li><p>连接耗尽应对机制</p>
+<p>解决办法：</p>
+<ul>
+<li>减少Apache超时（Timeout）设置、增大MaxClients设置</li>
+<li>限制同一IP的最大连接数</li>
+<li>多线程下载保护机制</li>
+</ul>
+</li>
+<li><p>Apache Web自带的访问机制</p>
+</li>
+<li><p>Apache Web审计和日志：access.log和error.log</p>
+</li>
+<li><p>Apache Web服务器防范DoS</p>
+</li>
+</ol>
+<h2 id="Apache-Web安全增强"><a href="#Apache-Web安全增强" class="headerlink" title="Apache Web安全增强"></a>Apache Web安全增强</h2><p>措施：</p>
 <ol>
-<li>网络信息安全保护措施： 目的是对网络管理对象进行风险控制</li>
+<li><p>及时安装Apache Web补丁</p>
+</li>
+<li><p>启用.htaccess文件保护网页</p>
+</li>
+<li><p>为Apache Web服务软件设置专门的用户和组</p>
+</li>
+<li><p>隐藏Apache Web软件的版本号</p>
+</li>
+<li><p>Apache Web目录访问安全增强</p>
+<ul>
+<li>设定禁止使用目录索引文件</li>
+<li>禁止默认访问</li>
+<li>禁止用户重载</li>
+</ul>
+</li>
+<li><p>Apache Web文件目录保护</p>
+<p>最佳安全实践：</p>
+<ul>
+<li>ServerRoot保存配置文件（conf子目录）、二进制文件和其他服务器配置文件</li>
+<li>DocumentRoot保存Web站点的内容，包括HTML文件和图片等</li>
+<li>Apache服务CGI目录的属主和权限设置555</li>
+<li>Apache服务器执行目录的属主和权限设置550</li>
+<li>Apache服务器日志目录的属主和权限设置664</li>
+</ul>
+<p>详细命令见P482</p>
+</li>
+<li><p>删除Apache Web默认目录或不必要的文件</p>
+<p>需要删除的文件：</p>
+<ul>
+<li>Apache源代码文件</li>
+<li>默认HTML文件</li>
+<li>CGI程序样例</li>
+<li>默认用户文件</li>
+</ul>
+</li>
+<li><p>使用第三方软件安全增强Apache Web服务</p>
+<ul>
+<li>构建Apache Web服务器“安全沙箱”</li>
+<li>使用OpenSSL增强Apache Web安全通信</li>
+<li>增强Apache Web服务器访问控制</li>
+</ul>
+</li>
 </ol>
-<p><strong>网络信息安全管理流程</strong></p>
-<p>​    步骤1，确定网络信息安全管理对象</p>
-<p>​    步骤2，评估网络信息安全管理对象的价值</p>
-<p>​    步骤3，识别网络信息安全管理对象的威胁</p>
-<p>​    步骤4，识别网络信息安全管理对象的脆弱性</p>
-<p>​    步骤5，确定网络信息安全管理对象的风险级别</p>
-<p>​    步骤6，制定网络信息安全防范体系及防范措施</p>
-<p>​    步骤7，实施和落实网络信息安全防范措施</p>
-<p>​    步骤8，运行/维护网络信息安全设备、配置</p>
-<p><img src="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/生命周期.jpg" alt></p>
-<p><strong>网络安全管理工具</strong></p>
-<p>SOC、IT资产管理系统、网络安全态势感知系统、漏洞扫描器、协议分析器、上网行为管理等</p>
-<p><strong>网络信息安全管理评估</strong></p>
+<h1 id="IIS安全分析与增强"><a href="#IIS安全分析与增强" class="headerlink" title="IIS安全分析与增强"></a>IIS安全分析与增强</h1><h2 id="IIS概述"><a href="#IIS概述" class="headerlink" title="IIS概述"></a>IIS概述</h2><p>IIS处理HTTP请求的步骤：</p>
+<ol>
+<li>HTTP.sys接收到客户的HTTP请求</li>
+<li>HTTP.sys联系WAS（Windows Process Activation Service），从配置库中获取信息</li>
+<li>WAS从配置库applicationHost.config中请求配置信息</li>
+<li>WWW Service接收配置信息，例如应用池和站点配置</li>
+<li>WWW Service使用这些配置信息设置HTTP.sys</li>
+<li>WAS针对请求，为应用池启动工作进程</li>
+<li>工作进程处理请求和返回HTTP.sys的响应</li>
+<li>客户接收到响应</li>
+</ol>
+<h2 id="IIS安全分析"><a href="#IIS安全分析" class="headerlink" title="IIS安全分析"></a>IIS安全分析</h2><p>典型威胁：</p>
 <ul>
-<li>网络安全等级保护</li>
-<li>信息安全管理体系认证（ISMS）：依据：GB/T22080、ISO/IEC27001</li>
-<li>系统安全工程能力成熟度模型（SSE-CMM）：组织过程、工程过程、项目过程来评价系统安全能力</li>
+<li>非授权访问</li>
+<li>网络蠕虫</li>
+<li>网页篡改</li>
+<li>拒绝服务</li>
+<li>IIS软件漏洞</li>
 </ul>
-<h1 id="网络信息安全法律与政策文件"><a href="#网络信息安全法律与政策文件" class="headerlink" title="网络信息安全法律与政策文件"></a>网络信息安全法律与政策文件</h1><p>《中华人民共和国密码法》于2020年1月1日起实施。</p>
-<p><strong>网络安全等级保护</strong></p>
-<p>工作：定级、备案、建设整改、等级测评、运营维护。</p>
-<p>保护义务：</p>
+<h2 id="IIS安全机制"><a href="#IIS安全机制" class="headerlink" title="IIS安全机制"></a>IIS安全机制</h2><ol>
+<li><p>IIS认证机制</p>
+<p>认证方式：</p>
 <ul>
-<li>制定内部安全管理制度和操作规程，确定网络安全负责人，落实网络安全保护责任；</li>
-<li>采取防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施；</li>
-<li>采取监测、记录网络运行状态、网络安全事件的技术措施，并按照规定留存相关的网络日志不少于六个月；</li>
-<li>采取数据分类、重要数据备份和加密等措施；</li>
-<li>法律、行政法规规定的其他义务。</li>
+<li>匿名认证</li>
+<li>基本验证</li>
+<li>证书认证</li>
+<li>数字签名认证</li>
+<li>IIS证书认证</li>
+<li>Windows认证</li>
 </ul>
-<p><strong>网络产品和服务审查</strong></p>
-<p>安全审查和认证机构：中国网络安全审查技术与认证中心（CCRC）</p>
-<p><strong>网络安全产品管理</strong></p>
-<p>由测评机构进行测评。</p>
-<p>国家保密科技测评中心、中国信息安全认证中心、国家网络与信息系统安全产品质量监督检验中心、公安部计算机信息系统安全产品质量监督检验中心等。</p>
-<p><strong>个人信息与重要数据保护制度</strong></p>
-<p><img src="/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/数据保护.jpg" alt></p>
-<p><strong>网络安全标准规范与测评</strong></p>
-<p>标准化工作组织：全国信息安全标准化技术委员会</p>
-<p><strong>网络安全事件与应急响应制度</strong></p>
-<p>国家应急中心：国际计算机网络应急技术处理协调中心（CNCERT）</p>
-<h1 id="网络信息安全科技信息获取"><a href="#网络信息安全科技信息获取" class="headerlink" title="网络信息安全科技信息获取"></a>网络信息安全科技信息获取</h1><p><strong>网络信息安全会议</strong></p>
-<p>四大顶级学术会议：S&amp;P、CCS、NDSS、USENIX Security</p>
-<p>USENIX Security被中国计算机学会（CCF）归为“网络与信息安全”A类会议。</p>
+</li>
+<li><p>IIS访问控制</p>
+<p>访问控制措施：请求过滤、URL授权控制、IP地址限制、文件授权</p>
+<p>IIS访问控制流程：</p>
+<p><img src="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/IIS访问控制流程.jpg" style="zoom:50%;"></p>
+</li>
+<li><p>IIS日志审计</p>
+</li>
+</ol>
+<h2 id="IIS安全增强"><a href="#IIS安全增强" class="headerlink" title="IIS安全增强"></a>IIS安全增强</h2><p>IIS安全增强措施：</p>
+<ol>
+<li>及时安装IIS补丁</li>
+<li>启用动态IP限制</li>
+<li>启用URLScan</li>
+<li>启用IIS Web应用防火墙</li>
+<li>启用SSL服务</li>
+</ol>
+<h1 id="Web应用漏洞分析与防护"><a href="#Web应用漏洞分析与防护" class="headerlink" title="Web应用漏洞分析与防护"></a>Web应用漏洞分析与防护</h1><h2 id="OWASP-Top-10"><a href="#OWASP-Top-10" class="headerlink" title="OWASP Top 10"></a>OWASP Top 10</h2><ol>
+<li>A1-注入漏洞</li>
+<li>A2-遭受破坏的认证</li>
+<li>A3-敏感数据暴露漏洞</li>
+<li>A4-XML外部实体引用漏洞</li>
+<li>A5-受损害的访问控制漏洞</li>
+<li>A6-安全配置错误</li>
+<li>A7-跨站脚本漏洞</li>
+<li>A8-非安全反序列化漏洞</li>
+<li>A9-使用含有已知漏洞的组件</li>
+<li>A10-非充分的日志记录和监控</li>
+</ol>
+<h2 id="Web应用漏洞防护"><a href="#Web应用漏洞防护" class="headerlink" title="Web应用漏洞防护"></a>Web应用漏洞防护</h2><ol>
+<li><p>SQL注入漏洞分析与防护</p>
+<ul>
+<li>对应用程序输入进行安全过滤</li>
+<li>设置应用程序最小化权限</li>
+<li>屏蔽应用程序错误提示信息</li>
+<li>对开源Web应用程序做安全适应性改造</li>
+</ul>
+</li>
+<li><p>文件上传漏洞分析与防护</p>
+<p>防护措施：</p>
+<ul>
+<li>将上传目录设置为不可执行，避免上传文件远程触发执行</li>
+<li>检查上传文件的安全性，阻断恶意文件上传</li>
+</ul>
+</li>
+<li><p>跨站脚本攻击</p>
+<p>典型的攻击方式：</p>
+<ul>
+<li>HTML内容替换</li>
+<li>嵌入脚本内容</li>
+<li>强制网页加载外部脚本</li>
+</ul>
+</li>
+</ol>
+<h1 id="网站安全保护机制与技术方案"><a href="#网站安全保护机制与技术方案" class="headerlink" title="网站安全保护机制与技术方案"></a>网站安全保护机制与技术方案</h1><h2 id="网站安全保护机制"><a href="#网站安全保护机制" class="headerlink" title="网站安全保护机制"></a>网站安全保护机制</h2><ol>
+<li>身份鉴别：用户名/口令、U盾、人脸识别以及基于证书的统一用户身份管理</li>
+<li>访问控制</li>
+<li>网站内容安全：网站文字内容安全检查、网页防篡改、敏感词汇过滤</li>
+<li>网站数据安全：用户数据隔离、数据加密、SSL、数据备份以及隐私保护</li>
+<li>网站安全防护</li>
+<li>网站安全审计与监控</li>
+<li>网站应急响应：网页防篡改、网站域名服务灾备、网络流量清洗、灾备中心、网络攻击取证</li>
+<li>网站合规管理：网站备案、网站防伪标识、网站等保测评</li>
+<li>网站安全测评：漏洞扫描、渗透测试、代码审核、风险分析</li>
+<li>网站安全管理机制：网站安全保障工作的总体方针和安全策略，建立网站建设、网站运维、网站内容、网站域名、网站应急预案等方面的安全管理制度</li>
+</ol>
+<h2 id="网站构成组件安全加固"><a href="#网站构成组件安全加固" class="headerlink" title="网站构成组件安全加固"></a>网站构成组件安全加固</h2><p>安全加固方面：</p>
+<ul>
+<li>操作系统安全加固</li>
+<li>数据库系统安全加固</li>
+<li>Web服务器软件安全加固</li>
+<li>Web应用程序安全加固</li>
+<li>Web通信安全加固</li>
+<li>网站域名服务安全加固</li>
+<li>网站后台管理安全加固</li>
+</ul>
+<h2 id="网站攻击防护及安全监测"><a href="#网站攻击防护及安全监测" class="headerlink" title="网站攻击防护及安全监测"></a>网站攻击防护及安全监测</h2><ol>
+<li><p>防火墙</p>
+</li>
+<li><p>漏洞扫描</p>
+</li>
+<li><p>网站防篡改</p>
+<p>实现技术：</p>
+<ul>
+<li>利用操作系统的文件调用事件来检测网页文件的完整性变化</li>
+<li>利用密码学的单向函数检测</li>
+</ul>
+</li>
+<li><p>网络流量清洗</p>
+</li>
+<li><p>网站安全监测</p>
+<p>主要内容：</p>
+<ul>
+<li>网站安全漏洞监测</li>
+<li>网站挂马监测</li>
+<li>网站ICP备案监测</li>
+<li>网站合规性监测</li>
+<li>网站性能监测</li>
+<li>网站DNS监测</li>
+<li>网站入侵检测</li>
+</ul>
+</li>
+</ol>
+<h1 id="网站安全综合应用案例分析"><a href="#网站安全综合应用案例分析" class="headerlink" title="网站安全综合应用案例分析"></a>网站安全综合应用案例分析</h1><p>政务网站安全保护、网上银行安全保护详见P499-P501</p>
 
     </div>
 
@@ -433,13 +562,13 @@
       <div class="popular-posts-title"><a href="/2020/09/10/第2章-网络攻击原理与常用方法/" rel="bookmark">第2章 网络攻击原理与常用方法</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/16/第4章-网络安全体系与网络安全模型/" rel="bookmark">第4章 网络安全体系与网络安全模型</a></div>
+      <div class="popular-posts-title"><a href="/2020/09/09/第1章-网络信息安全概述/" rel="bookmark">第1章 网络信息安全概述</a></div>
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2020/09/14/第3章-密码学基本理论/" rel="bookmark">第3章 密码学基本理论</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/17/第5章-物理环境安全技术/" rel="bookmark">第5章 物理环境安全技术</a></div>
+      <div class="popular-posts-title"><a href="/2020/09/16/第4章-网络安全体系与网络安全模型/" rel="bookmark">第4章 网络安全体系与网络安全模型</a></div>
     </li>
   </ul>
 
@@ -452,7 +581,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://fl4g.cn/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/" title="第1章 网络信息安全概述">https://fl4g.cn/2020/09/09/第1章-网络信息安全概述/</a>
+    <a href="https://fl4g.cn/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" title="第22章 网站安全需求分析与安全保护工程">https://fl4g.cn/2020/09/28/第22章-网站安全需求分析与安全保护工程/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -473,13 +602,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="2020年软考--信息安全工程师学习笔记">
-      <i class="fa fa-chevron-left"></i> 2020年软考--信息安全工程师学习笔记
+    <a href="/2020/09/28/%E7%AC%AC21%E7%AB%A0-%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8/" rel="prev" title="第21章 网络设备安全">
+      <i class="fa fa-chevron-left"></i> 第21章 网络设备安全
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" rel="next" title="第2章 网络攻击原理与常用方法">
-      第2章 网络攻击原理与常用方法 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -539,7 +665,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">网络信息安全基本属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">网络信息安全基本功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF%E9%9C%80%E6%B1%82"><span class="nav-number">3.</span> <span class="nav-text">网络信息安全基本技术需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E5%86%85%E5%AE%B9%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">网络信息安全管理内容与方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%B3%95%E5%BE%8B%E4%B8%8E%E6%94%BF%E7%AD%96%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">网络信息安全法律与政策文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%A7%91%E6%8A%80%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96"><span class="nav-number">6.</span> <span class="nav-text">网络信息安全科技信息获取</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81%E4%B8%8E%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">网站安全威胁与需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">网站安全分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82"><span class="nav-number">1.2.</span> <span class="nav-text">网站安全需求</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apache-Web%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E4%B8%8E%E5%A2%9E%E5%BC%BA"><span class="nav-number">2.</span> <span class="nav-text">Apache Web安全分析与增强</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Web%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">Apache Web概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Web%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">Apache Web安全分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Web%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6"><span class="nav-number">2.3.</span> <span class="nav-text">Apache Web安全机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Web%E5%AE%89%E5%85%A8%E5%A2%9E%E5%BC%BA"><span class="nav-number">2.4.</span> <span class="nav-text">Apache Web安全增强</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IIS%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E4%B8%8E%E5%A2%9E%E5%BC%BA"><span class="nav-number">3.</span> <span class="nav-text">IIS安全分析与增强</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS%E6%A6%82%E8%BF%B0"><span class="nav-number">3.1.</span> <span class="nav-text">IIS概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">IIS安全分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">IIS安全机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS%E5%AE%89%E5%85%A8%E5%A2%9E%E5%BC%BA"><span class="nav-number">3.4.</span> <span class="nav-text">IIS安全增强</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.</span> <span class="nav-text">Web应用漏洞分析与防护</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#OWASP-Top-10"><span class="nav-number">4.1.</span> <span class="nav-text">OWASP Top 10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4"><span class="nav-number">4.2.</span> <span class="nav-text">Web应用漏洞防护</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88"><span class="nav-number">5.</span> <span class="nav-text">网站安全保护机制与技术方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">5.1.</span> <span class="nav-text">网站安全保护机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%9E%84%E6%88%90%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA"><span class="nav-number">5.2.</span> <span class="nav-text">网站构成组件安全加固</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E6%94%BB%E5%87%BB%E9%98%B2%E6%8A%A4%E5%8F%8A%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B"><span class="nav-number">5.3.</span> <span class="nav-text">网站攻击防护及安全监测</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E7%BB%BC%E5%90%88%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">6.</span> <span class="nav-text">网站安全综合应用案例分析</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -555,7 +681,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -644,13 +770,13 @@ setInterval("createtime()",250);
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">73k</span>
+    <span title="站点总字数">110k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:07</span>
+    <span title="站点阅读时长">1:40</span>
 </div><script color="205,140,149" opacity="0.6" zIndex="-1" count="100" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
 
