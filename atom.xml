@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-09-29T06:41:56.278Z</updated>
+  <updated>2020-09-29T07:55:33.050Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>第25章 移动应用安全需求分析与安全保护工程</title>
+    <link href="https://fl4g.cn/2020/09/29/%E7%AC%AC25%E7%AB%A0-%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/"/>
+    <id>https://fl4g.cn/2020/09/29/%E7%AC%AC25%E7%AB%A0-%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/</id>
+    <published>2020-09-29T06:46:06.000Z</published>
+    <updated>2020-09-29T07:55:33.050Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="移动应用安全威胁与需求分析"><a href="#移动应用安全威胁与需求分析" class="headerlink" title="移动应用安全威胁与需求分析"></a>移动应用安全威胁与需求分析</h1><h2 id="移动应用系统组成"><a href="#移动应用系统组成" class="headerlink" title="移动应用系统组成"></a>移动应用系统组成</h2><p>三个部分：移动App、通信网络、应用服务端</p><h2 id="移动应用安全分析"><a href="#移动应用安全分析" class="headerlink" title="移动应用安全分析"></a>移动应用安全分析</h2><p>安全威胁类型：</p><ol><li><p>移动操作系统平台威胁：移动应用的安全性依赖于移动操作系统</p></li><li><p>无线网络攻击：通信内容监听、假冒基站、网络域名欺诈、网络钓鱼等攻击</p></li><li><p>恶意代码</p><a id="more"></a></li><li><p>移动应用代码逆向工程</p></li><li><p>移动应用程序非法篡改</p></li></ol><h2 id="Android系统安全与保护机制"><a href="#Android系统安全与保护机制" class="headerlink" title="Android系统安全与保护机制"></a>Android系统安全与保护机制</h2><h2 id="Android系统组成概要"><a href="#Android系统组成概要" class="headerlink" title="Android系统组成概要"></a>Android系统组成概要</h2><p><img src="/2020/09/29/%E7%AC%AC25%E7%AB%A0-%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/Android系统架构.jpg" style="zoom:50%;"></p><p>常见威胁形式：APK重打包、更新攻击、诱惑下载、提权攻击、远程控制、恶意付费、敏感信息搜集</p><h2 id="Android系统安全机制"><a href="#Android系统安全机制" class="headerlink" title="Android系统安全机制"></a>Android系统安全机制</h2><ol><li>权限声明机制</li><li>应用程序签名机制</li><li>沙箱机制：实现不同应用程序和进程之间的隔离</li><li>网络通信加密</li><li>内核安全机制</li></ol><p><img src="/2020/09/29/%E7%AC%AC25%E7%AB%A0-%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/Android系统安全.jpg" style="zoom:50%;"></p><h1 id="iOS系统功能安全与保护机制"><a href="#iOS系统功能安全与保护机制" class="headerlink" title="iOS系统功能安全与保护机制"></a>iOS系统功能安全与保护机制</h1><h2 id="iOS系统组成概要"><a href="#iOS系统组成概要" class="headerlink" title="iOS系统组成概要"></a>iOS系统组成概要</h2><p><img src="/2020/09/29/%E7%AC%AC25%E7%AB%A0-%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/iOS系统架构.jpg" style="zoom:50%;"></p><h2 id="iOS系统安全机制"><a href="#iOS系统安全机制" class="headerlink" title="iOS系统安全机制"></a>iOS系统安全机制</h2><p><img src="/2020/09/29/%E7%AC%AC25%E7%AB%A0-%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/iOS系统安全.jpg" style="zoom:50%;"></p><p>安全机制：</p><ol><li>安全启动链：iOS平台的安全依赖于启动链的安全</li><li>数据保护</li><li>数据的加密于保护机制：强制加密</li><li>地址空间布局随机化</li><li>代码签名</li><li>沙箱机制</li></ol><h1 id="移动应用安全保护机制与技术方案"><a href="#移动应用安全保护机制与技术方案" class="headerlink" title="移动应用安全保护机制与技术方案"></a>移动应用安全保护机制与技术方案</h1><h2 id="移动应用App安全风险"><a href="#移动应用App安全风险" class="headerlink" title="移动应用App安全风险"></a>移动应用App安全风险</h2><p>容易遭受反编译、调试、篡改、数据窃取等</p><h2 id="移动应用App安全加固"><a href="#移动应用App安全加固" class="headerlink" title="移动应用App安全加固"></a>移动应用App安全加固</h2><ol><li>防反编译：加密处理</li><li>防调试：设置调试检测功能，如清理用户数据、报告程序所在设备情况、禁止使用某些功能</li><li>防篡改：数字签名和多重校验</li><li>防窃取：加密</li></ol><h2 id="移动应用App安全检测"><a href="#移动应用App安全检测" class="headerlink" title="移动应用App安全检测"></a>移动应用App安全检测</h2><p>检测内容：</p><ul><li>身份认证机制检测</li><li>通信会话安全机制检测</li><li>敏感信息保护机制检测</li><li>日志安全策略检测</li><li>交易流程安全机制检测</li><li>服务端鉴权机制检测</li><li>访问控制机制检测</li><li>数据防篡改能力检测</li><li>防SQL注入能力检测</li><li>防钓鱼能力检测</li><li>App安全漏洞检测</li></ul><p>Android6.0及以上可收集的个人信息的权限，最小必要权限参考：</p><ol><li>地图导航：位置、存储权限</li><li>网络约车：位置、拨打电话权限</li><li>即时通信：存储权限</li><li>博客论坛：存储权限</li><li>网络支付：存储权限</li><li>新闻资讯：无</li><li>网上购物：无</li><li>短视频：存储权限</li><li>快递配送：无</li><li>餐饮外卖：位置、拨打电话权限</li><li>交通票务：无</li><li>婚恋相亲：存储权限</li><li>求职招聘：存储权限</li><li>金融借贷：存储权限</li><li>房屋租售：存储权限</li><li>二手车交易：存储权限</li><li>运动健身：位置、传感器权限</li><li>问诊挂号：存储权限</li><li>网页浏览器：无</li><li>输入法：无</li><li>安全管理：存储、获取应用账户、读取电话状态、短信权限</li></ol><h1 id="移动应用安全综合应用案例分析"><a href="#移动应用安全综合应用案例分析" class="headerlink" title="移动应用安全综合应用案例分析"></a>移动应用安全综合应用案例分析</h1><p>金融移动安全、运营商移动安全、移动办公安全详见P553-P555</p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;移动应用安全威胁与需求分析&quot;&gt;&lt;a href=&quot;#移动应用安全威胁与需求分析&quot; class=&quot;headerlink&quot; title=&quot;移动应用安全威胁与需求分析&quot;&gt;&lt;/a&gt;移动应用安全威胁与需求分析&lt;/h1&gt;&lt;h2 id=&quot;移动应用系统组成&quot;&gt;&lt;a href=&quot;#移动应用系统组成&quot; class=&quot;headerlink&quot; title=&quot;移动应用系统组成&quot;&gt;&lt;/a&gt;移动应用系统组成&lt;/h2&gt;&lt;p&gt;三个部分：移动App、通信网络、应用服务端&lt;/p&gt;
+&lt;h2 id=&quot;移动应用安全分析&quot;&gt;&lt;a href=&quot;#移动应用安全分析&quot; class=&quot;headerlink&quot; title=&quot;移动应用安全分析&quot;&gt;&lt;/a&gt;移动应用安全分析&lt;/h2&gt;&lt;p&gt;安全威胁类型：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;移动操作系统平台威胁：移动应用的安全性依赖于移动操作系统&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;无线网络攻击：通信内容监听、假冒基站、网络域名欺诈、网络钓鱼等攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;恶意代码&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;</summary>
+    
+    
+    
+    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
+    
+    
+    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>第24章 工控安全需求分析与安全保护工程</title>
@@ -503,28 +531,6 @@
 &lt;li&gt;所具有的生物特征&lt;/li&gt;
 &lt;li&gt;所表现的行为特征&lt;/li&gt;
 &lt;/ol&gt;</summary>
-    
-    
-    
-    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
-    
-    
-    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第5章 物理环境安全技术</title>
-    <link href="https://fl4g.cn/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/"/>
-    <id>https://fl4g.cn/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/</id>
-    <published>2020-09-17T01:58:06.000Z</published>
-    <updated>2020-09-17T04:12:05.827Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="物理安全概念与要求"><a href="#物理安全概念与要求" class="headerlink" title="物理安全概念与要求"></a>物理安全概念与要求</h1><h2 id="物理安全威胁"><a href="#物理安全威胁" class="headerlink" title="物理安全威胁"></a>物理安全威胁</h2><p>常见威胁：</p><p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg" alt></p><a id="more"></a><p>攻击技术：硬件木马、硬件协同的恶意代码、硬件安全漏洞利用、基于软件漏洞攻击硬件实体、基于环境攻击计算机实体。</p><h2 id="物理安全保护"><a href="#物理安全保护" class="headerlink" title="物理安全保护"></a>物理安全保护</h2><ol><li>设备物理安全：有标志和标记、防止电磁信息泄露、抗电磁干扰、安全漏洞等</li><li>环境物理安全：机房选择、防护</li><li>系统物理安全：存储介质，灾备、访问保护</li></ol><p>方法：安全合规、访问控制、安全屏蔽、故障容错、安全监测与预警、供应链安全管理和容灾备份等。</p><h2 id="物理安全规范"><a href="#物理安全规范" class="headerlink" title="物理安全规范"></a>物理安全规范</h2><p>《信息系统物理安全技术要求（GB/T 21052-2007）》分4级保护：</p><ol><li>第一级用户自主保护级提供基本的物理安全保护</li><li>第二级系统审计保护级提供适当的物理安全保护</li><li>第三级安全标记保护级提供较高程度的物理安全保护</li><li>第四级结构化保护级提供更高程度的物理安全保护</li></ol><h1 id="物理环境安全分析与防护"><a href="#物理环境安全分析与防护" class="headerlink" title="物理环境安全分析与防护"></a>物理环境安全分析与防护</h1><ol><li><p><strong> 防火</strong></p><p>理想灭火材料：卤代烷1211和1301灭火剂</p></li><li><p><strong>防水</strong></p><p>不要把机房设置在楼房底层或地下室</p></li><li><p><strong>防震</strong></p></li><li><p><strong>防盗</strong></p><p>报警器和监控、物理访问控制</p></li><li><p><strong>防鼠虫害</strong></p><p>危害：咬坏电缆或引起电源短路</p></li><li><p><strong>防雷</strong></p><p>避雷针及专用防雷设施，设备接地</p></li><li><p><strong>防电磁</strong></p><p>防止电磁干扰，防止信息通过电磁泄漏。措施：接地、屏蔽、选择合适场地</p></li><li><p><strong>防静电</strong></p><p>人员服装、机房温湿度、材料、操作戴防静电手套</p></li><li><p><strong>安全供电</strong></p><p>专用电线路、不间断电源（UPS）、备用发电机</p></li></ol><h1 id="机房安全分析与防护"><a href="#机房安全分析与防护" class="headerlink" title="机房安全分析与防护"></a>机房安全分析与防护</h1><h2 id="机房功能区域组成"><a href="#机房功能区域组成" class="headerlink" title="机房功能区域组成"></a>机房功能区域组成</h2><p>《计算机场地通用规范（GB/T 2887-2011）》（允许一室多用或酌情增减）：</p><ol><li>主要工作房间：主机房、终端室等；</li><li>第一类辅助房间：低压配电间、不间断电源室、空调机室、发电机室、气体钢瓶室、监控室等</li><li>第二类辅助房间：资料室、维修室、技术人员办公室</li><li>第三类辅助房间：储藏室、缓冲间、技术人员休息室、盥洗室</li></ol><h2 id="机房安全等级划分"><a href="#机房安全等级划分" class="headerlink" title="机房安全等级划分"></a>机房安全等级划分</h2><p>《计算机场地通用规范（GB/T 2887-2011）》分为A、B、C三级：</p><ul><li>A：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成严重损害</li><li>B：计算机系统运行中断后，会对国家安全、社会秩序、公共利益造成较大损害的</li><li>C：不属于A、B级的情况</li></ul><p>安全级别要求：</p><p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-1.jpg" alt></p><p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/安全级别要求-2.jpg" alt></p><h2 id="机房场地选择要求"><a href="#机房场地选择要求" class="headerlink" title="机房场地选择要求"></a>机房场地选择要求</h2><ol><li><p>环境安全性</p><p>避开：危险来源区、环境污染区、盐雾区、落雷区</p></li><li><p>地质可靠性</p><p>避开：杂填土、地层断裂、地质不牢靠、有开采价值矿区、低洼、潮湿</p></li><li><p>场地抗电磁干扰性</p><p>避开：无线电干扰源和微波线路的强电磁场干扰场所（不大于800A/m，100e）、强电流冲击</p></li><li><p>应避开强振动源和强噪音源</p><p>避开：振动源、机场、主要道路</p></li><li><p>应避免设在建筑物的高层以及用水设备的下层或隔壁</p></li></ol><h2 id="数据中心建设与设计要求"><a href="#数据中心建设与设计要求" class="headerlink" title="数据中心建设与设计要求"></a>数据中心建设与设计要求</h2><ul><li>超大型数据中心：&gt;=10000个标准机架；重点考虑气候环境、能源供给，优先在气候寒冷、能源充足的一类或气候适宜，能源充足的二类地区。</li><li>大型数据中心：&gt;=3000，&lt;10000标准机架；重点考虑气候环境、能源供给，优先在一类二类地区，也可在气候适宜，靠近能源富集地的三类地区</li><li>中小型数据中心：&lt;3000标准机架；重点考虑市场需求、能源供给，在靠近用户所在地、能源获取便利的地区建设。</li></ul><p>《设计规范》（2018.1.1）将数据中心分为A、B、C三级，强制性条文简述：</p><ul><li>所有设备的金属外壳、各类金属管道、金属线槽、建筑物金属结构必须进行等电位联结并接地（8.4.4）</li><li>耐火等级不应低于二级（13.2.1）</li><li>与气体供能用房在统一建筑内时，两者之间采用耐火极限不低于2.0h的防火隔墙和1.5h的楼板，隔墙上开门采用甲级防火门（13.2.4）</li><li>采用管网式气体或细水雾灭火系统的主机房，应同时设置两组独立的火灾探测器，火灾报警系统英语灭火系统和视频监控系统联动（13.3.1）</li><li>设置气体灭火系统的主机房，应配置专用空气呼吸器或氧气呼吸器（13.4.1）</li></ul><h2 id="互联网数据中心"><a href="#互联网数据中心" class="headerlink" title="互联网数据中心"></a>互联网数据中心</h2><p>IDC六大逻辑组成部分：</p><p><img src="/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/IDC逻辑组成.jpg" alt></p><p>《互联网数据中心工程技术规范（GB 51195-2016）》（2017.4.1）划分为R1（可用性不小于99.5%），R2（不小于99.9%），R3（不小于99.99%）3个级别，强制性条文简述：</p><ul><li>抗震设防烈度7度以上（含7度）地区，主要电信设备必须经过性能检测合格</li><li>对肌肤安全条件进行全面检查：灭火器材，非燃材料，不同电压的电源设备、电源插座应有明显区别标志。</li></ul><h2 id="CA机房物理安全控制"><a href="#CA机房物理安全控制" class="headerlink" title="CA机房物理安全控制"></a>CA机房物理安全控制</h2><p>《电子政务电子认证服务业务规则规范》，提出规范性要求。</p><ol><li>物理环境按照GM/T 0034要求严格实施，至少每五年进行一次屏蔽室检测</li><li>所有人员应佩戴标识身份的证明</li><li>进出人员留有记录，并妥善、安全的保管。（监控录像、门禁记录）</li><li>建立并执行人员访问制度及程序，对访问人员进行监督和监控</li><li>保护设备免于电源故障或网络通信异常影响</li><li>处理或再利用存储介质，检查是否含有敏感数据，并物理销毁或安全覆盖</li><li>制定相关安全检查、监督策略。</li></ol><h1 id="网络通信线路安全分析与防护"><a href="#网络通信线路安全分析与防护" class="headerlink" title="网络通信线路安全分析与防护"></a>网络通信线路安全分析与防护</h1><h2 id="网络通信线路安全分析"><a href="#网络通信线路安全分析" class="headerlink" title="网络通信线路安全分析"></a>网络通信线路安全分析</h2><p>威胁：</p><ul><li>网络通信线路被切断</li><li>网络通信线路被电磁干扰</li><li>网络通信线路泄漏信息</li></ul><h2 id="网络通信线路安全防护"><a href="#网络通信线路安全防护" class="headerlink" title="网络通信线路安全防护"></a>网络通信线路安全防护</h2><p>两个方面：</p><ul><li>网络通信设备：采取设备冗余</li><li>网络通信线路：采取多路通信</li></ul><h1 id="设备安全分析与防护"><a href="#设备安全分析与防护" class="headerlink" title="设备安全分析与防护"></a>设备安全分析与防护</h1><h2 id="设备实体安全分析"><a href="#设备实体安全分析" class="headerlink" title="设备实体安全分析"></a>设备实体安全分析</h2><ol><li>设备实体环境关联安全威胁</li><li>设备实体被盗取或损害</li><li>设备实体受到电磁干扰</li><li>设备供应链条中断或延缓</li><li>设备实体的固件部分遭受攻击</li><li>设备遭受硬件攻击</li><li>设备实体的控制组件安全威胁</li><li>设备非法外联</li></ol><h2 id="设备实体安全防护"><a href="#设备实体安全防护" class="headerlink" title="设备实体安全防护"></a>设备实体安全防护</h2><p>GB/T 21052-2007，主要技术措施：</p><ol><li>设备的标志和标记</li><li>设备电磁辐射防护</li><li>设备静电及用电安全防护</li><li>设备磁场抗扰</li><li>设备环境安全保护</li><li>设备适应性与可靠性保护（包括：温度、湿度、冲击和碰撞适应性、可靠性、供应链弹性、安全质量保障、安全合规、安全审查）</li></ol><h2 id="设备硬件攻击防护"><a href="#设备硬件攻击防护" class="headerlink" title="设备硬件攻击防护"></a>设备硬件攻击防护</h2><p>主要措施：</p><ol><li>硬剑木马检测（方法：反向分析法、功耗分析法、侧信道分析法）</li><li>硬件漏洞处理</li></ol><h1 id="存储介质安全分析与防护"><a href="#存储介质安全分析与防护" class="headerlink" title="存储介质安全分析与防护"></a>存储介质安全分析与防护</h1><h2 id="存储介质安全分析"><a href="#存储介质安全分析" class="headerlink" title="存储介质安全分析"></a>存储介质安全分析</h2><p>安全威胁：</p><ol><li>存储管理失效</li><li>存储数据泄密</li><li>存储介质及存储设备故障</li><li>存储介质数据非安全删除</li><li>恶意代码攻击</li></ol><h2 id="存储介质安全防护"><a href="#存储介质安全防护" class="headerlink" title="存储介质安全防护"></a>存储介质安全防护</h2><ol><li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li><li>数据存储加密保存</li><li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li></ol>]]></content>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;物理安全概念与要求&quot;&gt;&lt;a href=&quot;#物理安全概念与要求&quot; class=&quot;headerlink&quot; title=&quot;物理安全概念与要求&quot;&gt;&lt;/a&gt;物理安全概念与要求&lt;/h1&gt;&lt;h2 id=&quot;物理安全威胁&quot;&gt;&lt;a href=&quot;#物理安全威胁&quot; class=&quot;headerlink&quot; title=&quot;物理安全威胁&quot;&gt;&lt;/a&gt;物理安全威胁&lt;/h2&gt;&lt;p&gt;常见威胁：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/2020/09/17/%E7%AC%AC5%E7%AB%A0-%E7%89%A9%E7%90%86%E7%8E%AF%E5%A2%83%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/物理安全威胁.jpg&quot; alt&gt;&lt;/p&gt;</summary>
     
     
     
