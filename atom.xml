@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-09-29T07:55:33.050Z</updated>
+  <updated>2020-09-29T08:31:33.440Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>第26章 大数据安全需求分析与安全保护工程</title>
+    <link href="https://fl4g.cn/2020/09/29/%E7%AC%AC26%E7%AB%A0-%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/"/>
+    <id>https://fl4g.cn/2020/09/29/%E7%AC%AC26%E7%AB%A0-%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/</id>
+    <published>2020-09-29T08:02:09.000Z</published>
+    <updated>2020-09-29T08:31:33.440Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="大数据安全威胁与需求分析"><a href="#大数据安全威胁与需求分析" class="headerlink" title="大数据安全威胁与需求分析"></a>大数据安全威胁与需求分析</h1><h2 id="大数据安全威胁分析"><a href="#大数据安全威胁分析" class="headerlink" title="大数据安全威胁分析"></a>大数据安全威胁分析</h2><p>安全挑战：</p><ol><li><p>“数据集”安全边界日渐模糊，安全保护难度提升</p></li><li><p>敏感数据泄露安全风险增大</p></li><li><p>数据失真与大数据污染安全风险</p></li><li><p>大数据处理平台业务连续性与拒绝服务</p><a id="more"></a></li><li><p>个人数据广泛分布于多个数据平台，隐私保护难度加大</p></li><li><p>数据交易安全风险</p></li><li><p>大数据滥用</p></li></ol><h2 id="大数据安全法规政策"><a href="#大数据安全法规政策" class="headerlink" title="大数据安全法规政策"></a>大数据安全法规政策</h2><ol><li>《气象资料共享管理办法》</li><li>《中国人民银行关于银行业金融机构做好个人金融信息保护工作的通知》</li><li>《全国人民代表大会常务委员会关于加强网络信息保护的决定》</li><li>《电信和互联网用户个人信息保护规定》</li><li>《中华人民共和国消费者权益保护法（2013修正）》</li><li>《地图管理条例》</li><li>《中华人民共和国网络安全法》</li><li>《网络预约出租汽车经营服务管理暂行办法》</li><li>《网络出版服务管理规定》</li><li>《人口健康信息管理办法（试行）》</li><li>《保险公司开业验收指引》</li><li>《保险机构信息化监管规定（征求意见稿）》</li></ol><p>欧盟颁布实施《一般数据保护法案》（GDPR）</p><h2 id="大数据安全需求分析"><a href="#大数据安全需求分析" class="headerlink" title="大数据安全需求分析"></a>大数据安全需求分析</h2><p>主要内容：</p><ol><li>大数据自身安全：大数据应用依赖于可信的数据</li><li>大数据安全合规：满足不同国家和地区</li><li>大数据跨境安全：主要包括数据物理存储位置、跨境数据流动安全要求等</li><li>大数据隐私保护</li><li>大数据处理平台安全</li><li>大数据业务安全</li><li>大数据安全运营</li></ol><h1 id="大数据安全保护机制与技术方案"><a href="#大数据安全保护机制与技术方案" class="headerlink" title="大数据安全保护机制与技术方案"></a>大数据安全保护机制与技术方案</h1><h2 id="大数据安全保护机制"><a href="#大数据安全保护机制" class="headerlink" title="大数据安全保护机制"></a>大数据安全保护机制</h2><p>基本安全机制：数据分类分级、数据源认证、数据溯源、数据用户标识和鉴别、数据资源访问控制、数据隐私保护、数据备份与恢复、数据安全审计与监测、数据安全管理</p><h2 id="大数据自身安全保护技术"><a href="#大数据自身安全保护技术" class="headerlink" title="大数据自身安全保护技术"></a>大数据自身安全保护技术</h2><p>数字签名验证数据来源真实性；Hash算法确保数据完整性；加密算法保护数据机密性</p><h2 id="大数据平台安全保护技术"><a href="#大数据平台安全保护技术" class="headerlink" title="大数据平台安全保护技术"></a>大数据平台安全保护技术</h2><p>安全技术：安全分区、防火墙、系统安全加固、数据防泄漏</p><h2 id="大数据业务安全保护技术"><a href="#大数据业务安全保护技术" class="headerlink" title="大数据业务安全保护技术"></a>大数据业务安全保护技术</h2><p>安全内容：</p><ul><li>业务授权：基于角色的访问控制技术</li><li>业务逻辑安全：针对业务流程进行安全控制</li><li>业务合规性：业务满足政策法规及安全标准规范要求，技术有名贵数据安全检查、系统安全配置基准数据监控</li></ul><h2 id="大数据隐私安全保护技术"><a href="#大数据隐私安全保护技术" class="headerlink" title="大数据隐私安全保护技术"></a>大数据隐私安全保护技术</h2><p>主要技术：数据身份匿名、数据差分隐私、数据脱敏、数据加密、数据访问控制</p><h2 id="大数据运营安全保护技术"><a href="#大数据运营安全保护技术" class="headerlink" title="大数据运营安全保护技术"></a>大数据运营安全保护技术</h2><p>常用技术：网络入侵监测、网络安全态势感知、网络攻击取证、网络威胁情报分析、安全堡垒机</p><h2 id="大数据安全标准规范"><a href="#大数据安全标准规范" class="headerlink" title="大数据安全标准规范"></a>大数据安全标准规范</h2><ul><li>《信息安全技术 个人信息安全规范》</li><li>《信息安全技术 的数据服务安全能力要求》</li><li>《信息安全技术 大数据安全管理指南》</li><li>《信息安全技术 数据交易服务安全要求》</li><li>《信息安全技术 个人信息去标识化指南》</li></ul><h1 id="大数据综合应用案例分析"><a href="#大数据综合应用案例分析" class="headerlink" title="大数据综合应用案例分析"></a>大数据综合应用案例分析</h1><p>阿里巴巴大数据安全实践、京东大数据安全实践、上海数据交易中心安全保护、华为大数据安全实践、科学数据安全管理、支付卡行业数据安全规范详见P562-P568</p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;大数据安全威胁与需求分析&quot;&gt;&lt;a href=&quot;#大数据安全威胁与需求分析&quot; class=&quot;headerlink&quot; title=&quot;大数据安全威胁与需求分析&quot;&gt;&lt;/a&gt;大数据安全威胁与需求分析&lt;/h1&gt;&lt;h2 id=&quot;大数据安全威胁分析&quot;&gt;&lt;a href=&quot;#大数据安全威胁分析&quot; class=&quot;headerlink&quot; title=&quot;大数据安全威胁分析&quot;&gt;&lt;/a&gt;大数据安全威胁分析&lt;/h2&gt;&lt;p&gt;安全挑战：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;“数据集”安全边界日渐模糊，安全保护难度提升&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;敏感数据泄露安全风险增大&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;数据失真与大数据污染安全风险&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;大数据处理平台业务连续性与拒绝服务&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;</summary>
+    
+    
+    
+    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
+    
+    
+    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>第25章 移动应用安全需求分析与安全保护工程</title>
@@ -502,34 +531,6 @@
 &lt;h2 id=&quot;访问控制目标&quot;&gt;&lt;a href=&quot;#访问控制目标&quot; class=&quot;headerlink&quot; title=&quot;访问控制目标&quot;&gt;&lt;/a&gt;访问控制目标&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;防止非法用户进入系统；&lt;/li&gt;
 &lt;li&gt;阻止合法用户对系统资源的非法使用，即禁止合法用户的越权访问&lt;/li&gt;
-&lt;/ol&gt;</summary>
-    
-    
-    
-    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
-    
-    
-    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第6章 认证技术原理与应用</title>
-    <link href="https://fl4g.cn/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"/>
-    <id>https://fl4g.cn/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</id>
-    <published>2020-09-17T06:14:55.000Z</published>
-    <updated>2020-09-23T07:05:30.627Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="认证概述"><a href="#认证概述" class="headerlink" title="认证概述"></a>认证概述</h1><p>认证由标识和鉴别两部分组成。</p><h2 id="认证依据"><a href="#认证依据" class="headerlink" title="认证依据"></a>认证依据</h2><p>主要有四类：</p><ol><li>所知道的秘密信息</li><li>所拥有的实物凭证</li><li>所具有的生物特征</li><li>所表现的行为特征</li></ol><a id="more"></a><h2 id="认证原理"><a href="#认证原理" class="headerlink" title="认证原理"></a>认证原理</h2><p>认证机制又验证对象、认证协议、鉴别实体构成。</p><p>根据认证依据所利用的时间长度，分成一次性口令、持续认证。</p><h1 id="认证类型与认证过程"><a href="#认证类型与认证过程" class="headerlink" title="认证类型与认证过程"></a>认证类型与认证过程</h1><h2 id="单向认证"><a href="#单向认证" class="headerlink" title="单向认证"></a>单向认证</h2><ol><li><p>基于共享秘密</p><p>验证者（B）和声称者（A）共享一个秘密$K_{AB}$，$ID_A$为实体A的标识，A发送两者给B，B进行验证并回复给A</p></li><li><p>基于挑战的响应</p><p>验证者B生成一个随机数$R_B$，$ID_A$为实体A的标识，$ID_B$为实体A的标识，B向A发送消息（$ID_B$，$R_B$）。A收到消息后，生成包含随机数$R_B$的秘密$K_{AB}$，并发送（$ID_A$，$K_{AB}$）给B，B收到后，解密$K_{AB}$，检查$R_B$是否正确，并回复给A。</p></li></ol><h2 id="双向认证"><a href="#双向认证" class="headerlink" title="双向认证"></a>双向认证</h2><p>双方互相认证。</p><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/双向认证.jpg" alt></p><h2 id="第三方认证"><a href="#第三方认证" class="headerlink" title="第三方认证"></a>第三方认证</h2><p>实体A和实体B与第三方共享密钥$K_{PA}$，$K_{PB}$，实体A发送认证请求时，向第三方申请实体AB的密钥$K_{AB}$，然后A和B使用$K_{AB}$加密保护双方的认证信息。</p><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/第三方认证.jpg" alt></p><h1 id="认证技术方法"><a href="#认证技术方法" class="headerlink" title="认证技术方法"></a>认证技术方法</h1><h2 id="口令认证技术"><a href="#口令认证技术" class="headerlink" title="口令认证技术"></a>口令认证技术</h2><p>主要攻击方式：窃听、重放、中间人攻击、口令猜测</p><p>口令认证安全：加密存储、安全传输、符合协议设计要求、避免弱口令</p><h2 id="智能卡技术"><a href="#智能卡技术" class="headerlink" title="智能卡技术"></a>智能卡技术</h2><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/智能卡技术.jpg" alt></p><h2 id="基于生物特征认证技术"><a href="#基于生物特征认证技术" class="headerlink" title="基于生物特征认证技术"></a>基于生物特征认证技术</h2><p>生物特征：指纹、人脸、视网膜、语音</p><p><strong>虹膜识别的错误率是各种生物特征识别中最低的</strong></p><h2 id="Kerberos认证技术"><a href="#Kerberos认证技术" class="headerlink" title="Kerberos认证技术"></a>Kerberos认证技术</h2><p>四个基本实体</p><ul><li>Kerberos客户机，用户用来访问服务器设备</li><li>AS（认证服务器），识别用户身份并提供TGS会话密钥</li><li>TGS（票据发放服务器），为申请服务的用户授予票据</li><li>应用服务器，为用户提供服务的设备或系统</li></ul><p>kerberos V5认证协议主要由六步构成（AS与TGS统称为KDC）</p><p><img src="/2020/09/17/%E7%AC%AC6%E7%AB%A0-%E8%AE%A4%E8%AF%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/Kerberos工作流程.jpg" alt></p><ol><li>Kerberos客户（已知自己用户名密码）向AS（已知所有用户和服务名所有密码）申请票据TGT</li><li>当AS收到Kerberos客户消息后，在认证数据库检查确认后产生一个会话密钥，同时使用客户秘密密钥对会话密钥加密，生成票据TGT（实体名、地址、时间戳、限制时间、会话密钥组成）。然后发送给Kerberos客户。</li><li>Kerberos客户收到TGT后，使用自己的秘密密钥解密得到会话密钥，利用解密的信息重新构造认证请求单，向TGS发送请求，申请访问应用服务器AP所需的票据。</li><li>TGS使用其秘密密钥对TGT进行解密，同时使用TGT中的会话密钥对Kerberos客户对请求认证单信息进行解密，并将解密后的信息与TGT中信息进行比较。然后TGS生成新的会话密钥以供Kerberos客户和应用服务器使用，并利用各自的秘密密钥加密会话密钥。最后，生成一个票据TGT（由客户的实体名、地址、时间戳、限制时间、会话密钥组成），将TGT发送给Kerberos客户。</li><li>Kerberos客户收到TGS响应后，获得与应用服务器共享的会话密钥。此时，Kerberos客户生成一个新的用于访问应用服务器的认证单，并用与应用服务器共享的会话密钥加密，然后与TGS发送来的票据一并传送到应用服务器。</li></ol><p>优点：</p><ul><li>显著减少用户密钥的密文暴露次数，减少公交站对有关用户密钥对密文积累</li><li>具有单点登录的优点，只要TGT未过期，认证过程就不必重新输入密码</li></ul><p>缺点：</p><ul><li>若服务器时间发送错误，则整个Kerberos认证系统将会瘫痪</li></ul><h2 id="公钥基础设施（PKI）技术"><a href="#公钥基础设施（PKI）技术" class="headerlink" title="公钥基础设施（PKI）技术"></a>公钥基础设施（PKI）技术</h2><p>PKI主要安全服务：身份认证、完整性保护、数字签名、会话加密管理、密钥恢复</p><p>PKI各实体的功能分别叙述如下：</p><ul><li>CA：证书授权机构，主要进行证书的颁发、废止和更新；认证机构负责签发、管理和撤销一组终端用户的证书</li><li>RA：证书登记权威机构，将公钥和对应的证书持有者的身份及其他属性联系起来，进行注册和担保；RA可以充当CA和他的终端用户之间的中间实体，辅助CA完成其他绝大部分的证书处理功能</li><li>目录服务器：CA通常使用一个目录服务器，提供证书管理和分发的服务</li><li>终端实体：指需要认证的对象，如服务器、E-mail地址</li><li>客户端：指需要基于PKI安全服务的使用者，包括用户、服务进程等</li></ul><h2 id="单点登录"><a href="#单点登录" class="headerlink" title="单点登录"></a>单点登录</h2><p>使用不同系统时，只需要进行一次身份认证。</p><h2 id="基于人机识别认证技术"><a href="#基于人机识别认证技术" class="headerlink" title="基于人机识别认证技术"></a>基于人机识别认证技术</h2><p>区别计算机和人的操作，称为CAPTCHA技术。主要包括：文本、图像、语音等</p><h2 id="多因素认证技术"><a href="#多因素认证技术" class="headerlink" title="多因素认证技术"></a>多因素认证技术</h2><p>多种鉴别信息进行组合</p><h2 id="基于行为的身份鉴别技术"><a href="#基于行为的身份鉴别技术" class="headerlink" title="基于行为的身份鉴别技术"></a>基于行为的身份鉴别技术</h2><p>根据用户行为和风险大小而进行的身份鉴别技术。动态监控用户状态以判定用户身份。</p><h2 id="快速在线认证（FIDO）"><a href="#快速在线认证（FIDO）" class="headerlink" title="快速在线认证（FIDO）"></a>快速在线认证（FIDO）</h2><p>使用标准公钥加密技术来提供强身份验证。</p><ol><li><p>登记注册</p><p>创建公私钥，公钥注册到在线服务。</p></li><li><p>登录使用</p><p>验证方法：安全PIN、生物识别以及符合FIDO标准要求的认证设备。</p></li></ol><h1 id="认证主要产品与技术指标"><a href="#认证主要产品与技术指标" class="headerlink" title="认证主要产品与技术指标"></a>认证主要产品与技术指标</h1><h2 id="认证主要产品"><a href="#认证主要产品" class="headerlink" title="认证主要产品"></a>认证主要产品</h2><p>产品类型：系统安全增强、生物认证、电子认证服务、网络准入控制、身份认证网关</p><h2 id="主要技术指标"><a href="#主要技术指标" class="headerlink" title="主要技术指标"></a>主要技术指标</h2><p>评价指标分成三类：安全功能要求、性能要求和安全保障要求</p><p>技术指标：密码算法支持、认证准确性、用户支持数量、安全保障级别</p><h1 id="认证技术应用"><a href="#认证技术应用" class="headerlink" title="认证技术应用"></a>认证技术应用</h1><p>常见应用场景：用户身份验证、信息来源证实、信息安全保护</p><p>校园网、网络路由、机房门禁、公民网络电子身份标识、HTTP等方面认证技术应用参考详见P134-139</p>]]></content>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;认证概述&quot;&gt;&lt;a href=&quot;#认证概述&quot; class=&quot;headerlink&quot; title=&quot;认证概述&quot;&gt;&lt;/a&gt;认证概述&lt;/h1&gt;&lt;p&gt;认证由标识和鉴别两部分组成。&lt;/p&gt;
-&lt;h2 id=&quot;认证依据&quot;&gt;&lt;a href=&quot;#认证依据&quot; class=&quot;headerlink&quot; title=&quot;认证依据&quot;&gt;&lt;/a&gt;认证依据&lt;/h2&gt;&lt;p&gt;主要有四类：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;所知道的秘密信息&lt;/li&gt;
-&lt;li&gt;所拥有的实物凭证&lt;/li&gt;
-&lt;li&gt;所具有的生物特征&lt;/li&gt;
-&lt;li&gt;所表现的行为特征&lt;/li&gt;
 &lt;/ol&gt;</summary>
     
     
