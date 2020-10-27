@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="URL去重URL去重主要有两种方式：  布隆过滤器去重 Hash表去重">
+<meta property="og:type" content="article">
+<meta property="og:title" content="URL去重去似">
+<meta property="og:url" content="https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/index.html">
+<meta property="og:site_name" content="zering的博客">
+<meta property="og:description" content="URL去重URL去重主要有两种方式：  布隆过滤器去重 Hash表去重">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-05-24T01:48:54.000Z">
+<meta property="article:modified_time" content="2020-09-08T06:50:39.000Z">
+<meta property="article:author" content="zering">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>URL去重去似 | zering的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="zering的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zering的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">20</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">47</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+<meta name="google-site-verification" content="A484aRcwhwSoPkimp9OmCvO84Lp2Kkzo-g_N72GZaEk" />
+<meta name="baidu-site-verification" content="code-pQXPTgqjJc" />
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zeringzxh" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zering">
+      <meta itemprop="description" content="学而时习之">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zering的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          URL去重去似
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-05-24 09:48:54" itemprop="dateCreated datePublished" datetime="2018-05-24T09:48:54+08:00">2018-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-08 14:50:39" itemprop="dateModified" datetime="2020-09-08T14:50:39+08:00">2020-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/" class="post-meta-item leancloud_visitors" data-flag-title="URL去重去似" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
+<ul>
+<li>布隆过滤器去重</li>
+<li><p>Hash表去重</p>
+<a id="more"></a>
+<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
+<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
+<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
+<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
+</ol>
+<p>python有两个第三方插件实现了此功能：</p>
+<ul>
+<li>Python-bloomfilter<br>项目地址:<a target="_blank" rel="noopener" href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
+<li>Pybloomfiltermmap<br>项目地址:<a target="_blank" rel="noopener" href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a target="_blank" rel="noopener" href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
+</ul>
+<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
+<p>布隆过滤器存在一定的误判率。</p>
+<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
+<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
+<ul>
+<li>btree：树结构，存储任意复杂key和value</li>
+<li>hash：hash存储，访问量巨大时，效果好</li>
+<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
+<li>recno：与queue相似，但支持边长value</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
+<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
+</li>
+</ul>
+<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
+<ul>
+<li>协议相同（protocol）</li>
+<li>主机名相同（host）</li>
+<li>端口相同（port）</li>
+<li>资源路劲相同（path）</li>
+<li>参数名所组成列表相同或包含</li>
+</ul>
+<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a target="_blank" rel="noopener" href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
+
+    </div>
+
+    
+    
+    
+    
+    <div>
+     
+       <div>
+   
+		<div style="text-align:center;color: #ccc;font-size:14px;">-------本文结束&nbsp;<i class="fa fa-paw"></i>&nbsp;感谢您的阅读-------</div>
+	
+</div>
+     
+   </div>
+      
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zering
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://fl4g.cn/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/" title="URL去重去似">https://fl4g.cn/2018/05/24/url去重去似/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/" rel="prev" title="python学习-argparse模块">
+      <i class="fa fa-chevron-left"></i> python学习-argparse模块
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/06/01/Android%E9%80%86%E5%90%91-smali%E8%AF%AD%E6%B3%95/" rel="next" title="Android逆向-smali语法">
+      Android逆向-smali语法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#URL%E5%8E%BB%E9%87%8D"><span class="nav-number">1.</span> <span class="nav-text">URL去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%8E%BB%E9%87%8D"><span class="nav-number">1.1.</span> <span class="nav-text">布隆过滤器去重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash%E8%A1%A8%E5%8E%BB%E9%87%8D"><span class="nav-number">1.2.</span> <span class="nav-text">Hash表去重</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%88%A9%E7%94%A8%E5%86%85%E5%AD%98Hash%E8%A1%A8%E5%8E%BB%E9%87%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">方法一：利用内存Hash表去重</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%88%A9%E7%94%A8BerkeleyDB%E5%8E%BB%E9%87%8D"><span class="nav-number">1.2.2.</span> <span class="nav-text">方法二：利用BerkeleyDB去重</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#URL%E5%8E%BB%E4%BC%BC%E5%8E%BB%E5%90%AB"><span class="nav-number">2.</span> <span class="nav-text">URL去似去含</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zering"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zering</p>
+  <div class="site-description" itemprop="description">学而时习之</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      天才或疯子
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://1sparrow.com/" title="https:&#x2F;&#x2F;1sparrow.com&#x2F;" rel="noopener" target="_blank">一只麻雀</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://blog.51cto.com/13769225" title="http:&#x2F;&#x2F;blog.51cto.com&#x2F;13769225" rel="noopener" target="_blank">Wuli王蜀黎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sa1tfish.github.io/" title="https:&#x2F;&#x2F;sa1tfish.github.io&#x2F;" rel="noopener" target="_blank">咸鱼的博客</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div>
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/31/2019 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+</div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zering</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">119k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:49</span>
+</div><script color="205,140,149" opacity="0.6" zIndex="-1" count="100" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'lQLsGBhiarkYBwvOmqFw80NJ-gzGzoHsz',
+      appKey     : 'qBw97RhefahyXiugjB2ogQtl',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--  -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+<!---->
+<script type="text/javascript" src="/js/src/custom.js"></script>

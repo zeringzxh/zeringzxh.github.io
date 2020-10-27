@@ -1,61 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>URL去重去似</title>
-    <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
-    <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
-<ul>
-<li>布隆过滤器去重</li>
-<li><p>Hash表去重</p>
-<a id="more"></a>
-<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
-<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
-<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
-<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
-</ol>
-<p>python有两个第三方插件实现了此功能：</p>
-<ul>
-<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
-<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
-</ul>
-<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
-<p>布隆过滤器存在一定的误判率。</p>
-<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
-<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
-<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
-<ul>
-<li>btree：树结构，存储任意复杂key和value</li>
-<li>hash：hash存储，访问量巨大时，效果好</li>
-<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
-<li>recno：与queue相似，但支持边长value</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
-<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
-</li>
-</ul>
-<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
-<ul>
-<li>协议相同（protocol）</li>
-<li>主机名相同（host）</li>
-<li>端口相同（port）</li>
-<li>资源路劲相同（path）</li>
-<li>参数名所组成列表相同或包含</li>
-</ul>
-<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>python学习-argparse模块</title>
     <url>/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<p>  argparse模块是python中用于解析命令行参数和选项的标准模块，方便用户在命令行中输入参数。</p>
@@ -121,6 +66,61 @@
       </categories>
       <tags>
         <tag>argparse</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>URL去重去似</title>
+    <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
+    <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
+<ul>
+<li>布隆过滤器去重</li>
+<li><p>Hash表去重</p>
+<a id="more"></a>
+<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
+<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
+<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
+<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
+</ol>
+<p>python有两个第三方插件实现了此功能：</p>
+<ul>
+<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
+<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
+</ul>
+<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
+<p>布隆过滤器存在一定的误判率。</p>
+<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
+<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
+<ul>
+<li>btree：树结构，存储任意复杂key和value</li>
+<li>hash：hash存储，访问量巨大时，效果好</li>
+<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
+<li>recno：与queue相似，但支持边长value</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
+<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
+</li>
+</ul>
+<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
+<ul>
+<li>协议相同（protocol）</li>
+<li>主机名相同（host）</li>
+<li>端口相同（port）</li>
+<li>资源路劲相同（path）</li>
+<li>参数名所组成列表相同或包含</li>
+</ul>
+<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -328,65 +328,6 @@
       </tags>
   </entry>
   <entry>
-    <title>流量分析入门</title>
-    <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。<br><a id="more"></a></p>
-<h3 id="NetFlow输出格式"><a href="#NetFlow输出格式" class="headerlink" title="NetFlow输出格式"></a>NetFlow输出格式</h3><p>NetFlow输出格式为报头+一系列Flow流。报头包含序列号、记录数、系统时间等，Flow流包含IP地址、端口、路由信息等。</p>
-<p>一个IP数据包的Flow流至少定义了7个关键元素：</p>
-<ul>
-<li>源IP地址；</li>
-<li>目的IP地址；</li>
-<li>源端口号；</li>
-<li>目的端口号；</li>
-<li>第三层协议类型；</li>
-<li>TOS字段；</li>
-<li>网络设备输入/输出的逻辑端口。</li>
-</ul>
-<p>OSSIM提供可视化NetFlow图形界面，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/NetFlow.png" alt></p>
-<h3 id="NetFlow监测恶意代码"><a href="#NetFlow监测恶意代码" class="headerlink" title="NetFlow监测恶意代码"></a>NetFlow监测恶意代码</h3><p>NetFlow数据流获取方便，当网络正常运行时，NetFlow数据流是有一定的规律性的，当网络中存在异常流量时，网络流量会发生异常的波动。<br>监测蠕虫的策略：选取几个不同时间段，若时间段内符合特征的Flow超过上限值，则为病毒。</p>
-<h3 id="反应网络运行的核心参数"><a href="#反应网络运行的核心参数" class="headerlink" title="反应网络运行的核心参数"></a>反应网络运行的核心参数</h3><ul>
-<li>平均每秒流量：如果网络内部存在大流量的攻击或P2P等大流量的下载等异常流量时，其数值会比正常时大很多。</li>
-<li>平均每秒包数：大部分的异常流量都会产生非常多的数据包数。</li>
-<li>数据包大小分布：64字节左右的小包和1500字节左右的大包的分布比例较小，小包过多，可能存在扫描、攻击行为，大包过多可能存在消耗带宽资源的大包DOS攻击行为。<br>*平均包长：网络内的平均包长会在500-700字节左右。</li>
-<li>TCP会话数、UDP会话数、IP地址个数、MAC地址个数。。。</li>
-</ul>
-<h2 id="WireShark"><a href="#WireShark" class="headerlink" title="WireShark"></a>WireShark</h2><p> WireShark是目前世界上最流行的网络分析工具，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/WireShark.png" alt></p>
-<h3 id="界面详解"><a href="#界面详解" class="headerlink" title="界面详解"></a>界面详解</h3><p>1.过滤器规则：</p>
-<ul>
-<li>tcp-&gt;只显示TCP协议的记录；</li>
-<li>http-&gt;只看HTTP协议的记录；</li>
-<li>ip.src ==192.168.1.102 -&gt;显示源地址为192.168.1.102的记录；</li>
-<li>ip.dst==192.168.1.102 -&gt;目标地址为192.168.1.10的记录；</li>
-<li>ip.addr == 42.121.252.58 -&gt;只显示与某主机的通信；</li>
-<li>tcp.port ==80-&gt;端口为80的；</li>
-<li>tcp.srcport == 80 -&gt;只显示TCP协议的源端口为80的；</li>
-<li>http.request.method==”GET”  -&gt;只显示HTTP GET方法的；</li>
-<li>eth.type == 0x806-&gt;只显示ARP报文，这个字段的值表示是ARP报文，如果是ip报文此值为0x8000（可在表达式中选取对应的16进制值）。</li>
-</ul>
-<p>2.封包列表：<br>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。</p>
-<p>3.封包的详细信息：<br>在封包信息中，每行对应的含义及在OSI模型中的对应关系如下：</p>
-<ul>
-<li>Frame:   物理层的数据帧概况  -&gt;对应OSI七层模型中的【物理层】</li>
-<li>Ethernet II: 数据链路层以太网帧头部信息  -&gt;对应OSI七层模型中的【数据链路层】</li>
-<li>Internet Protocol Version 4: 互联网层IP包头部信息  -&gt;对应OSI七层模型中的【网络层】</li>
-<li>Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP  -&gt;对应OSI七层模型中的【传输层】</li>
-<li>Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议  -&gt;对应OSI七层模型中的【应用层】</li>
-</ul>
-<h3 id="WireShark统计模块"><a href="#WireShark统计模块" class="headerlink" title="WireShark统计模块"></a>WireShark统计模块</h3><h4 id="捕获文件的属性"><a href="#捕获文件的属性" class="headerlink" title="捕获文件的属性"></a>捕获文件的属性</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/文件属性.PNG" alt><br>这一菜单简单收集所有抓包数据，在定义了过滤条件的时候，将呈现过滤后的数据。当想要知道每秒的平均报文数或是字节数时，可以使用此工具。</p>
-<h4 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/统计_Endpoints.png" alt><br>此窗口中，能够看到第2,3,4层的endpoints，也就是以太网，IP, TCP或UDP。查看收发大量数据流的IP地址。</p>
-<h4 id="Conversations"><a href="#Conversations" class="headerlink" title="Conversations"></a>Conversations</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/Conversations.PNG" alt><br>显示2层以太网统计数据，第3层IP统计数据，或第4层TCP或UDP统计数据，网络会话是两个指定终端之间的数据流。例如，IP会话是两个IP地址之间的所有数据流，TCP会话包含了所有TCP连接。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/Chilam007/p/6973990.html"> 抓包工具 - Wireshark（详细介绍与TCP三次握手数据分析）
-</a></p>
-]]></content>
-      <categories>
-        <category>工具使用</category>
-      </categories>
-      <tags>
-        <tag>NetFlow</tag>
-        <tag>WireShark</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hexo博客迁移到其他电脑</title>
     <url>/2018/08/03/Hexo%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E5%88%B0%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91/</url>
     <content><![CDATA[<h2 id="备份原文件"><a href="#备份原文件" class="headerlink" title="备份原文件"></a>备份原文件</h2><p>需要转移的文件有：</p>
@@ -517,6 +458,65 @@
       <tags>
         <tag>PhEmail</tag>
         <tag>邮件钓鱼</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>流量分析入门</title>
+    <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。<br><a id="more"></a></p>
+<h3 id="NetFlow输出格式"><a href="#NetFlow输出格式" class="headerlink" title="NetFlow输出格式"></a>NetFlow输出格式</h3><p>NetFlow输出格式为报头+一系列Flow流。报头包含序列号、记录数、系统时间等，Flow流包含IP地址、端口、路由信息等。</p>
+<p>一个IP数据包的Flow流至少定义了7个关键元素：</p>
+<ul>
+<li>源IP地址；</li>
+<li>目的IP地址；</li>
+<li>源端口号；</li>
+<li>目的端口号；</li>
+<li>第三层协议类型；</li>
+<li>TOS字段；</li>
+<li>网络设备输入/输出的逻辑端口。</li>
+</ul>
+<p>OSSIM提供可视化NetFlow图形界面，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/NetFlow.png" alt></p>
+<h3 id="NetFlow监测恶意代码"><a href="#NetFlow监测恶意代码" class="headerlink" title="NetFlow监测恶意代码"></a>NetFlow监测恶意代码</h3><p>NetFlow数据流获取方便，当网络正常运行时，NetFlow数据流是有一定的规律性的，当网络中存在异常流量时，网络流量会发生异常的波动。<br>监测蠕虫的策略：选取几个不同时间段，若时间段内符合特征的Flow超过上限值，则为病毒。</p>
+<h3 id="反应网络运行的核心参数"><a href="#反应网络运行的核心参数" class="headerlink" title="反应网络运行的核心参数"></a>反应网络运行的核心参数</h3><ul>
+<li>平均每秒流量：如果网络内部存在大流量的攻击或P2P等大流量的下载等异常流量时，其数值会比正常时大很多。</li>
+<li>平均每秒包数：大部分的异常流量都会产生非常多的数据包数。</li>
+<li>数据包大小分布：64字节左右的小包和1500字节左右的大包的分布比例较小，小包过多，可能存在扫描、攻击行为，大包过多可能存在消耗带宽资源的大包DOS攻击行为。<br>*平均包长：网络内的平均包长会在500-700字节左右。</li>
+<li>TCP会话数、UDP会话数、IP地址个数、MAC地址个数。。。</li>
+</ul>
+<h2 id="WireShark"><a href="#WireShark" class="headerlink" title="WireShark"></a>WireShark</h2><p> WireShark是目前世界上最流行的网络分析工具，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/WireShark.png" alt></p>
+<h3 id="界面详解"><a href="#界面详解" class="headerlink" title="界面详解"></a>界面详解</h3><p>1.过滤器规则：</p>
+<ul>
+<li>tcp-&gt;只显示TCP协议的记录；</li>
+<li>http-&gt;只看HTTP协议的记录；</li>
+<li>ip.src ==192.168.1.102 -&gt;显示源地址为192.168.1.102的记录；</li>
+<li>ip.dst==192.168.1.102 -&gt;目标地址为192.168.1.10的记录；</li>
+<li>ip.addr == 42.121.252.58 -&gt;只显示与某主机的通信；</li>
+<li>tcp.port ==80-&gt;端口为80的；</li>
+<li>tcp.srcport == 80 -&gt;只显示TCP协议的源端口为80的；</li>
+<li>http.request.method==”GET”  -&gt;只显示HTTP GET方法的；</li>
+<li>eth.type == 0x806-&gt;只显示ARP报文，这个字段的值表示是ARP报文，如果是ip报文此值为0x8000（可在表达式中选取对应的16进制值）。</li>
+</ul>
+<p>2.封包列表：<br>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。</p>
+<p>3.封包的详细信息：<br>在封包信息中，每行对应的含义及在OSI模型中的对应关系如下：</p>
+<ul>
+<li>Frame:   物理层的数据帧概况  -&gt;对应OSI七层模型中的【物理层】</li>
+<li>Ethernet II: 数据链路层以太网帧头部信息  -&gt;对应OSI七层模型中的【数据链路层】</li>
+<li>Internet Protocol Version 4: 互联网层IP包头部信息  -&gt;对应OSI七层模型中的【网络层】</li>
+<li>Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP  -&gt;对应OSI七层模型中的【传输层】</li>
+<li>Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议  -&gt;对应OSI七层模型中的【应用层】</li>
+</ul>
+<h3 id="WireShark统计模块"><a href="#WireShark统计模块" class="headerlink" title="WireShark统计模块"></a>WireShark统计模块</h3><h4 id="捕获文件的属性"><a href="#捕获文件的属性" class="headerlink" title="捕获文件的属性"></a>捕获文件的属性</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/文件属性.PNG" alt><br>这一菜单简单收集所有抓包数据，在定义了过滤条件的时候，将呈现过滤后的数据。当想要知道每秒的平均报文数或是字节数时，可以使用此工具。</p>
+<h4 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/统计_Endpoints.png" alt><br>此窗口中，能够看到第2,3,4层的endpoints，也就是以太网，IP, TCP或UDP。查看收发大量数据流的IP地址。</p>
+<h4 id="Conversations"><a href="#Conversations" class="headerlink" title="Conversations"></a>Conversations</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/Conversations.PNG" alt><br>显示2层以太网统计数据，第3层IP统计数据，或第4层TCP或UDP统计数据，网络会话是两个指定终端之间的数据流。例如，IP会话是两个IP地址之间的所有数据流，TCP会话包含了所有TCP连接。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/Chilam007/p/6973990.html"> 抓包工具 - Wireshark（详细介绍与TCP三次握手数据分析）
+</a></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>NetFlow</tag>
+        <tag>WireShark</tag>
       </tags>
   </entry>
   <entry>
@@ -767,25 +767,6 @@
       </tags>
   </entry>
   <entry>
-    <title>任意用户密码重置</title>
-    <url>/2019/04/28/%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/</url>
-    <content><![CDATA[<div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <div class="hbe-input-container">
-  <input type="password" id="hbePass" placeholder="" />
-    <label for="hbePass">输入密码，查看文章。</label>
-    <div class="bottom-line"></div>
-  </div>
-  <script id="hbeData" type="hbeData" data-hmacdigest="9c0f3a2c34d77fabfd872821a82785a27c129dd92d69ef33c38a22d4cf277bd8">a0c75c8d75e1ac906489f75c7391f8dab563c6e3d9d92740bc0fb5b4a1798c9104febd470a64ff880f0a2d482be0fc7316aae6a77a5d377943df79583b59baa51eea6c9f94f6553b9d6f616110eac7310a4f398ca6201d18dd937b7199259db0640de663c987714b8d01d8c3c74f31610813e7041821e7e9afcabc76f1a1d2936d3077a0b101939fb009637a5207bd37d304c03387372f2f3d049f798a7cec365d3e3a7514613789360b11d3f156a46fe27f14b20be432886c06e3592507f28395b113b60085f13b4b705679fa00d0b5e6843de9db97769d81282242b00a2ca582286b5794a129dbd8e4d2ea5e97b31d4c3e04992774dfeacfbfc9096104b1b24d05541a5a14274d93a93d60941288e142e72db3f57e33e140779c37dadb9ff76713c33eb05aa7aeb4984086ac0b98d39ffa9dac2e410404470201414af46f28fa5c54b46e737eed7606a1ded873e4bb668e0c7e3e43e9677d9b962afe4a7d135d93ab210803c6318e9485c4b6c22bae538d616ff518c5ef3b42c5f49f5a83564ad2ccba477b224f186621227fd684d1a586ed846708b01557238f3eaa5bd9d0667d2ebc19ca18795bfee55409f9c54f53a913b7a600d114bde93f0884f9f7eca7a12068958eea95988c73c6185b4f29b100ade7f1a99e415b2a605b8ca27c0e2a2c3717cc0198b8a7db0885b9d05b8040df53732e28e470db4e235b921424ac6fdfe2ad1d56776d74a34cf76478ea9d14844c81fab1e1b78531e4841a518cfd83dc25bef51beacc86fd43e983ba876ac3e6b163c797e264ca4cf8262a0207846f51c5c1dfc8c133184973ede3cdec8dd1ef8a19bfdf93e2c129117ab900f177d9bcf0dc936602e4dd043374811c8e31e742684ef2fe8e48a8a4edb9c1b3b2edce360505d7cb959c871dced051303e2d3ecd079885b7293e6dfa4ace667c428afdb7be706587e6d466c103118e1f8ab01dce1b86b658693958f5e532b23cf29a93e54adb45e35d43073801772cce0f8c9c5dcc2f2e86e3ba83eea397264a6ecfb4458c89b75d8ced724f3d0d9fa65084dfec021c083100b408777e33b7908914cc6b6484abb2cd10acc7cb7299d6a95775ba504abcc72a2c45aaa8bacd24f43ac65a17284450fb8a123486b48993cb0fd22c884a6f3bf845ae8aeda45aebb89106cb13b3374285e5e558bc9f80d32d2c25032271f8cd4b08d447d8c0c245c4ed352c4caa5ccf41bff4fbbf4143178923d67cf8e033891e11f7229a92842579f8c184689e3827dc75ce873d19b30f8d4b15698482cfb7de0a5ec24c28a2709af5b508629e3b9c52a8d3d8854ae3a40f697390880f486298ede4d60c94740d7d1a4e6bd73b0867ad4c6953133080ab72e729131104f2b51078a0e8a54bb4c5d4511d456e89dbf19571e4f147c27a09dbb0201b1bd6daf0d6b01856b198a79cc171bf6219034a5c0e640e71ba91f56579a62639666a4e157bb0dc053ad0ae4e6f36f4baa7b455e4d38a5c77b7722fe1ed9f4e34e203fb95c33fd9e494358d9379be2d0853f138876e8deec5abff06a696ee8dead3fa7ae08fc12f110c8e1402142a151eba4bb8a89cd691d37afa4653939d0585b5997727cc72394368a592fc3d87deff8df22d2e1fc4a949d1124b1e098608e7333d18005bfac8f7e533bf1e2ca4b027f05a2b6bb1f885b4b3502389abfbb8c615e898e216b7748de1cbf9bfd5fa103fd060634f7bd5910641be440cea668c39f6f9379fafd84e16ce8159fe3ddd5c264f1e4ef22b16c9836311e259ebc7d70cb7f307dc0e9864ae113928507859e9b3a5f1515599b55af7fcc2b66b13e54260a5ce379ec63cde65b2959d08af28532f8ed29d6f74b76affbf1b87231f3e620ba2a6f307fcc001bc21b7e796fe8c2537f7f3f24286790e233a7caeef5431eee1c0284e1b2ef6b35257439c4fbdfcdfcffdaf8cfbcb220bf262ea0e7730442afdc8f622ddb22e238294256d05225c7e494e50923cae332d0793194caca3131b3391fe40ab0a7b3df23285de4b713b6f8134442c1dad6859259fe548941885573ea72f6bddbf3c52decbbafa36bc4d0860c70dc21c962f2766a7e5da37fb72e8e006a0198cb480f2d809a89f44bed761178cd64734157917f39f74ec354ce5ee100f2316c25ed5718ce77e1ffb4d4580d22404c37a1b6f47dc0b72912ed7d404efde99b9ec910911a418440f537b229dc549b427371f7187addccdd1e85f8839e210efc16fcc5d2689259a2a008d849190a3e9073e9e04a4a3fb05a1597581fcb2a1f3e878564cefdf4f33afcb459685ffa522e36caa709176bbf4b4d0e9111d455d9432c5906d3967a44a8a53f63fdeb6c632c29b0602985a16ab5e0b736a1c196a7c52d323a1a6dfcca5756ac12f34401777787e4c6e5a9d0eb9cfbca26a62ff58627911fb49151f2342cb2f719dcac0c093435d3283d0d1e9638ddffccdb48a08f88f2bea5726422c41296e1ce20e9dfb652cad9ed5cd1446f7b8220fdcc0fb5a40c0f4eaadd431bb1e48bed022015c1c634844b566301ff3b6491d0133d846865a71d867a83384ff5138f1da5efcada07cffd93d80e1969c3855b9dc1066c66cf4eafb6f426219ab7dda0f56b7cc254d82e3a1d1d75a142dd5c9dbc95249b25d9ea7b9aefb0e55904325176e5b68f2fec76d9fde2a563bec2493af121e730dd13b79ebd7ed2e23fd994e2a30d9fe0c4b9dc6bbb715898d8085d15579d120a95d551735c697dac576515d6ca6f12460c2c70f9fdef1f395b96e50012d0e83edf435253e7e15ef08b0037d4ee973084d9f694a79e819125352ff4601158e3c74b3c49e195379e5b2d484e670efba60c2513dbcd6c1de1b9cd23de72ce2e7cece4701f7e3c6d947a10ae6441a7229e5157cab6c562b7a9726ff7f502e40aa33a2d0c559411c0933c49a7533bfcab17522d51aa76450ee7264876f0a6b15cedc0b5604b8544d253032e1f24e29361baf6b064abe14ecd47a34ab46893c2b7f4762472507d69d9dad735524f273901d4de8e8d860e0a41a5810d373c36347a78985b788ab1a432037a6e006362322acaff7cb0475a31996f483e71b4e768908c7bf1403b59e12f3a1d13edb7f1a9e67bcdbf7369e8aeb2cfee7937bf5b127fa2aa63b54c5594f56f92d82d97c4b0e8733f4ebafc5a767c38a6dd4f2c112f8efed495f01fb156842fef1fd950c2640921d29ff857badddde7e4311ed1926eb9dd8ae0d2fcaf2ec748a6454adb85990f387a15c91cba991bfea01e157941c9617</script>
-</div>
-<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
-      <categories>
-        <category>渗透测试</category>
-      </categories>
-      <tags>
-        <tag>密码找回</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>NSA逆向工具--Ghidra安装及漏洞修复</title>
     <url>/2019/03/07/NSA%E9%80%86%E5%90%91%E5%B7%A5%E5%85%B7-Ghidra%E5%AE%89%E8%A3%85%E5%8F%8A%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/</url>
     <content><![CDATA[<h1 id="0x01-简介"><a href="#0x01-简介" class="headerlink" title="0x01 简介"></a>0x01 简介</h1><p>2019年RSA安全大会上，美国国家安全局（NSA）公布了一款名叫Ghidra的逆向工程工具。Ghidra使用Java编写，具有图形界面，可在Windows，Mac和Linux上运行。</p>
@@ -817,6 +798,25 @@
       </categories>
       <tags>
         <tag>逆向</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>任意用户密码重置</title>
+    <url>/2019/04/28/%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/</url>
+    <content><![CDATA[<div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="" />
+    <label for="hbePass">输入密码，查看文章。</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="9c0f3a2c34d77fabfd872821a82785a27c129dd92d69ef33c38a22d4cf277bd8">a0c75c8d75e1ac906489f75c7391f8dab563c6e3d9d92740bc0fb5b4a1798c9104febd470a64ff880f0a2d482be0fc7316aae6a77a5d377943df79583b59baa51eea6c9f94f6553b9d6f616110eac7310a4f398ca6201d18dd937b7199259db0640de663c987714b8d01d8c3c74f31610813e7041821e7e9afcabc76f1a1d2936d3077a0b101939fb009637a5207bd37d304c03387372f2f3d049f798a7cec365d3e3a7514613789360b11d3f156a46fe27f14b20be432886c06e3592507f28395b113b60085f13b4b705679fa00d0b5e6843de9db97769d81282242b00a2ca582286b5794a129dbd8e4d2ea5e97b31d4c3e04992774dfeacfbfc9096104b1b24d05541a5a14274d93a93d60941288e142e72db3f57e33e140779c37dadb9ff76713c33eb05aa7aeb4984086ac0b98d39ffa9dac2e410404470201414af46f28fa5c54b46e737eed7606a1ded873e4bb668e0c7e3e43e9677d9b962afe4a7d135d93ab210803c6318e9485c4b6c22bae538d616ff518c5ef3b42c5f49f5a83564ad2ccba477b224f186621227fd684d1a586ed846708b01557238f3eaa5bd9d0667d2ebc19ca18795bfee55409f9c54f53a913b7a600d114bde93f0884f9f7eca7a12068958eea95988c73c6185b4f29b100ade7f1a99e415b2a605b8ca27c0e2a2c3717cc0198b8a7db0885b9d05b8040df53732e28e470db4e235b921424ac6fdfe2ad1d56776d74a34cf76478ea9d14844c81fab1e1b78531e4841a518cfd83dc25bef51beacc86fd43e983ba876ac3e6b163c797e264ca4cf8262a0207846f51c5c1dfc8c133184973ede3cdec8dd1ef8a19bfdf93e2c129117ab900f177d9bcf0dc936602e4dd043374811c8e31e742684ef2fe8e48a8a4edb9c1b3b2edce360505d7cb959c871dced051303e2d3ecd079885b7293e6dfa4ace667c428afdb7be706587e6d466c103118e1f8ab01dce1b86b658693958f5e532b23cf29a93e54adb45e35d43073801772cce0f8c9c5dcc2f2e86e3ba83eea397264a6ecfb4458c89b75d8ced724f3d0d9fa65084dfec021c083100b408777e33b7908914cc6b6484abb2cd10acc7cb7299d6a95775ba504abcc72a2c45aaa8bacd24f43ac65a17284450fb8a123486b48993cb0fd22c884a6f3bf845ae8aeda45aebb89106cb13b3374285e5e558bc9f80d32d2c25032271f8cd4b08d447d8c0c245c4ed352c4caa5ccf41bff4fbbf4143178923d67cf8e033891e11f7229a92842579f8c184689e3827dc75ce873d19b30f8d4b15698482cfb7de0a5ec24c28a2709af5b508629e3b9c52a8d3d8854ae3a40f697390880f486298ede4d60c94740d7d1a4e6bd73b0867ad4c6953133080ab72e729131104f2b51078a0e8a54bb4c5d4511d456e89dbf19571e4f147c27a09dbb0201b1bd6daf0d6b01856b198a79cc171bf6219034a5c0e640e71ba91f56579a62639666a4e157bb0dc053ad0ae4e6f36f4baa7b455e4d38a5c77b7722fe1ed9f4e34e203fb95c33fd9e494358d9379be2d0853f138876e8deec5abff06a696ee8dead3fa7ae08fc12f110c8e1402142a151eba4bb8a89cd691d37afa4653939d0585b5997727cc72394368a592fc3d87deff8df22d2e1fc4a949d1124b1e098608e7333d18005bfac8f7e533bf1e2ca4b027f05a2b6bb1f885b4b3502389abfbb8c615e898e216b7748de1cbf9bfd5fa103fd060634f7bd5910641be440cea668c39f6f9379fafd84e16ce8159fe3ddd5c264f1e4ef22b16c9836311e259ebc7d70cb7f307dc0e9864ae113928507859e9b3a5f1515599b55af7fcc2b66b13e54260a5ce379ec63cde65b2959d08af28532f8ed29d6f74b76affbf1b87231f3e620ba2a6f307fcc001bc21b7e796fe8c2537f7f3f24286790e233a7caeef5431eee1c0284e1b2ef6b35257439c4fbdfcdfcffdaf8cfbcb220bf262ea0e7730442afdc8f622ddb22e238294256d05225c7e494e50923cae332d0793194caca3131b3391fe40ab0a7b3df23285de4b713b6f8134442c1dad6859259fe548941885573ea72f6bddbf3c52decbbafa36bc4d0860c70dc21c962f2766a7e5da37fb72e8e006a0198cb480f2d809a89f44bed761178cd64734157917f39f74ec354ce5ee100f2316c25ed5718ce77e1ffb4d4580d22404c37a1b6f47dc0b72912ed7d404efde99b9ec910911a418440f537b229dc549b427371f7187addccdd1e85f8839e210efc16fcc5d2689259a2a008d849190a3e9073e9e04a4a3fb05a1597581fcb2a1f3e878564cefdf4f33afcb459685ffa522e36caa709176bbf4b4d0e9111d455d9432c5906d3967a44a8a53f63fdeb6c632c29b0602985a16ab5e0b736a1c196a7c52d323a1a6dfcca5756ac12f34401777787e4c6e5a9d0eb9cfbca26a62ff58627911fb49151f2342cb2f719dcac0c093435d3283d0d1e9638ddffccdb48a08f88f2bea5726422c41296e1ce20e9dfb652cad9ed5cd1446f7b8220fdcc0fb5a40c0f4eaadd431bb1e48bed022015c1c634844b566301ff3b6491d0133d846865a71d867a83384ff5138f1da5efcada07cffd93d80e1969c3855b9dc1066c66cf4eafb6f426219ab7dda0f56b7cc254d82e3a1d1d75a142dd5c9dbc95249b25d9ea7b9aefb0e55904325176e5b68f2fec76d9fde2a563bec2493af121e730dd13b79ebd7ed2e23fd994e2a30d9fe0c4b9dc6bbb715898d8085d15579d120a95d551735c697dac576515d6ca6f12460c2c70f9fdef1f395b96e50012d0e83edf435253e7e15ef08b0037d4ee973084d9f694a79e819125352ff4601158e3c74b3c49e195379e5b2d484e670efba60c2513dbcd6c1de1b9cd23de72ce2e7cece4701f7e3c6d947a10ae6441a7229e5157cab6c562b7a9726ff7f502e40aa33a2d0c559411c0933c49a7533bfcab17522d51aa76450ee7264876f0a6b15cedc0b5604b8544d253032e1f24e29361baf6b064abe14ecd47a34ab46893c2b7f4762472507d69d9dad735524f273901d4de8e8d860e0a41a5810d373c36347a78985b788ab1a432037a6e006362322acaff7cb0475a31996f483e71b4e768908c7bf1403b59e12f3a1d13edb7f1a9e67bcdbf7369e8aeb2cfee7937bf5b127fa2aa63b54c5594f56f92d82d97c4b0e8733f4ebafc5a767c38a6dd4f2c112f8efed495f01fb156842fef1fd950c2640921d29ff857badddde7e4311ed1926eb9dd8ae0d2fcaf2ec748a6454adb85990f387a15c91cba991bfea01e157941c9617</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>密码找回</tag>
       </tags>
   </entry>
   <entry>
@@ -977,87 +977,6 @@
       </tags>
   </entry>
   <entry>
-    <title>第2章 网络攻击原理与常用方法</title>
-    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
-<ul>
-<li>信息泄露攻击</li>
-<li>完整性破坏攻击</li>
-<li>拒绝服务攻击</li>
-<li>非法使用攻击</li>
-</ul>
-<a id="more"></a>
-<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
-<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
-<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
-<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
-<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
-</ol>
-<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
-<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
-<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
-<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
-<li>获取目标访问权限。（获取更高权限）</li>
-<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
-<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
-<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
-<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
-</ol>
-<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
-<ul>
-<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
-<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
-<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
-<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
-<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
-<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
-<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
-<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
-<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-</ul>
-<p><strong>口令破解</strong></p>
-<p><strong>缓冲区溢出</strong></p>
-<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
-<p><strong>恶意代码</strong></p>
-<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
-<p><strong>拒绝服务</strong></p>
-<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
-<ul>
-<li>同步包风暴（SYN Flood）</li>
-<li>UDP洪水（UDP Flood）</li>
-<li>Smurf攻击</li>
-<li>垃圾邮件</li>
-<li>消耗CPU和内存资源等拒绝服务攻击</li>
-<li>死亡之ping（ping of death）</li>
-<li>泪滴攻击（Teardrop Attack）</li>
-<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
-</ul>
-<p><strong>网络钓鱼</strong></p>
-<p><strong>网络窃听</strong></p>
-<p>技术手段：网络嗅探、中间人攻击</p>
-<p><strong>SQL注入</strong></p>
-<p><strong>社交工程</strong></p>
-<p><strong>电子监听</strong></p>
-<p><strong>会话劫持</strong></p>
-<p><strong>漏洞扫描</strong></p>
-<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
-<p><strong>代理技术</strong></p>
-<p><strong>数据加密</strong></p>
-<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
-<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
-<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
-<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
-<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>第1章 网络信息安全概述</title>
     <url>/2020/09/09/%E7%AC%AC1%E7%AB%A0-%E7%BD%91%E7%BB%9C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<h1 id="网络信息安全基本属性"><a href="#网络信息安全基本属性" class="headerlink" title="网络信息安全基本属性"></a>网络信息安全基本属性</h1><ul>
@@ -1173,6 +1092,87 @@
 <h1 id="网络信息安全科技信息获取"><a href="#网络信息安全科技信息获取" class="headerlink" title="网络信息安全科技信息获取"></a>网络信息安全科技信息获取</h1><p><strong>网络信息安全会议</strong></p>
 <p>四大顶级学术会议：S&amp;P、CCS、NDSS、USENIX Security</p>
 <p>USENIX Security被中国计算机学会（CCF）归为“网络与信息安全”A类会议。</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第2章 网络攻击原理与常用方法</title>
+    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
+<ul>
+<li>信息泄露攻击</li>
+<li>完整性破坏攻击</li>
+<li>拒绝服务攻击</li>
+<li>非法使用攻击</li>
+</ul>
+<a id="more"></a>
+<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
+<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
+<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
+<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
+<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
+</ol>
+<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
+<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
+<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
+<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
+<li>获取目标访问权限。（获取更高权限）</li>
+<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
+<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
+<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
+<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
+</ol>
+<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
+<ul>
+<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
+<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
+<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
+<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
+<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
+<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
+<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
+<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
+<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+</ul>
+<p><strong>口令破解</strong></p>
+<p><strong>缓冲区溢出</strong></p>
+<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
+<p><strong>恶意代码</strong></p>
+<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
+<p><strong>拒绝服务</strong></p>
+<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
+<ul>
+<li>同步包风暴（SYN Flood）</li>
+<li>UDP洪水（UDP Flood）</li>
+<li>Smurf攻击</li>
+<li>垃圾邮件</li>
+<li>消耗CPU和内存资源等拒绝服务攻击</li>
+<li>死亡之ping（ping of death）</li>
+<li>泪滴攻击（Teardrop Attack）</li>
+<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
+</ul>
+<p><strong>网络钓鱼</strong></p>
+<p><strong>网络窃听</strong></p>
+<p>技术手段：网络嗅探、中间人攻击</p>
+<p><strong>SQL注入</strong></p>
+<p><strong>社交工程</strong></p>
+<p><strong>电子监听</strong></p>
+<p><strong>会话劫持</strong></p>
+<p><strong>漏洞扫描</strong></p>
+<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
+<p><strong>代理技术</strong></p>
+<p><strong>数据加密</strong></p>
+<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
+<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
+<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
+<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
+<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
@@ -4651,8 +4651,8 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mysql -h 127.0.0.1 -P 6606 -u root -p</span><br><span class="line">Enter password:root</span><br><span class="line"></span><br><span class="line">mysql&gt; CREATE DATABASE IF NOT EXISTS vuldb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;</span><br><span class="line">mysql&gt; grant all on vuldb.* to vuluser@&#39;%&#39; identified by &#39;vulpassword&#39;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; quit</span><br></pre></td></tr></table></figure>
 <p>或者可以先进入docker容器中，再连接mysql数据库，使用如下命令：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it open_source_mysqldb bash</span><br><span class="line"></span><br><span class="line">mysql -u root -p</span><br><span class="line">Enter password:root</span><br><span class="line"></span><br><span class="line">mysql&gt; CREATE DATABASE IF NOT EXISTS vuldb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;</span><br><span class="line">mysql&gt; grant all on vuldb.* to vuluser@&#39;%&#39; identified by &#39;vulpassword&#39;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; quit</span><br></pre></td></tr></table></figure>
-<h2 id="部署APP"><a href="#部署APP" class="headerlink" title="部署APP"></a>部署APP</h2><h4 id="1-下载源码"><a href="#1-下载源码" class="headerlink" title="1. 下载源码"></a>1. 下载源码</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git clone https:&#x2F;&#x2F;github.com&#x2F;creditease-sec&#x2F;insight.git</span><br></pre></td></tr></table></figure>
-<h4 id="2-修改srcpm-config-py-配置文件（若使用qq邮箱进行发件，见邮箱配置-jump-）"><a href="#2-修改srcpm-config-py-配置文件（若使用qq邮箱进行发件，见邮箱配置-jump-）" class="headerlink" title="2. 修改srcpm/config.py 配置文件（若使用qq邮箱进行发件，见邮箱配置](#jump)）"></a>2. 修改srcpm/config.py 配置文件（若使用qq邮箱进行发件，见邮箱配置](#jump)）</h4><ul>
+<h2 id="部署APP"><a href="#部署APP" class="headerlink" title="部署APP"></a>部署APP</h2><h3 id="1-下载源码"><a href="#1-下载源码" class="headerlink" title="1. 下载源码"></a>1. 下载源码</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git clone https:&#x2F;&#x2F;github.com&#x2F;creditease-sec&#x2F;insight.git</span><br></pre></td></tr></table></figure>
+<h3 id="2-修改srcpm-config-py-配置文件（若使用qq邮箱进行发件，见邮箱配置-jump-）"><a href="#2-修改srcpm-config-py-配置文件（若使用qq邮箱进行发件，见邮箱配置-jump-）" class="headerlink" title="2. 修改srcpm/config.py 配置文件（若使用qq邮箱进行发件，见邮箱配置](#jump)）"></a>2. 修改srcpm/config.py 配置文件（若使用qq邮箱进行发件，见邮箱配置](#jump)）</h3><ul>
 <li>修改公司邮箱后缀</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#公司邮箱后缀限制，只能使用公司邮箱注册账号。</span><br><span class="line">CORP_MAIL &#x3D; &#39;@qq.com&#39;</span><br></pre></td></tr></table></figure>
@@ -4668,8 +4668,8 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
 <li>修改生产模式的邮箱服务器和发件邮箱配置</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 以生产模式的配置运行，使用生产邮件服务器，并关闭debug模式</span><br><span class="line"></span><br><span class="line">    # 平台发邮件账号设置</span><br><span class="line">    SRCPM_MAIL_SENDER &#x3D; &#39;安全部 &lt;xxx@creditease.cn&gt;&#39;</span><br><span class="line">    </span><br><span class="line">    # 发送邮件的服务器设置，账号密码由系统变量中读取</span><br><span class="line">    MAIL_SERVER &#x3D; &#39;x.x.x.x&#39;</span><br><span class="line">    MAIL_PORT &#x3D; 25</span><br><span class="line">    MAIL_USE_TLS &#x3D; False</span><br><span class="line">    MAIL_USERNAME &#x3D; os.environ.get(</span><br><span class="line">        &#39;MAIL_USERNAME&#39;) or &#39;xxx@creditease.cn&#39;</span><br><span class="line">    MAIL_PASSWORD &#x3D; os.environ.get(&#39;MAIL_PASSWORD&#39;) or &#39;&#39;</span><br></pre></td></tr></table></figure>
-<h4 id="3-修改定时周期邮件-mail-sender-py-的配置"><a href="#3-修改定时周期邮件-mail-sender-py-的配置" class="headerlink" title="3. 修改定时周期邮件 mail_sender.py 的配置"></a>3. 修改定时周期邮件 mail_sender.py 的配置</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#平台发送的每封邮件的邮件抄送列表，可以设置发送给安全部邮箱列表，可自行修改，也可以保持不变为空</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">示例：</span><br><span class="line">CC_EMAIL &#x3D; [&#39;xxx1@creditease.cn&#39;,</span><br><span class="line">            &#39;xxx2@creditease.cn&#39;,</span><br><span class="line">        ]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">CC_EMAIL &#x3D; [</span><br><span class="line">        ]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#主机名设置</span><br><span class="line">SERVER_NAME &#x3D; &#39;xxx.creditease.corp&#39;</span><br><span class="line"></span><br><span class="line"># 平台发邮件账号设置</span><br><span class="line">SRCPM_MAIL_SENDER &#x3D; &#39;安全部 &lt;xxx@creditease.cn&gt;&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 发送邮件的服务器设置，账号密码由系统变量中读取</span><br><span class="line">MAIL_SERVER &#x3D; &#39;x.x.x.x&#39;</span><br><span class="line">MAIL_PORT &#x3D; 25</span><br><span class="line">MAIL_USE_TLS &#x3D; False</span><br><span class="line">MAIL_USERNAME &#x3D; os.environ.get(</span><br><span class="line">    &#39;MAIL_USERNAME&#39;) or &#39;xxx@creditease.cn&#39;</span><br><span class="line">MAIL_PASSWORD &#x3D; os.environ.get(&#39;MAIL_PASSWORD&#39;) or &#39;&#39;</span><br></pre></td></tr></table></figure>
-<h4 id="4-修改srcpm-app-src-forms-py-漏洞来源下拉列表"><a href="#4-修改srcpm-app-src-forms-py-漏洞来源下拉列表" class="headerlink" title="4. 修改srcpm/app/src/forms.py 漏洞来源下拉列表"></a>4. 修改srcpm/app/src/forms.py 漏洞来源下拉列表</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#39;&#39;&#39; 下拉选项 &#39;&#39;&#39;</span><br><span class="line">source_choices &#x3D; [(&#39;&#39;,&#39;&#39;), (u&#39;安全部&#39;, u&#39;安全部&#39;), (u&#39;YISRC&#39;, u&#39;YISRC&#39;), (u&#39;公众平台&#39;, u&#39;公众平台&#39;), (u&#39;合作伙伴&#39;, u&#39;合作伙伴&#39;)]</span><br></pre></td></tr></table></figure>
+<h3 id="3-修改定时周期邮件-mail-sender-py-的配置"><a href="#3-修改定时周期邮件-mail-sender-py-的配置" class="headerlink" title="3. 修改定时周期邮件 mail_sender.py 的配置"></a>3. 修改定时周期邮件 mail_sender.py 的配置</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#平台发送的每封邮件的邮件抄送列表，可以设置发送给安全部邮箱列表，可自行修改，也可以保持不变为空</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">示例：</span><br><span class="line">CC_EMAIL &#x3D; [&#39;xxx1@creditease.cn&#39;,</span><br><span class="line">            &#39;xxx2@creditease.cn&#39;,</span><br><span class="line">        ]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">CC_EMAIL &#x3D; [</span><br><span class="line">        ]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#主机名设置</span><br><span class="line">SERVER_NAME &#x3D; &#39;xxx.creditease.corp&#39;</span><br><span class="line"></span><br><span class="line"># 平台发邮件账号设置</span><br><span class="line">SRCPM_MAIL_SENDER &#x3D; &#39;安全部 &lt;xxx@creditease.cn&gt;&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 发送邮件的服务器设置，账号密码由系统变量中读取</span><br><span class="line">MAIL_SERVER &#x3D; &#39;x.x.x.x&#39;</span><br><span class="line">MAIL_PORT &#x3D; 25</span><br><span class="line">MAIL_USE_TLS &#x3D; False</span><br><span class="line">MAIL_USERNAME &#x3D; os.environ.get(</span><br><span class="line">    &#39;MAIL_USERNAME&#39;) or &#39;xxx@creditease.cn&#39;</span><br><span class="line">MAIL_PASSWORD &#x3D; os.environ.get(&#39;MAIL_PASSWORD&#39;) or &#39;&#39;</span><br></pre></td></tr></table></figure>
+<h3 id="4-修改srcpm-app-src-forms-py-漏洞来源下拉列表"><a href="#4-修改srcpm-app-src-forms-py-漏洞来源下拉列表" class="headerlink" title="4. 修改srcpm/app/src/forms.py 漏洞来源下拉列表"></a>4. 修改srcpm/app/src/forms.py 漏洞来源下拉列表</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#39;&#39;&#39; 下拉选项 &#39;&#39;&#39;</span><br><span class="line">source_choices &#x3D; [(&#39;&#39;,&#39;&#39;), (u&#39;安全部&#39;, u&#39;安全部&#39;), (u&#39;YISRC&#39;, u&#39;YISRC&#39;), (u&#39;公众平台&#39;, u&#39;公众平台&#39;), (u&#39;合作伙伴&#39;, u&#39;合作伙伴&#39;)]</span><br></pre></td></tr></table></figure>
 <h2 id="邮箱配置"><a href="#邮箱配置" class="headerlink" title="邮箱配置"></a><span id="jump">邮箱配置</span></h2><p>参考<a href="https://note.youdao.com/ynoteshare1/index.html?id=885afcf3ceece652749bc1d9a55f722e&amp;type=note#/">洞察-漏洞管理系统安装</a></p>
 <ul>
 <li>修改srcpm/config.py 配置文件</li>
@@ -4705,21 +4705,21 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
 <p>导入sql</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mysql -h127.0.0.1 -P6606 -uroot -p vuldb &lt; srcpm&#x2F;vuldb_init.sql</span><br><span class="line">Enter password:root</span><br></pre></td></tr></table></figure>
-<h2 id="访问洞察"><a href="#访问洞察" class="headerlink" title="访问洞察"></a>访问洞察</h2><h4 id="1-主页"><a href="#1-主页" class="headerlink" title="1. 主页"></a>1. 主页</h4><p><a href="http://IP:9000/srcpm/">http://IP:9000/srcpm/</a></p>
+<h2 id="访问洞察"><a href="#访问洞察" class="headerlink" title="访问洞察"></a>访问洞察</h2><h3 id="1-主页"><a href="#1-主页" class="headerlink" title="1. 主页"></a>1. 主页</h3><p><a href="http://IP:9000/srcpm/">http://IP:9000/srcpm/</a></p>
 <p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/主页.png" style="zoom:50%;"></p>
-<h4 id="2-登录页面"><a href="#2-登录页面" class="headerlink" title="2. 登录页面"></a>2. 登录页面</h4><p><a href="http://IP:9000/srcpm/auth/login">http://IP:9000/srcpm/auth/login</a></p>
+<h3 id="2-登录页面"><a href="#2-登录页面" class="headerlink" title="2. 登录页面"></a>2. 登录页面</h3><p><a href="http://IP:9000/srcpm/auth/login">http://IP:9000/srcpm/auth/login</a></p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>账号</th>
-<th>密码</th>
+<th style="text-align:center">账号</th>
+<th style="text-align:center">密码</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="mailto:admin@admin.com">admin@admin.com</a></td>
-<td>11</td>
+<td style="text-align:center">admin@admin.com</td>
+<td style="text-align:center">11</td>
 </tr>
 </tbody>
 </table>
