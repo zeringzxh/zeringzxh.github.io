@@ -1911,7 +1911,7 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <li>防火墙无法有效防范内部威胁</li>
 <li>防火墙效用受限于安全规则</li>
 </ol>
-<h1 id="防火墙类型于实现技术"><a href="#防火墙类型于实现技术" class="headerlink" title="防火墙类型于实现技术"></a>防火墙类型于实现技术</h1><h2 id="包过滤"><a href="#包过滤" class="headerlink" title="包过滤"></a>包过滤</h2><p>IP层（网络层）：根据包的源IP地址、目的IP地址、源端口、目的端口及包传递方向等包头信息判断是否允许包通过。</p>
+<h1 id="防火墙类型与实现技术"><a href="#防火墙类型与实现技术" class="headerlink" title="防火墙类型与实现技术"></a>防火墙类型与实现技术</h1><h2 id="包过滤"><a href="#包过滤" class="headerlink" title="包过滤"></a>包过滤</h2><p>IP层（网络层）：根据包的源IP地址、目的IP地址、源端口、目的端口及包传递方向等包头信息判断是否允许包通过。</p>
 <p>控制依据：规则集</p>
 <p>过滤规则表示格式由“规则号、匹配条件、匹配操作”三部分组成。</p>
 <p>优点：低负载、高通过率、对用户透明</p>
@@ -1944,7 +1944,7 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <h2 id="数据库防火墙技术"><a href="#数据库防火墙技术" class="headerlink" title="数据库防火墙技术"></a>数据库防火墙技术</h2><p>技术原理：基于数据通信协议深度分析和虚拟补丁，根据安全规则对数据库访问操作及通信进行安全访问控制，防止数据库系统受到攻击威胁。</p>
 <h2 id="工控防火墙技术"><a href="#工控防火墙技术" class="headerlink" title="工控防火墙技术"></a>工控防火墙技术</h2><p>技术原理：深度分析工控协议，监控访问请求和响应</p>
 <p>工控协议：Modbus TCP协议、IEC61850、OPC、Ethernet/IP和DNP3协议</p>
-<h2 id="下一代防火墙技术"><a href="#下一代防火墙技术" class="headerlink" title="下一代防火墙技术"></a>下一代防火墙技术</h2><p>除传统翻获取功能外，还具有：</p>
+<h2 id="下一代防火墙技术"><a href="#下一代防火墙技术" class="headerlink" title="下一代防火墙技术"></a>下一代防火墙技术</h2><p>除传统防火墙功能外，还具有：</p>
 <ul>
 <li>应用识别和管控</li>
 <li>入侵防护（IPS）</li>
@@ -2222,7 +2222,7 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <li>流量异常</li>
 <li>非法网络访问</li>
 </ul>
-<p>优点：适当的配置可以监控一个大型网络的安全状况；安装队网络影响很小；可以很好地避免攻击</p>
+<p>优点：适当的配置可以监控一个大型网络的安全状况；安装对网络影响很小；可以很好地避免攻击</p>
 <p>缺点：在高速网络中很难处理所有网络包；交换机不提供统一监测端口，减少监测范围；网络流量被加密，探测器无法对数据包中的协议进行有效分析；仅依靠网络流量无法推知命令的执行结果，无法判断攻击是否成功。</p>
 <h2 id="分布式入侵检测系统"><a href="#分布式入侵检测系统" class="headerlink" title="分布式入侵检测系统"></a>分布式入侵检测系统</h2><ol>
 <li><p>基于主机检测的分布式入侵检测系统</p>
@@ -4630,6 +4630,119 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
       </categories>
       <tags>
         <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>漏洞管理平台insight安装使用体验</title>
+    <url>/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/</url>
+    <content><![CDATA[<h1 id="0x01-insight"><a href="#0x01-insight" class="headerlink" title="0x01 insight"></a>0x01 insight</h1><p>项目地址：<a href="https://github.com/creditease-sec/insight">宜信洞察</a></p>
+<p>功能：</p>
+<ul>
+<li>应用系统资产管理</li>
+<li>漏洞生命周期管理</li>
+<li>安全知识库管理</li>
+</ul>
+<h1 id="0x02-部署安装"><a href="#0x02-部署安装" class="headerlink" title="0x02 部署安装"></a>0x02 部署安装</h1><p>参考项目提供的<a href="https://github.com/creditease-sec/insight/blob/open-source/docs/install.md">docker部署指南</a></p>
+<p>本人使用centos7进行docker部署，yum更新完成后，开始部署。</p>
+<h2 id="部署和启动mysql"><a href="#部署和启动mysql" class="headerlink" title="部署和启动mysql"></a>部署和启动mysql</h2><p>使用docker部署mysql，docker名称为open_source_mysqldb ，密码为root</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull mysql:5.7.13</span><br><span class="line"></span><br><span class="line">docker run -d -p 127.0.0.1:6606:3306 \</span><br><span class="line">--name open_source_mysqldb \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD&#x3D;root \</span><br><span class="line">mysql:5.7.13</span><br></pre></td></tr></table></figure>
+<h2 id="创建数据库和账号权限配置"><a href="#创建数据库和账号权限配置" class="headerlink" title="创建数据库和账号权限配置"></a>创建数据库和账号权限配置</h2><p>本地安装mysql客户端后直接使用如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mysql -h 127.0.0.1 -P 6606 -u root -p</span><br><span class="line">Enter password:root</span><br><span class="line"></span><br><span class="line">mysql&gt; CREATE DATABASE IF NOT EXISTS vuldb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;</span><br><span class="line">mysql&gt; grant all on vuldb.* to vuluser@&#39;%&#39; identified by &#39;vulpassword&#39;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; quit</span><br></pre></td></tr></table></figure>
+<p>或者可以先进入docker容器中，再连接mysql数据库，使用如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it open_source_mysqldb bash</span><br><span class="line"></span><br><span class="line">mysql -u root -p</span><br><span class="line">Enter password:root</span><br><span class="line"></span><br><span class="line">mysql&gt; CREATE DATABASE IF NOT EXISTS vuldb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;</span><br><span class="line">mysql&gt; grant all on vuldb.* to vuluser@&#39;%&#39; identified by &#39;vulpassword&#39;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; quit</span><br></pre></td></tr></table></figure>
+<h2 id="部署APP"><a href="#部署APP" class="headerlink" title="部署APP"></a>部署APP</h2><h4 id="1-下载源码"><a href="#1-下载源码" class="headerlink" title="1. 下载源码"></a>1. 下载源码</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git clone https:&#x2F;&#x2F;github.com&#x2F;creditease-sec&#x2F;insight.git</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改srcpm-config-py-配置文件（若使用qq邮箱进行发件，见邮箱配置-jump-）"><a href="#2-修改srcpm-config-py-配置文件（若使用qq邮箱进行发件，见邮箱配置-jump-）" class="headerlink" title="2. 修改srcpm/config.py 配置文件（若使用qq邮箱进行发件，见邮箱配置](#jump)）"></a>2. 修改srcpm/config.py 配置文件（若使用qq邮箱进行发件，见邮箱配置](#jump)）</h4><ul>
+<li>修改公司邮箱后缀</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#公司邮箱后缀限制，只能使用公司邮箱注册账号。</span><br><span class="line">CORP_MAIL &#x3D; &#39;@qq.com&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改邮件CC抄送列表</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#平台发送的每封邮件的邮件抄送列表，可以设置发送给安全部邮箱列表，可自行修改，也可以保持不变为空</span><br><span class="line">    &#39;&#39;&#39;</span><br><span class="line">    示例：</span><br><span class="line">    CC_EMAIL &#x3D; [&#39;xxx1@creditease.cn&#39;,</span><br><span class="line">                &#39;xxx2@creditease.cn&#39;,</span><br><span class="line">            ]</span><br><span class="line">    &#39;&#39;&#39;</span><br><span class="line">    CC_EMAIL &#x3D; [</span><br><span class="line">            ]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改开发模式的邮箱服务器和发件邮箱配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 以开发模式的配置运行，使用测试邮件服务器，并开启debug模式</span><br><span class="line"></span><br><span class="line">    # 平台发邮件账号设置</span><br><span class="line">    SRCPM_MAIL_SENDER &#x3D; &#39;安全部 &lt;sec_creditease@sina.com&gt;&#39;</span><br><span class="line">    </span><br><span class="line">    # 发送邮件的服务器设置，邮箱密码由系统变量中读取</span><br><span class="line">    MAIL_SERVER &#x3D; &#39;smtp.sina.com&#39;</span><br><span class="line">    MAIL_PORT &#x3D; 587</span><br><span class="line">    MAIL_USE_TLS &#x3D; True</span><br><span class="line">    MAIL_USERNAME &#x3D; os.environ.get(</span><br><span class="line">        &#39;MAIL_USERNAME&#39;) or &#39;sec_creditease@sina.com&#39;</span><br><span class="line">    MAIL_PASSWORD &#x3D; os.environ.get(&#39;MAIL_PASSWORD&#39;) or &#39;&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改生产模式的邮箱服务器和发件邮箱配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 以生产模式的配置运行，使用生产邮件服务器，并关闭debug模式</span><br><span class="line"></span><br><span class="line">    # 平台发邮件账号设置</span><br><span class="line">    SRCPM_MAIL_SENDER &#x3D; &#39;安全部 &lt;xxx@creditease.cn&gt;&#39;</span><br><span class="line">    </span><br><span class="line">    # 发送邮件的服务器设置，账号密码由系统变量中读取</span><br><span class="line">    MAIL_SERVER &#x3D; &#39;x.x.x.x&#39;</span><br><span class="line">    MAIL_PORT &#x3D; 25</span><br><span class="line">    MAIL_USE_TLS &#x3D; False</span><br><span class="line">    MAIL_USERNAME &#x3D; os.environ.get(</span><br><span class="line">        &#39;MAIL_USERNAME&#39;) or &#39;xxx@creditease.cn&#39;</span><br><span class="line">    MAIL_PASSWORD &#x3D; os.environ.get(&#39;MAIL_PASSWORD&#39;) or &#39;&#39;</span><br></pre></td></tr></table></figure>
+<h4 id="3-修改定时周期邮件-mail-sender-py-的配置"><a href="#3-修改定时周期邮件-mail-sender-py-的配置" class="headerlink" title="3. 修改定时周期邮件 mail_sender.py 的配置"></a>3. 修改定时周期邮件 mail_sender.py 的配置</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#平台发送的每封邮件的邮件抄送列表，可以设置发送给安全部邮箱列表，可自行修改，也可以保持不变为空</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">示例：</span><br><span class="line">CC_EMAIL &#x3D; [&#39;xxx1@creditease.cn&#39;,</span><br><span class="line">            &#39;xxx2@creditease.cn&#39;,</span><br><span class="line">        ]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">CC_EMAIL &#x3D; [</span><br><span class="line">        ]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#主机名设置</span><br><span class="line">SERVER_NAME &#x3D; &#39;xxx.creditease.corp&#39;</span><br><span class="line"></span><br><span class="line"># 平台发邮件账号设置</span><br><span class="line">SRCPM_MAIL_SENDER &#x3D; &#39;安全部 &lt;xxx@creditease.cn&gt;&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 发送邮件的服务器设置，账号密码由系统变量中读取</span><br><span class="line">MAIL_SERVER &#x3D; &#39;x.x.x.x&#39;</span><br><span class="line">MAIL_PORT &#x3D; 25</span><br><span class="line">MAIL_USE_TLS &#x3D; False</span><br><span class="line">MAIL_USERNAME &#x3D; os.environ.get(</span><br><span class="line">    &#39;MAIL_USERNAME&#39;) or &#39;xxx@creditease.cn&#39;</span><br><span class="line">MAIL_PASSWORD &#x3D; os.environ.get(&#39;MAIL_PASSWORD&#39;) or &#39;&#39;</span><br></pre></td></tr></table></figure>
+<h4 id="4-修改srcpm-app-src-forms-py-漏洞来源下拉列表"><a href="#4-修改srcpm-app-src-forms-py-漏洞来源下拉列表" class="headerlink" title="4. 修改srcpm/app/src/forms.py 漏洞来源下拉列表"></a>4. 修改srcpm/app/src/forms.py 漏洞来源下拉列表</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#39;&#39;&#39; 下拉选项 &#39;&#39;&#39;</span><br><span class="line">source_choices &#x3D; [(&#39;&#39;,&#39;&#39;), (u&#39;安全部&#39;, u&#39;安全部&#39;), (u&#39;YISRC&#39;, u&#39;YISRC&#39;), (u&#39;公众平台&#39;, u&#39;公众平台&#39;), (u&#39;合作伙伴&#39;, u&#39;合作伙伴&#39;)]</span><br></pre></td></tr></table></figure>
+<h2 id="邮箱配置"><a href="#邮箱配置" class="headerlink" title="邮箱配置"></a><span id="jump">邮箱配置</span></h2><p>参考<a href="https://note.youdao.com/ynoteshare1/index.html?id=885afcf3ceece652749bc1d9a55f722e&amp;type=note#/">洞察-漏洞管理系统安装</a></p>
+<ul>
+<li>修改srcpm/config.py 配置文件</li>
+</ul>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/邮箱配置1.png" alt></p>
+<ul>
+<li><p>修改srcpm/mail_sender.py文件</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/邮箱配置2.png" alt></p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/邮箱配置3.png" alt="邮箱配置3"></p>
+<ul>
+<li><p>QQ邮箱授权码获取（下一步启动APP时的密码）</p>
+<p>授权码作为邮箱服务器的密码，下一步启动时填入MAIL_PASSWORD中</p>
+<p>开启QQ邮箱转发功能，并生成用于第三方登录的授权码</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/qq邮箱授权码.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="在项目根目录下部署和启动APP"><a href="#在项目根目录下部署和启动APP" class="headerlink" title="在项目根目录下部署和启动APP"></a>在项目根目录下部署和启动APP</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 拉取镜像</span><br><span class="line">docker pull daocloud.io&#x2F;liusheng&#x2F;vulpm_docker:latest</span><br><span class="line">或</span><br><span class="line">自己构建镜像</span><br><span class="line">docker build -t&#x3D;&#39;vulpm_docker&#39; .</span><br><span class="line"></span><br><span class="line"># 在项目目录下启动容器，确保当前目录下存在srcpm文件夹，MAIL_PASSOWRD替换为自己邮箱服务器的密码。</span><br><span class="line">$ docker run -d -p 0.0.0.0:9000:5000 \</span><br><span class="line">--link open_source_mysqldb:db \</span><br><span class="line">--name open_source_srcpm \</span><br><span class="line">-v $PWD&#x2F;srcpm:&#x2F;opt&#x2F;webapp&#x2F;srcpm \</span><br><span class="line">-e DEV_DATABASE_URL&#x3D;&#39;mysql:&#x2F;&#x2F;vuluser:vulpassword@db&#x2F;vuldb&#39; \</span><br><span class="line">-e SrcPM_CONFIG&#x3D;development \</span><br><span class="line">-e MAIL_PASSWORD&#x3D;&#39;xxxxxx&#39; \</span><br><span class="line">daocloud.io&#x2F;liusheng&#x2F;vulpm_docker:latest \</span><br><span class="line">sh -c &#39;supervisord -c srcpm&#x2F;supervisor.conf &amp;&amp; supervisorctl -c srcpm&#x2F;supervisor.conf start all &amp;&amp; tail -f srcpm&#x2F;log&#x2F;gunicorn.err &amp;&amp; tail -f srcpm&#x2F;log&#x2F;mail_sender.err&#39;</span><br></pre></td></tr></table></figure>
+<p><strong>注意命令中的IP地址设置成0.0.0.0，若为127.0.0.1则为本地访问。</strong></p>
+<p>如果之前有运行过此命令的话，使用如下命令查看open_source_srcpm容器中的环境变量是否正确，注意MAIL_PASSWORD值是否为QQ邮箱授权码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec open_source_srcpm env</span><br></pre></td></tr></table></figure>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/docker环境变量.png" alt></p>
+<p>若不正确请先删除容器。</p>
+<p>命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stop open_source_srcpm </span><br><span class="line"></span><br><span class="line">docker rm open_source_srcpm</span><br></pre></td></tr></table></figure>
+<p>再重新运行启动命令</p>
+<h2 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a>初始化数据库</h2><p>数据库初始化详细配置请见：</p>
+<p><a href="https://github.com/creditease-sec/insight/blob/open-source/docs/db_init.md">数据库初始化详细配置指南</a></p>
+<p>或者</p>
+<p>直接导入初始化的sql，本人使用直接导入初始化sql的方案</p>
+<blockquote>
+<p>导入sql</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mysql -h127.0.0.1 -P6606 -uroot -p vuldb &lt; srcpm&#x2F;vuldb_init.sql</span><br><span class="line">Enter password:root</span><br></pre></td></tr></table></figure>
+<h2 id="访问洞察"><a href="#访问洞察" class="headerlink" title="访问洞察"></a>访问洞察</h2><h4 id="1-主页"><a href="#1-主页" class="headerlink" title="1. 主页"></a>1. 主页</h4><p><a href="http://IP:9000/srcpm/">http://IP:9000/srcpm/</a></p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/主页.png" style="zoom:50%;"></p>
+<h4 id="2-登录页面"><a href="#2-登录页面" class="headerlink" title="2. 登录页面"></a>2. 登录页面</h4><p><a href="http://IP:9000/srcpm/auth/login">http://IP:9000/srcpm/auth/login</a></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>账号</th>
+<th>密码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="mailto:admin@admin.com">admin@admin.com</a></td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="0x03-使用体验"><a href="#0x03-使用体验" class="headerlink" title="0x03 使用体验"></a>0x03 使用体验</h1><h2 id="漏洞管理"><a href="#漏洞管理" class="headerlink" title="漏洞管理"></a>漏洞管理</h2><p>登录后提交漏洞</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/漏洞管理.png" style="zoom:50%;"></p>
+<p>对漏洞进行管理，发送邮件给安全管理员,进行通知。</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/邮件通知.png" style="zoom:50%;"></p>
+<p>若要忽略漏洞，需使用管理员账户进行管理编辑，修改为暂不处理</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/暂不处理.png" style="zoom:50%;"></p>
+<h2 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h2><p>在管理员后台-认证和授权-用户查看处，可对注册用户与人员管理处增加对人员进行关联，通常使用同一邮箱的人会自动进行关联。</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/人员关联.png" style="zoom:50%;"></p>
+<p>匿名用户问题</p>
+<p><a href="https://note.youdao.com/ynoteshare1/index.html?id=885afcf3ceece652749bc1d9a55f722e&amp;type=note#/">洞察-漏洞管理系统安装</a>给出解决方案</p>
+<p><img src="/2020/10/27/%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0insight%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/匿名用户.png" style="zoom:50%;"></p>
+<h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><p>无法进行人员和资产批量导入，不过个人觉得可以直接操作数据库进行导入。</p>
+<h1 id="0x04-参考文章"><a href="#0x04-参考文章" class="headerlink" title="0x04 参考文章"></a>0x04 参考文章</h1><p><a href="https://note.youdao.com/ynoteshare1/index.html?id=885afcf3ceece652749bc1d9a55f722e&amp;type=note#/">洞察-漏洞管理系统安装</a></p>
+<p><a href="https://github.com/creditease-sec/insight/blob/open-source/docs/install.md">docker部署指南</a></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>insight</tag>
       </tags>
   </entry>
 </search>
