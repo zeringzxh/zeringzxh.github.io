@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-10-27T04:54:46.780Z</updated>
+  <updated>2020-12-16T02:31:10.704Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>任意文件读取</title>
+    <link href="https://fl4g.cn/2020/12/15/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/"/>
+    <id>https://fl4g.cn/2020/12/15/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/</id>
+    <published>2020-12-15T10:30:46.000Z</published>
+    <updated>2020-12-16T02:31:10.704Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>忙于换工作，又不知道写啥，又弃更了一段时间，看了Nu1l战队编写的从0到1 CTFER成长之路，于是记录下任意文件读取来凑个数吧。</p><h1 id="0x02-任意文件读取产生的原因"><a href="#0x02-任意文件读取产生的原因" class="headerlink" title="0x02 任意文件读取产生的原因"></a>0x02 任意文件读取产生的原因</h1><ol><li>开发者调用API时，未明确可接受的参数范围，并未对参数进行限制。</li><li>Web Server自身问题或不安全的服务器配置</li></ol><a id="more"></a><h1 id="0x03-常见触发点"><a href="#0x03-常见触发点" class="headerlink" title="0x03 常见触发点"></a>0x03 常见触发点</h1><h2 id="Web语言"><a href="#Web语言" class="headerlink" title="Web语言"></a>Web语言</h2><h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p><strong>常见函数：</strong></p><ul><li>file_get_contents()、file()、fopen()（及其文件指针操作函数fread()、gets()）</li><li>文件包含相关函数：include()、require()、include_once()、require_once()等</li><li>执行系统命令：system()、exec()等</li><li>PHP扩展：php-curl扩展、XML模块等</li></ul><p><strong>PHP特色：</strong></p><ul><li>Wrapper：指功能不同但形式相似的协议的统称，开发者可自定义。如php://协议。</li><li>Filter：开发者通过stream_filter_register进行注册，Filter对目前的Wripper进行一定的处理。内置的Wrapper会自带一些Filter。</li></ul><p>两者都可以通过php.ini禁用。</p><p><strong>实际问题中可能遇到三种情况：</strong></p><ol><li><p>文件路径前面可控，后面不可控</p><p>在较低PHP版本及容器版本中使用“\x00”截断，对应的url编码为”%00”。当服务器存在上传文件功能时，也可以尝试zip或者phar协议直接进行文件包含进而执行php代码。</p></li><li><p>文件路径后面可控，前面不可控</p><p>通过符号”../“进行目录穿越来直接读取文件，但这种情况无法使用Wrapper。如果服务端使用include等文件包含类函数，我们将无法读取PHP文件中的PHP代码。</p></li><li><p>文件路径中间可控</p><p>与第一种类似，但是无法通过Wrapper进行文件包含。</p></li></ol><h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>Python的Web应用更多地倾向于通过其自身的模块启动服务，同时搭配中间件、代理服务将整个Web应用呈现给用户。用户和Web应用交互的过程本身就是含有对服务器资源文件的请求，因此Python某框架任意文件读取漏洞也是因为缺乏统一的资源文件交互的标准。</p><p><strong>常见漏洞点：</strong></p><p>框架请求静态资源文件部分，也就是最后读取文件内容的open函数，但直接导致漏洞的成因往往是开发者忽略了python函数的feature，如os.path.join()函数</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.join(<span class="string">&quot;/a&quot;</span>,<span class="string">&quot;/b&quot;</span>)</span><br><span class="line"><span class="string">&#x27;/b&#x27;</span></span><br></pre></td></tr></table></figure><p>过滤”.”时，可以通过传入“/”穿越到根目录。（绝对路径）</p><h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p>除了Java本身的文件读取函数FileInputStream，XXE导致的文件读取，Java的一些模块也支持”file://“协议。</p><h3 id="Ruby"><a href="#Ruby" class="headerlink" title="Ruby"></a>Ruby</h3><p>通常与Rails框架有关。</p><h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>已知Node.js的express模块曾存在任意文件读取漏洞（CVE-2017-14849）。</p><h2 id="中间件-服务器相关"><a href="#中间件-服务器相关" class="headerlink" title="中间件/服务器相关"></a>中间件/服务器相关</h2><h3 id="Nginx错误配置"><a href="#Nginx错误配置" class="headerlink" title="Nginx错误配置"></a>Nginx错误配置</h3><p>搭配Python-Web应用一起出现，例如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;static&#123;</span><br><span class="line">alias &#x2F;home&#x2F;myapp&#x2F;static&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>如果配置文件中包含了上述配置，有可能是开发人员想让用户访问到静态资源目录，但是如果用户输入的路径是/static../，拼接到alias上就变成了/home/myapp/static/../，这时就产生了目录穿越漏洞，穿越到了上一级的myapp目录。</p><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p>以MySQL为例：load_file()函数进行文件读取。另一种load data infield，需要执行完整的SQL语句</p><h3 id="软链接"><a href="#软链接" class="headerlink" title="软链接"></a>软链接</h3><p>使用ln -s创建软链接，上传服务器。访问链接文件即访问指向的服务器文件。</p><h3 id="FFmpeg"><a href="#FFmpeg" class="headerlink" title="FFmpeg"></a>FFmpeg</h3><p>2017年6月，FFmpeg被爆出存在任意文件读取漏洞。</p><h3 id="Docker-API"><a href="#Docker-API" class="headerlink" title="Docker-API"></a>Docker-API</h3><p>SSRF漏洞进行UNIX Socket通信的时候，就可以通过操控Docker-API把本地文件载入Docker新容器进行读取（利用Docker的ADD、COPY操作）</p><h2 id="客户端相关"><a href="#客户端相关" class="headerlink" title="客户端相关"></a>客户端相关</h2><h3 id="浏览器-Flash-XSS"><a href="#浏览器-Flash-XSS" class="headerlink" title="浏览器/Flash XSS"></a>浏览器/Flash XSS</h3><p>网站同源策略阻止JavaScript使用File协议读取客户的本地文件。Safari浏览器2017年8月被爆出客户端的本地文件读取漏洞。</p><h3 id="MarkDown语法解析器XSS"><a href="#MarkDown语法解析器XSS" class="headerlink" title="MarkDown语法解析器XSS"></a>MarkDown语法解析器XSS</h3><p>Markdown解析器具有一定的解析JavaScript的能力。</p><h1 id="0x04-常见读取路径"><a href="#0x04-常见读取路径" class="headerlink" title="0x04 常见读取路径"></a>0x04 常见读取路径</h1><h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul><li><p>/etc目录<br>/etc目录下多是各种应用或系统配置文件，所以其下的文件是文件读取的首要目标</p></li><li><p>/etc/passwd<br>/etc/passwd文件是Linux系统保存用户信息及其工作目录的文件，权限是所有用户/组可读，一般被用作Linux系统下文件读取漏洞存在性判断的基准。读到这个文件我们就可以知道系统存在哪些用户，它们的组是什么，他们的工作目录是什么。</p></li><li><p>/etc/shadow<br>/etc/shadow是Linux系统保存用户信息及（可能存在）密码（hash）的文件，权限是root可读写，shadow组可读。所以一般情况下，这个文件是不可读的。</p></li><li><p>/etc/apache2/<em><br>/etc/apache2/</em>是Apache配置文件，可以获知Web目录、服务端口等信息。</p></li><li><p>/etc/nginx/*</p><p>Nginx配置文件，可获知Web目录、服务端口等信息</p></li><li><p>/etc/apparmor(.d)/*</p><p>Apparmor配置文件，获知各应用系统调用的白名单、黑名单。</p></li><li><p>/etc/(cron.d/*|crontab)</p><p>定时任务文件。</p></li><li><p>/etc/environment</p><p>环境变量配置文件之一，泄漏大量目录信息，甚至可能出现secret key。</p></li><li><p>/etc/hostname</p><p>主机名</p></li><li><p>/etc/hosts</p><p>主机名查询静态表，包含指定域名解析IP的成对信息。</p></li><li><p>/etc/issue</p><p>指明系统版本</p></li><li><p>/etc/mysql/*</p><p>MySQL配置文件</p></li><li><p>/etc/php/*</p><p>PHP配置文件</p></li><li><p>/proc目录</p><p>虚拟目录，存储进程动态允许的各种信息。/proc/[pid]/可以爆破pid进程号，/proc/self/查看当前进程。</p></li></ul><blockquote><p>对应目录下的cmdline可读出比较敏感的信息，如使用<code>mysql -uxxx -pxxx</code>登录MySQL，会在cmdline中显示明文密码：</p><ul><li>/proc/[pid]/cmdline</li></ul><p>通过cwd命令可以直接跳转到当前目录：</p><ul><li>/proc/[pid]/cwd/</li></ul><p>环境变量中可能存在secret_key，这时可以通过environ进行读取：</p><ul><li>/proc/[pid]/environ</li><li>/proc/[pid]/fd(1|2…).     读取pid指向进程的stdout或stderror或其他</li><li>/proc/[pid]/maps     内存映射</li><li>/proc/[pid]/(mounts|mountinfo)    文件系统挂载情况</li><li>/proc/[pid]/net/*       网络信息</li></ul></blockquote><ul><li><p>/usr/local/nginx/conf/*</p><p>Nginx配置文件可能存在其他路径</p></li><li><p>/var/log/*                    （apache2的web应用可读/var/log/apache2/access.log分析日志）</p><p>日志文件</p></li><li><p>/var/www/html/</p><p>Apache默认Web根目录</p></li><li><p>/var/lib/php(5)/sessions</p><p>PHP session目录</p></li><li><p>[user]/.bash_history        （历史执行命令）</p></li><li><p>[user]/.bashrc                 （部分环境变量）</p></li><li><p>[user]/.ssh/id_rsa(.pub)  （ssh登录私钥/公钥）</p></li><li><p>[user]/.viminfo                 （vim使用记录）</p><p>用户目录</p></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;0x01-前言&quot;&gt;&lt;a href=&quot;#0x01-前言&quot; class=&quot;headerlink&quot; title=&quot;0x01 前言&quot;&gt;&lt;/a&gt;0x01 前言&lt;/h1&gt;&lt;p&gt;忙于换工作，又不知道写啥，又弃更了一段时间，看了Nu1l战队编写的从0到1 CTFER成长之路，于是记录下任意文件读取来凑个数吧。&lt;/p&gt;
+&lt;h1 id=&quot;0x02-任意文件读取产生的原因&quot;&gt;&lt;a href=&quot;#0x02-任意文件读取产生的原因&quot; class=&quot;headerlink&quot; title=&quot;0x02 任意文件读取产生的原因&quot;&gt;&lt;/a&gt;0x02 任意文件读取产生的原因&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;开发者调用API时，未明确可接受的参数范围，并未对参数进行限制。&lt;/li&gt;
+&lt;li&gt;Web Server自身问题或不安全的服务器配置&lt;/li&gt;
+&lt;/ol&gt;</summary>
+    
+    
+    
+    <category term="漏洞分析" scheme="https://fl4g.cn/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    
+    
+    <category term="文件读取" scheme="https://fl4g.cn/tags/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/"/>
+    
+  </entry>
   
   <entry>
     <title>漏洞管理平台insight安装使用体验</title>
@@ -506,33 +531,6 @@
 &lt;li&gt;保密性服务&lt;/li&gt;
 &lt;li&gt;完整性服务&lt;/li&gt;
 &lt;li&gt;认证服务&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
-    
-    
-    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第8章 防火墙技术原理与应用</title>
-    <link href="https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"/>
-    <id>https://fl4g.cn/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</id>
-    <published>2020-09-18T07:02:06.000Z</published>
-    <updated>2020-10-14T03:24:59.990Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="防火墙概述"><a href="#防火墙概述" class="headerlink" title="防火墙概述"></a>防火墙概述</h1><p>安全区域：</p><ul><li>公共外部网络</li><li>内联网</li><li>外联网，用作组织与合作伙伴之间进行通信</li><li>军事缓冲区域，DMZ，介于内部网络和外部网络之间，放置公共服务设备，向外提供服务</li></ul><a id="more"></a><h2 id="防火墙工作原理"><a href="#防火墙工作原理" class="headerlink" title="防火墙工作原理"></a>防火墙工作原理</h2><p>两种类型安全策略：白名单策略、黑名单策略</p><p>功能：</p><ul><li>过滤非安全网络访问</li><li>限制网络访问：只允许访问指定主机或网络服务</li><li>网络访问审计</li><li>网络带宽控制</li><li>协同防御</li></ul><h2 id="防火墙安全风险"><a href="#防火墙安全风险" class="headerlink" title="防火墙安全风险"></a>防火墙安全风险</h2><ol><li>网络安全旁路。只能对通过它对网络通信包进行访问控制。</li><li>防火墙功能缺陷，导致一些网络威胁无法阻断。<ul><li>不能完全防止感染病毒的软件或文件传输</li><li>不能防止基于数据驱动式的攻击</li><li>不能完全防止后门攻击</li></ul></li><li>防火墙安全机制形成单点故障和特权威胁</li><li>防火墙无法有效防范内部威胁</li><li>防火墙效用受限于安全规则</li></ol><h1 id="防火墙类型与实现技术"><a href="#防火墙类型与实现技术" class="headerlink" title="防火墙类型与实现技术"></a>防火墙类型与实现技术</h1><h2 id="包过滤"><a href="#包过滤" class="headerlink" title="包过滤"></a>包过滤</h2><p>IP层（网络层）：根据包的源IP地址、目的IP地址、源端口、目的端口及包传递方向等包头信息判断是否允许包通过。</p><p>控制依据：规则集</p><p>过滤规则表示格式由“规则号、匹配条件、匹配操作”三部分组成。</p><p>优点：低负载、高通过率、对用户透明</p><p>弱点：不能在用户级别进行过滤，IP伪装绕过</p><h2 id="状态检查技术"><a href="#状态检查技术" class="headerlink" title="状态检查技术"></a>状态检查技术</h2><p>通过利用TCP会话和UDP“伪”会话的状态信息进行网络访问机制。</p><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/状态防火墙.jpg" style="zoom:50%;"></p><h2 id="应用服务代理"><a href="#应用服务代理" class="headerlink" title="应用服务代理"></a>应用服务代理</h2><p>代替受保护网络的主机向外部网发送服务请求，并将响应结果返回。提供在应用级的网络安全访问控制。</p><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/代理服务.jpg" style="zoom:50%;"></p><p>优点：</p><ul><li>不允许外部主机直接访问内部主机</li><li>支持多种用户认证方案</li><li>可以分析数据包内部的应用命令</li><li>可以提供详细的审计记录</li></ul><p>缺点：</p><ul><li>速度比包过滤慢</li><li>对用户不透明</li><li>与特定应用协议相关联，代理服务器并不能支持所有的网络协议</li></ul><h2 id="网络地址转换技术"><a href="#网络地址转换技术" class="headerlink" title="网络地址转换技术"></a>网络地址转换技术</h2><p>实现网络地址转换的方式主要有三种类型：</p><ul><li>静态NAT：内部每个主机被永久映射成外部网络某个合法地址</li><li>NAT池：采用动态分配的方法映射内部网络</li><li>端口NAT（PAT）：把内部地址映射到外部网络一个IP地址的不同端口上</li></ul><h2 id="Web防火墙技术"><a href="#Web防火墙技术" class="headerlink" title="Web防火墙技术"></a>Web防火墙技术</h2><p>常见功能：允许/禁止HTTP请求类型、HTTP协议头各个字段的长度限制、后缀名过滤、URL内容关键字过滤、Web服务器返回内容过滤</p><p>开源Web应用防火墙有：ModSecurity、WebKnight、ShadowDaemon等</p><h2 id="数据库防火墙技术"><a href="#数据库防火墙技术" class="headerlink" title="数据库防火墙技术"></a>数据库防火墙技术</h2><p>技术原理：基于数据通信协议深度分析和虚拟补丁，根据安全规则对数据库访问操作及通信进行安全访问控制，防止数据库系统受到攻击威胁。</p><h2 id="工控防火墙技术"><a href="#工控防火墙技术" class="headerlink" title="工控防火墙技术"></a>工控防火墙技术</h2><p>技术原理：深度分析工控协议，监控访问请求和响应</p><p>工控协议：Modbus TCP协议、IEC61850、OPC、Ethernet/IP和DNP3协议</p><h2 id="下一代防火墙技术"><a href="#下一代防火墙技术" class="headerlink" title="下一代防火墙技术"></a>下一代防火墙技术</h2><p>除传统防火墙功能外，还具有：</p><ul><li>应用识别和管控</li><li>入侵防护（IPS）</li><li>数据防泄漏</li><li>恶意代码防护</li><li>URL分类与过滤</li><li>带宽管理与Qos优化</li><li>加密通信分析</li></ul><h2 id="防火墙共性关键技术"><a href="#防火墙共性关键技术" class="headerlink" title="防火墙共性关键技术"></a>防火墙共性关键技术</h2><ol><li>深度包检测（DPI）：对包的数据内容及包头信息进行检查分析，运用模式（特征）匹配、协议异常检测等方法。</li><li>操作系统</li><li>网络协议分析</li></ol><h1 id="防火墙主要产品与技术指标"><a href="#防火墙主要产品与技术指标" class="headerlink" title="防火墙主要产品与技术指标"></a>防火墙主要产品与技术指标</h1><h2 id="防火墙主要产品"><a href="#防火墙主要产品" class="headerlink" title="防火墙主要产品"></a>防火墙主要产品</h2><p>网络防火墙、Web应用防火墙、数据库防火墙、主机防火墙、工控防火墙、下一代防火墙、家庭防火墙</p><h2 id="防火墙主要技术指标"><a href="#防火墙主要技术指标" class="headerlink" title="防火墙主要技术指标"></a>防火墙主要技术指标</h2><ol><li><p>防火墙安全功能指标</p><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/防火墙安全功能指标.jpg" style="zoom:50%;"></p></li><li><p>防火墙性能指标：最大吞吐量、最大连接速率、最大规则数、并发连接数</p></li><li><p>防火墙安全保障指标：主要包括开发、指导性文档、生命周期支持、测试、脆弱性评定</p></li><li><p>环境适应性指标</p></li><li><p>防火墙自身安全指标</p></li></ol><h1 id="防火墙防御体系结构类型"><a href="#防火墙防御体系结构类型" class="headerlink" title="防火墙防御体系结构类型"></a>防火墙防御体系结构类型</h1><h2 id="基于双宿主主机防火墙机构"><a href="#基于双宿主主机防火墙机构" class="headerlink" title="基于双宿主主机防火墙机构"></a>基于双宿主主机防火墙机构</h2><p>使用具有两个网络接口卡的主机，分别连接内外网，从一块网卡上送来IP包，经过安全模块检查，合法则转发到另一块网卡。</p><h2 id="基于代理型防火墙机构"><a href="#基于代理型防火墙机构" class="headerlink" title="基于代理型防火墙机构"></a>基于代理型防火墙机构</h2><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/代理型防火墙.jpg" style="zoom:50%;"></p><p>主要缺点：只要攻破代理主机，整个内部网络与代理主机之间没有任何障碍</p><h2 id="基于屏蔽子网的防火墙结构"><a href="#基于屏蔽子网的防火墙结构" class="headerlink" title="基于屏蔽子网的防火墙结构"></a>基于屏蔽子网的防火墙结构</h2><p><img src="/2020/09/18/%E7%AC%AC8%E7%AB%A0-%E9%98%B2%E7%81%AB%E5%A2%99%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/屏蔽子网.jpg" style="zoom:50%;"></p><p>特点：</p><ul><li>应用代理、公开服务器位于屏蔽子网，外部只能访问屏蔽子网，不能进入内部网络</li><li>包过滤路由器A：过滤外部网对屏蔽子网的访问，B：过滤被屏蔽子网对内部网络的访问。所有外部网络访问都必须经过应用代理的检查和认证</li><li>优点：安全级别最高</li><li>缺点：成本高，配置复杂</li></ul><h1 id="防火墙技术应用"><a href="#防火墙技术应用" class="headerlink" title="防火墙技术应用"></a>防火墙技术应用</h1><h2 id="防火墙应用场景类型"><a href="#防火墙应用场景类型" class="headerlink" title="防火墙应用场景类型"></a>防火墙应用场景类型</h2><p>常见场景：上网保护、网站保护、数据保护、网络边界保护、终端保护、网络安全应急响应</p><h2 id="防火墙部署基本方法"><a href="#防火墙部署基本方法" class="headerlink" title="防火墙部署基本方法"></a>防火墙部署基本方法</h2><ol><li>根据安全策略要求，划分网络安全区域</li><li>在安全区域之间设置针对网络通行的访问控制点</li><li>针对不同访问控制点的通信业务需求，制定相应的边界安全策略</li><li>依据控制点的边界安全策略，采用合适的防火墙技术和防范结构</li><li>在防火墙上，配置实现对应的网络安全策略</li><li>测试验证边界安全策略是否正常执行</li><li>允许和维护防火墙</li></ol><p>IPtables防火墙应用参考、Web应用防火墙应用参考、包过滤防火墙应用参考、工控防火墙应用参考见P176-P82</p>]]></content>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;防火墙概述&quot;&gt;&lt;a href=&quot;#防火墙概述&quot; class=&quot;headerlink&quot; title=&quot;防火墙概述&quot;&gt;&lt;/a&gt;防火墙概述&lt;/h1&gt;&lt;p&gt;安全区域：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;公共外部网络&lt;/li&gt;
-&lt;li&gt;内联网&lt;/li&gt;
-&lt;li&gt;外联网，用作组织与合作伙伴之间进行通信&lt;/li&gt;
-&lt;li&gt;军事缓冲区域，DMZ，介于内部网络和外部网络之间，放置公共服务设备，向外提供服务&lt;/li&gt;
 &lt;/ul&gt;</summary>
     
     

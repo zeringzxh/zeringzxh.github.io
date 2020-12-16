@@ -4746,4 +4746,144 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
         <tag>insight</tag>
       </tags>
   </entry>
+  <entry>
+    <title>任意文件读取</title>
+    <url>/2020/12/15/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/</url>
+    <content><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>忙于换工作，又不知道写啥，又弃更了一段时间，看了Nu1l战队编写的从0到1 CTFER成长之路，于是记录下任意文件读取来凑个数吧。</p>
+<h1 id="0x02-任意文件读取产生的原因"><a href="#0x02-任意文件读取产生的原因" class="headerlink" title="0x02 任意文件读取产生的原因"></a>0x02 任意文件读取产生的原因</h1><ol>
+<li>开发者调用API时，未明确可接受的参数范围，并未对参数进行限制。</li>
+<li>Web Server自身问题或不安全的服务器配置</li>
+</ol>
+<a id="more"></a>
+<h1 id="0x03-常见触发点"><a href="#0x03-常见触发点" class="headerlink" title="0x03 常见触发点"></a>0x03 常见触发点</h1><h2 id="Web语言"><a href="#Web语言" class="headerlink" title="Web语言"></a>Web语言</h2><h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p><strong>常见函数：</strong></p>
+<ul>
+<li>file_get_contents()、file()、fopen()（及其文件指针操作函数fread()、gets()）</li>
+<li>文件包含相关函数：include()、require()、include_once()、require_once()等</li>
+<li>执行系统命令：system()、exec()等</li>
+<li>PHP扩展：php-curl扩展、XML模块等</li>
+</ul>
+<p><strong>PHP特色：</strong></p>
+<ul>
+<li>Wrapper：指功能不同但形式相似的协议的统称，开发者可自定义。如php://协议。</li>
+<li>Filter：开发者通过stream_filter_register进行注册，Filter对目前的Wripper进行一定的处理。内置的Wrapper会自带一些Filter。</li>
+</ul>
+<p>两者都可以通过php.ini禁用。</p>
+<p><strong>实际问题中可能遇到三种情况：</strong></p>
+<ol>
+<li><p>文件路径前面可控，后面不可控</p>
+<p>在较低PHP版本及容器版本中使用“\x00”截断，对应的url编码为”%00”。当服务器存在上传文件功能时，也可以尝试zip或者phar协议直接进行文件包含进而执行php代码。</p>
+</li>
+<li><p>文件路径后面可控，前面不可控</p>
+<p>通过符号”../“进行目录穿越来直接读取文件，但这种情况无法使用Wrapper。如果服务端使用include等文件包含类函数，我们将无法读取PHP文件中的PHP代码。</p>
+</li>
+<li><p>文件路径中间可控</p>
+<p>与第一种类似，但是无法通过Wrapper进行文件包含。</p>
+</li>
+</ol>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>Python的Web应用更多地倾向于通过其自身的模块启动服务，同时搭配中间件、代理服务将整个Web应用呈现给用户。用户和Web应用交互的过程本身就是含有对服务器资源文件的请求，因此Python某框架任意文件读取漏洞也是因为缺乏统一的资源文件交互的标准。</p>
+<p><strong>常见漏洞点：</strong></p>
+<p>框架请求静态资源文件部分，也就是最后读取文件内容的open函数，但直接导致漏洞的成因往往是开发者忽略了python函数的feature，如os.path.join()函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.join(<span class="string">&quot;/a&quot;</span>,<span class="string">&quot;/b&quot;</span>)</span><br><span class="line"><span class="string">&#x27;/b&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>过滤”.”时，可以通过传入“/”穿越到根目录。（绝对路径）</p>
+<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p>除了Java本身的文件读取函数FileInputStream，XXE导致的文件读取，Java的一些模块也支持”file://“协议。</p>
+<h3 id="Ruby"><a href="#Ruby" class="headerlink" title="Ruby"></a>Ruby</h3><p>通常与Rails框架有关。</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>已知Node.js的express模块曾存在任意文件读取漏洞（CVE-2017-14849）。</p>
+<h2 id="中间件-服务器相关"><a href="#中间件-服务器相关" class="headerlink" title="中间件/服务器相关"></a>中间件/服务器相关</h2><h3 id="Nginx错误配置"><a href="#Nginx错误配置" class="headerlink" title="Nginx错误配置"></a>Nginx错误配置</h3><p>搭配Python-Web应用一起出现，例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;static&#123;</span><br><span class="line">	alias &#x2F;home&#x2F;myapp&#x2F;static&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果配置文件中包含了上述配置，有可能是开发人员想让用户访问到静态资源目录，但是如果用户输入的路径是/static../，拼接到alias上就变成了/home/myapp/static/../，这时就产生了目录穿越漏洞，穿越到了上一级的myapp目录。</p>
+<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p>以MySQL为例：load_file()函数进行文件读取。另一种load data infield，需要执行完整的SQL语句</p>
+<h3 id="软链接"><a href="#软链接" class="headerlink" title="软链接"></a>软链接</h3><p>使用ln -s创建软链接，上传服务器。访问链接文件即访问指向的服务器文件。</p>
+<h3 id="FFmpeg"><a href="#FFmpeg" class="headerlink" title="FFmpeg"></a>FFmpeg</h3><p>2017年6月，FFmpeg被爆出存在任意文件读取漏洞。</p>
+<h3 id="Docker-API"><a href="#Docker-API" class="headerlink" title="Docker-API"></a>Docker-API</h3><p>SSRF漏洞进行UNIX Socket通信的时候，就可以通过操控Docker-API把本地文件载入Docker新容器进行读取（利用Docker的ADD、COPY操作）</p>
+<h2 id="客户端相关"><a href="#客户端相关" class="headerlink" title="客户端相关"></a>客户端相关</h2><h3 id="浏览器-Flash-XSS"><a href="#浏览器-Flash-XSS" class="headerlink" title="浏览器/Flash XSS"></a>浏览器/Flash XSS</h3><p>网站同源策略阻止JavaScript使用File协议读取客户的本地文件。Safari浏览器2017年8月被爆出客户端的本地文件读取漏洞。</p>
+<h3 id="MarkDown语法解析器XSS"><a href="#MarkDown语法解析器XSS" class="headerlink" title="MarkDown语法解析器XSS"></a>MarkDown语法解析器XSS</h3><p>Markdown解析器具有一定的解析JavaScript的能力。</p>
+<h1 id="0x04-常见读取路径"><a href="#0x04-常见读取路径" class="headerlink" title="0x04 常见读取路径"></a>0x04 常见读取路径</h1><h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><ul>
+<li><p>/etc目录<br>/etc目录下多是各种应用或系统配置文件，所以其下的文件是文件读取的首要目标</p>
+</li>
+<li><p>/etc/passwd<br>/etc/passwd文件是Linux系统保存用户信息及其工作目录的文件，权限是所有用户/组可读，一般被用作Linux系统下文件读取漏洞存在性判断的基准。读到这个文件我们就可以知道系统存在哪些用户，它们的组是什么，他们的工作目录是什么。</p>
+</li>
+<li><p>/etc/shadow<br>/etc/shadow是Linux系统保存用户信息及（可能存在）密码（hash）的文件，权限是root可读写，shadow组可读。所以一般情况下，这个文件是不可读的。</p>
+</li>
+<li><p>/etc/apache2/<em><br>/etc/apache2/</em>是Apache配置文件，可以获知Web目录、服务端口等信息。</p>
+</li>
+<li><p>/etc/nginx/*</p>
+<p>Nginx配置文件，可获知Web目录、服务端口等信息</p>
+</li>
+<li><p>/etc/apparmor(.d)/*</p>
+<p>Apparmor配置文件，获知各应用系统调用的白名单、黑名单。</p>
+</li>
+<li><p>/etc/(cron.d/*|crontab)</p>
+<p>定时任务文件。</p>
+</li>
+<li><p>/etc/environment</p>
+<p>环境变量配置文件之一，泄漏大量目录信息，甚至可能出现secret key。</p>
+</li>
+<li><p>/etc/hostname</p>
+<p>主机名</p>
+</li>
+<li><p>/etc/hosts</p>
+<p>主机名查询静态表，包含指定域名解析IP的成对信息。</p>
+</li>
+<li><p>/etc/issue</p>
+<p>指明系统版本</p>
+</li>
+<li><p>/etc/mysql/*</p>
+<p>MySQL配置文件</p>
+</li>
+<li><p>/etc/php/*</p>
+<p>PHP配置文件</p>
+</li>
+<li><p>/proc目录</p>
+<p>虚拟目录，存储进程动态允许的各种信息。/proc/[pid]/可以爆破pid进程号，/proc/self/查看当前进程。</p>
+</li>
+</ul>
+<blockquote>
+<p>对应目录下的cmdline可读出比较敏感的信息，如使用<code>mysql -uxxx -pxxx</code>登录MySQL，会在cmdline中显示明文密码：</p>
+<ul>
+<li>/proc/[pid]/cmdline</li>
+</ul>
+<p>通过cwd命令可以直接跳转到当前目录：</p>
+<ul>
+<li>/proc/[pid]/cwd/</li>
+</ul>
+<p>环境变量中可能存在secret_key，这时可以通过environ进行读取：</p>
+<ul>
+<li>/proc/[pid]/environ</li>
+<li>/proc/[pid]/fd(1|2…).     读取pid指向进程的stdout或stderror或其他</li>
+<li>/proc/[pid]/maps     内存映射</li>
+<li>/proc/[pid]/(mounts|mountinfo)    文件系统挂载情况</li>
+<li>/proc/[pid]/net/*       网络信息</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>/usr/local/nginx/conf/*</p>
+<p>Nginx配置文件可能存在其他路径</p>
+</li>
+<li><p>/var/log/*                    （apache2的web应用可读/var/log/apache2/access.log分析日志）</p>
+<p>日志文件</p>
+</li>
+<li><p>/var/www/html/</p>
+<p>Apache默认Web根目录</p>
+</li>
+<li><p>/var/lib/php(5)/sessions</p>
+<p>PHP session目录</p>
+</li>
+<li><p>[user]/.bash_history        （历史执行命令）</p>
+</li>
+<li><p>[user]/.bashrc                 （部分环境变量）</p>
+</li>
+<li><p>[user]/.ssh/id_rsa(.pub)  （ssh登录私钥/公钥）</p>
+</li>
+<li><p>[user]/.viminfo                 （vim使用记录）</p>
+<p>用户目录</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>漏洞分析</category>
+      </categories>
+      <tags>
+        <tag>文件读取</tag>
+      </tags>
+  </entry>
 </search>
