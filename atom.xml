@@ -6,7 +6,7 @@
   <link href="https://fl4g.cn/atom.xml" rel="self"/>
   
   <link href="https://fl4g.cn/"/>
-  <updated>2020-12-16T02:31:10.704Z</updated>
+  <updated>2021-01-18T10:52:17.931Z</updated>
   <id>https://fl4g.cn/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>域基础及黄金票据复现</title>
+    <link href="https://fl4g.cn/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/"/>
+    <id>https://fl4g.cn/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/</id>
+    <published>2021-01-18T08:44:55.000Z</published>
+    <updated>2021-01-18T10:52:17.931Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>啥都不说，做合规工作，偶尔更新一下。新年第一个博客，就简单写一下这几天复现的经典域环境中的黄金票据问题吧。</p><h1 id="0x01-域环境搭建"><a href="#0x01-域环境搭建" class="headerlink" title="0x01 域环境搭建"></a>0x01 域环境搭建</h1><p>虚拟机安装，网卡设置仅主机模式。</p><p>域控机器：windows service2016</p><p>客户端：Windows10</p><p><em>其中域控机器的DNS与IP一致，客户端DNS设置为域控机器的IP。</em></p><a id="more"></a><p>系统安装过程省略。</p><p>在使用win10客户端加入域控时，出现大致<strong>如下错误：</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;DNS 服务器失败。&quot;</span><br><span class="line"> (错误代码 0x0000232A RCODE_SERVER_FAILURE)</span><br><span class="line"></span><br><span class="line">此查询用于查找 _ldap._tcp.dc._msdcs.throld.com 的 SRV 记录</span><br></pre></td></tr></table></figure><p>此时在DNS管理器中缺少_ldap的记录。（以下为修复后出现_ldap记录）</p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/ldap记录.png" alt></p><p><strong>解决方案：</strong></p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/加域解决.png" alt></p><p>此外，本人还重启了DNS服务，域环境搭建完成。</p><h1 id="0x02-Kerberos认证"><a href="#0x02-Kerberos认证" class="headerlink" title="0x02 Kerberos认证"></a>0x02 Kerberos认证</h1><p>域内认证即采用了Kerberos协议的认证机制，其设计目标是通过密钥系统为客 户机 / 服务器应用程序提供强大的认证服务。该认证过程的实现不 依赖于主机操作系统的认证，无需基于主机地址的信任，不要求 网络上所有主机的物理安全，并假定网络上传送的数据包可以被 任意地读取、修改和插入数据。与本地认证和网络认证相比最大的区别是有个一个可信的第三方机构KDC的参与。</p><p><strong>参与域认证的三个角色：</strong></p><ul><li>Client</li><li>Server</li><li>KDC(Key Distribution Center) = DC(Domain Controller)</li></ul><h2 id="Kerberos几个重要组件"><a href="#Kerberos几个重要组件" class="headerlink" title="Kerberos几个重要组件"></a>Kerberos几个重要组件</h2><p><strong>KDC：</strong></p><p>KDC负责管理发放Ticket和记录授权的中心服务器，包含两部分：AS认证服务器（Authentication Server）,TGS服务授权服务器(Ticket Granting Server)</p><ul><li>Authentication Service：验证Client的身份，验证通过就会生成一个TGT (Ticket Granting Ticket) 给Client</li><li>Ticket Granting Service： 为client用AS给予的TGT票据换取访问Server的ticket</li></ul><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/KDC.png" alt></p><p><strong>其他重要组件：</strong></p><ul><li>AD（account database）：存储所有client的白名单，只有存在于白名单的client才能顺利申请到TGT</li><li>Client 客户端：需要使用kerberos服务的客户端</li><li>Server 服务端：提供具体服务的服务端</li></ul><h2 id="Kerberos认证流程"><a href="#Kerberos认证流程" class="headerlink" title="Kerberos认证流程"></a>Kerberos认证流程</h2><p>kerberos认证交互过程可以简要概括为以下图片中的三次通信：</p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/Kerberos.png" alt></p><p><strong>粗略流程：</strong></p><ol><li>client先向DC请求，要求获取访问server的权限，当DC接收到请求之后，先由AS向AD发起请求，查看此client是否在白名单中，成功后，则由AS将TGT返回给client。 </li><li>然后client带着TGT继续向DC发起请求，要求获取访问server的权限，当DC接收到请求后，TGS会通过TGT判断此client是否有获取server服务的权限，成功后，则将Ticket返回给client。</li><li>最后client凭借Ticket去访问所请求的server，这个Ticket只对该server有效，如果要访问其他server，需要重新申请。 </li></ol><p>详细过程见：<a href="https://1sparrow.com/2018/02/18/Kerberos%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3/">Kerberos认证相关</a></p><h1 id="0x03-黄金票据复现"><a href="#0x03-黄金票据复现" class="headerlink" title="0x03 黄金票据复现"></a>0x03 黄金票据复现</h1><p>简义 : 在拥有普通域用户权限和 krbtgt账号的hash的情况下,获取域管理员权限。</p><p>由来：</p><blockquote><p>Kerberos信任及完全依赖于KDC密码,由于Kerberos协议是无状态的,因此密钥分发中心KDC和票据授予服务TGS并没记录以前的交互信息。 因此票据授予服务所需使用的全部信息都位于TGT票据中。因为TGT使用krbtgt的密钥加密过, 理论上讲网络上只有两方能够解密TGT:</p><p>​    颁发票据的KDC和接受票据并创建访问网络资源的服务票据的票据授予服务TGS。 </p><p>这种情况让krbtgt成为系统中最重要的密码。最终结果是只要TGT被krbtgt账户密码正确地加密,TGT中的所有信息都是可信的。</p></blockquote><p><strong>复现流程：</strong>（以下操作均在win10客户端操作）</p><ol><li><p>提权到管理员用户，使用mimikatz导出krbtgt NTLM Hash</p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/hash.png" alt></p></li><li><p>生成黄金票据，在目录下生成了golden.ti票据文件</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kerberos::golden &#x2F;admin:administrator &#x2F;domain:domain-name &#x2F;sid:user-sid &#x2F;krbtgt:ntlmhash-value &#x2F;ticket:golden.ti</span><br></pre></td></tr></table></figure><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/生成票据.png" alt></p><p>（<strong>注：</strong>SID复制时去掉最后的RID（502），不然生成的票据无法使用。）</p></li><li><p>此时使用普通用户打开mimikatz，导入golden.ti，低权限本地用户，就被提升到域管理权限。</p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/导入票据.png" alt></p></li><li><p>此时使用使用dir <a href="file:///ad.test.local/c$">\\ad.test.local\c$</a>查看文件夹可以访问，与之前对比：</p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir1.png" alt></p><p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir2.png" alt="dir2"></p></li></ol><h1 id="0x04-参考文章"><a href="#0x04-参考文章" class="headerlink" title="0x04 参考文章"></a>0x04 参考文章</h1><p><a href="https://cloud.tencent.com/developer/article/1596509">Windows认证 | 域认证</a></p><p><a href="https://1sparrow.com/2018/02/19/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%9B%B8%E5%85%B3/">域渗透相关</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;啥都不说，做合规工作，偶尔更新一下。新年第一个博客，就简单写一下这几天复现的经典域环境中的黄金票据问题吧。&lt;/p&gt;
+&lt;h1 id=&quot;0x01-域环境搭建&quot;&gt;&lt;a href=&quot;#0x01-域环境搭建&quot; class=&quot;headerlink&quot; title=&quot;0x01 域环境搭建&quot;&gt;&lt;/a&gt;0x01 域环境搭建&lt;/h1&gt;&lt;p&gt;虚拟机安装，网卡设置仅主机模式。&lt;/p&gt;
+&lt;p&gt;域控机器：windows service2016&lt;/p&gt;
+&lt;p&gt;客户端：Windows10&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;其中域控机器的DNS与IP一致，客户端DNS设置为域控机器的IP。&lt;/em&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="渗透测试" scheme="https://fl4g.cn/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    
+    
+    <category term="域" scheme="https://fl4g.cn/tags/%E5%9F%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>任意文件读取</title>
@@ -505,33 +530,6 @@
 &lt;li&gt;可以为网络安全策略的制定提供重要指导&lt;/li&gt;
 &lt;li&gt;报警信息可用作网络犯罪取证&lt;/li&gt;
 &lt;/ol&gt;</summary>
-    
-    
-    
-    <category term="信息安全工程师软考" scheme="https://fl4g.cn/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/"/>
-    
-    
-    <category term="学习笔记" scheme="https://fl4g.cn/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第9章 VPN技术原理与应用</title>
-    <link href="https://fl4g.cn/2020/09/19/%E7%AC%AC9%E7%AB%A0-VPN%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/"/>
-    <id>https://fl4g.cn/2020/09/19/%E7%AC%AC9%E7%AB%A0-VPN%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</id>
-    <published>2020-09-19T08:44:12.000Z</published>
-    <updated>2020-09-19T10:28:38.591Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="VPN概述"><a href="#VPN概述" class="headerlink" title="VPN概述"></a>VPN概述</h1><p>技术原理：把需要经过公共网传递的报文加密处理后，再由公共网络发送到目的地。</p><h2 id="VPN安全功能"><a href="#VPN安全功能" class="headerlink" title="VPN安全功能"></a>VPN安全功能</h2><p>3种安全服务：</p><ul><li>保密性服务</li><li>完整性服务</li><li>认证服务</li></ul><a id="more"></a><h2 id="VPN技术风险"><a href="#VPN技术风险" class="headerlink" title="VPN技术风险"></a>VPN技术风险</h2><ol><li>VPN产品代码实现的安全缺陷</li><li>VPN密码算法安全缺陷</li><li>VPN管理不当引发的安全缺陷</li></ol><h1 id="VPN类型和实现技术"><a href="#VPN类型和实现技术" class="headerlink" title="VPN类型和实现技术"></a>VPN类型和实现技术</h1><h2 id="VPN类型"><a href="#VPN类型" class="headerlink" title="VPN类型"></a>VPN类型</h2><ul><li>链路层VPN：ATM、Frame Relay、多协议标签交换MPLS</li><li>网络层VPN：受控路由过滤、隧道技术</li><li>传输层VPN：SSL</li></ul><h2 id="密码算法"><a href="#密码算法" class="headerlink" title="密码算法"></a>密码算法</h2><p>DES、AES、RSA、SM1、SM4、SM3</p><h2 id="密钥管理"><a href="#密钥管理" class="headerlink" title="密钥管理"></a>密钥管理</h2><p>密钥分发两种方法：</p><ol><li>手工配置：可靠、更新速度慢</li><li>采用密钥交换协议动态分发：快速更新</li></ol><p>密钥交换与管理标准：SKIP（互联网简单密钥管理协议）、ISAKMP/Oakley（互联网安全联盟和密钥管理协议）</p><h2 id="认证访问控制"><a href="#认证访问控制" class="headerlink" title="认证访问控制"></a>认证访问控制</h2><p>两种形式的认证：</p><ol><li>用户身份认证</li><li>数据完整性和合法性认证</li></ol><h2 id="IPSec"><a href="#IPSec" class="headerlink" title="IPSec"></a>IPSec</h2><p>IP安全系列规范：认证头（AH）、封装安全有效负荷（ESP）、密钥交换协议</p><ol><li><p>IP AH：保证IP包的完整性、提供数据源认证和抗重放攻击</p></li><li><p>IP ESP：保证IP包的保密性</p><p>IP AH和IP ESP有两种工作模式：透明模式（只保护IP包种的数据域），隧道模式（保护IP包头和数据域）</p></li><li><p>密钥交换协议：基于IPSec技术主要优点是透明性，但是会增加网络安全管理难度和降低网络传输性能</p></li></ol><h2 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h2><p>SSl应用于传输层，包含：</p><ul><li>握手协议（身份鉴别和安全参数协商）</li><li>密码规格变更协议（通知安全参数变更）</li><li>报警协议（关闭通知和对错误进行报警）</li><li>记录层协议（传输数据的分段、压缩机解压缩、加密及解密、完整性校验）。</li></ul><p>SSL协议提供三种安全通信服务：</p><ol><li>保密性通信</li><li>点对点之间的身份认证</li><li>可靠性通信</li></ol><p>SSL记录协议的数据处理过程：</p><ol><li>SSL将数据分割成可管理的区块长度</li><li>选择是否要将已分割的数据压缩</li><li>加上消息验证码（MAC）</li><li>将数据加密，生成即将发送的消息</li><li>接收端将收到的消息解密、验证、解压缩，再重组后传送至较高层（如应用层），即完成接收</li></ol><h2 id="PPTP"><a href="#PPTP" class="headerlink" title="PPTP"></a>PPTP</h2><p>点到点安全隧道协议</p><h2 id="L2TP"><a href="#L2TP" class="headerlink" title="L2TP"></a>L2TP</h2><p>UDP 1701端口</p><h1 id="VPN主要产品与技术指标"><a href="#VPN主要产品与技术指标" class="headerlink" title="VPN主要产品与技术指标"></a>VPN主要产品与技术指标</h1><h2 id="VPN主要产品"><a href="#VPN主要产品" class="headerlink" title="VPN主要产品"></a>VPN主要产品</h2><p>IPSec VPN、SSL VPN</p><h2 id="VPN产品主要技术指标"><a href="#VPN产品主要技术指标" class="headerlink" title="VPN产品主要技术指标"></a>VPN产品主要技术指标</h2><ol><li>密码算法要求</li></ol><div class="table-container"><table><thead><tr><th style="text-align:center"></th><th style="text-align:center">IPSec VPN</th><th style="text-align:center">SSL VPN</th></tr></thead><tbody><tr><td style="text-align:center">非对称密码<br>（实体验证、数字签名、数字信封）</td><td style="text-align:center">1024比特RSA<br>256比特SM2椭圆曲线算法</td><td style="text-align:center">256位群阶ECC椭圆曲线SM2<br>IBC标识密码算法SM9<br>1024位以上RSA</td></tr><tr><td style="text-align:center">对称密码<br>（密钥协商数据和报文数据加密）</td><td style="text-align:center">128比特分支的SM1</td><td style="text-align:center">SM1</td></tr><tr><td style="text-align:center">密码杂凑算法<br>（对称密钥生成和完整性校验）</td><td style="text-align:center">SHA-1或SM3<br>SM3输出为256比特</td><td style="text-align:center">SM3和SHA-1</td></tr><tr><td style="text-align:center">随机数生成算法</td><td style="text-align:center"></td></tr></tbody></table></div><ol><li><p>VPN产品功能要求</p><p>IPSec VPN：随机数生成、密钥协商、安全报文封装、NAT穿越、身份鉴别</p><p>SSL VPN：随机数生成、密钥协商、安全报文传输、身份鉴别、访问控制、密钥更新、客户端主机安全检查</p></li><li><p>VPN产品性能要求</p><p>IPSec VPN：加解密吞吐率、加解密时延、加解密丢包率、每秒新建连接数</p><p>SSL VPN：最大并发用户数、最大并发连接数、每秒新建连接数、吞吐率</p></li></ol><h1 id="VPN技术应用"><a href="#VPN技术应用" class="headerlink" title="VPN技术应用"></a>VPN技术应用</h1><p>三种类型：远程访问虚拟网、企业内部虚拟网、企业扩展虚拟网</p><p>应用场景类型：远程安全访问、构建内部安全专网、外部网络安全互联详见P191-P192</p>]]></content>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;VPN概述&quot;&gt;&lt;a href=&quot;#VPN概述&quot; class=&quot;headerlink&quot; title=&quot;VPN概述&quot;&gt;&lt;/a&gt;VPN概述&lt;/h1&gt;&lt;p&gt;技术原理：把需要经过公共网传递的报文加密处理后，再由公共网络发送到目的地。&lt;/p&gt;
-&lt;h2 id=&quot;VPN安全功能&quot;&gt;&lt;a href=&quot;#VPN安全功能&quot; class=&quot;headerlink&quot; title=&quot;VPN安全功能&quot;&gt;&lt;/a&gt;VPN安全功能&lt;/h2&gt;&lt;p&gt;3种安全服务：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;保密性服务&lt;/li&gt;
-&lt;li&gt;完整性服务&lt;/li&gt;
-&lt;li&gt;认证服务&lt;/li&gt;
-&lt;/ul&gt;</summary>
     
     
     

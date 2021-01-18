@@ -4889,4 +4889,85 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
         <tag>文件读取</tag>
       </tags>
   </entry>
+  <entry>
+    <title>域基础及黄金票据复现</title>
+    <url>/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>啥都不说，做合规工作，偶尔更新一下。新年第一个博客，就简单写一下这几天复现的经典域环境中的黄金票据问题吧。</p>
+<h1 id="0x01-域环境搭建"><a href="#0x01-域环境搭建" class="headerlink" title="0x01 域环境搭建"></a>0x01 域环境搭建</h1><p>虚拟机安装，网卡设置仅主机模式。</p>
+<p>域控机器：windows service2016</p>
+<p>客户端：Windows10</p>
+<p><em>其中域控机器的DNS与IP一致，客户端DNS设置为域控机器的IP。</em></p>
+<a id="more"></a>
+<p>系统安装过程省略。</p>
+<p>在使用win10客户端加入域控时，出现大致<strong>如下错误：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;DNS 服务器失败。&quot;</span><br><span class="line"> (错误代码 0x0000232A RCODE_SERVER_FAILURE)</span><br><span class="line"></span><br><span class="line">此查询用于查找 _ldap._tcp.dc._msdcs.throld.com 的 SRV 记录</span><br></pre></td></tr></table></figure>
+<p>此时在DNS管理器中缺少_ldap的记录。（以下为修复后出现_ldap记录）</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/ldap记录.png" alt></p>
+<p><strong>解决方案：</strong></p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/加域解决.png" alt></p>
+<p>此外，本人还重启了DNS服务，域环境搭建完成。</p>
+<h1 id="0x02-Kerberos认证"><a href="#0x02-Kerberos认证" class="headerlink" title="0x02 Kerberos认证"></a>0x02 Kerberos认证</h1><p>域内认证即采用了Kerberos协议的认证机制，其设计目标是通过密钥系统为客 户机 / 服务器应用程序提供强大的认证服务。该认证过程的实现不 依赖于主机操作系统的认证，无需基于主机地址的信任，不要求 网络上所有主机的物理安全，并假定网络上传送的数据包可以被 任意地读取、修改和插入数据。与本地认证和网络认证相比最大的区别是有个一个可信的第三方机构KDC的参与。</p>
+<p><strong>参与域认证的三个角色：</strong></p>
+<ul>
+<li>Client</li>
+<li>Server</li>
+<li>KDC(Key Distribution Center) = DC(Domain Controller)</li>
+</ul>
+<h2 id="Kerberos几个重要组件"><a href="#Kerberos几个重要组件" class="headerlink" title="Kerberos几个重要组件"></a>Kerberos几个重要组件</h2><p><strong>KDC：</strong></p>
+<p>KDC负责管理发放Ticket和记录授权的中心服务器，包含两部分：AS认证服务器（Authentication Server）,TGS服务授权服务器(Ticket Granting Server)</p>
+<ul>
+<li>Authentication Service：验证Client的身份，验证通过就会生成一个TGT (Ticket Granting Ticket) 给Client</li>
+<li>Ticket Granting Service： 为client用AS给予的TGT票据换取访问Server的ticket</li>
+</ul>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/KDC.png" alt></p>
+<p><strong>其他重要组件：</strong></p>
+<ul>
+<li>AD（account database）：存储所有client的白名单，只有存在于白名单的client才能顺利申请到TGT</li>
+<li>Client 客户端：需要使用kerberos服务的客户端</li>
+<li>Server 服务端：提供具体服务的服务端</li>
+</ul>
+<h2 id="Kerberos认证流程"><a href="#Kerberos认证流程" class="headerlink" title="Kerberos认证流程"></a>Kerberos认证流程</h2><p>kerberos认证交互过程可以简要概括为以下图片中的三次通信：</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/Kerberos.png" alt></p>
+<p><strong>粗略流程：</strong></p>
+<ol>
+<li>client先向DC请求，要求获取访问server的权限，当DC接收到请求之后，先由AS向AD发起请求，查看此client是否在白名单中，成功后，则由AS将TGT返回给client。 </li>
+<li>然后client带着TGT继续向DC发起请求，要求获取访问server的权限，当DC接收到请求后，TGS会通过TGT判断此client是否有获取server服务的权限，成功后，则将Ticket返回给client。</li>
+<li>最后client凭借Ticket去访问所请求的server，这个Ticket只对该server有效，如果要访问其他server，需要重新申请。 </li>
+</ol>
+<p>详细过程见：<a href="https://1sparrow.com/2018/02/18/Kerberos%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3/">Kerberos认证相关</a></p>
+<h1 id="0x03-黄金票据复现"><a href="#0x03-黄金票据复现" class="headerlink" title="0x03 黄金票据复现"></a>0x03 黄金票据复现</h1><p>简义 : 在拥有普通域用户权限和 krbtgt账号的hash的情况下,获取域管理员权限。</p>
+<p>由来：</p>
+<blockquote>
+<p>Kerberos信任及完全依赖于KDC密码,由于Kerberos协议是无状态的,因此密钥分发中心KDC和票据授予服务TGS并没记录以前的交互信息。 因此票据授予服务所需使用的全部信息都位于TGT票据中。因为TGT使用krbtgt的密钥加密过, 理论上讲网络上只有两方能够解密TGT:</p>
+<p>​    颁发票据的KDC和接受票据并创建访问网络资源的服务票据的票据授予服务TGS。 </p>
+<p>这种情况让krbtgt成为系统中最重要的密码。最终结果是只要TGT被krbtgt账户密码正确地加密,TGT中的所有信息都是可信的。</p>
+</blockquote>
+<p><strong>复现流程：</strong>（以下操作均在win10客户端操作）</p>
+<ol>
+<li><p>提权到管理员用户，使用mimikatz导出krbtgt NTLM Hash</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/hash.png" alt></p>
+</li>
+<li><p>生成黄金票据，在目录下生成了golden.ti票据文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kerberos::golden &#x2F;admin:administrator &#x2F;domain:domain-name &#x2F;sid:user-sid &#x2F;krbtgt:ntlmhash-value &#x2F;ticket:golden.ti</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/生成票据.png" alt></p>
+<p>（<strong>注：</strong>SID复制时去掉最后的RID（502），不然生成的票据无法使用。）</p>
+</li>
+<li><p>此时使用普通用户打开mimikatz，导入golden.ti，低权限本地用户，就被提升到域管理权限。</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/导入票据.png" alt></p>
+</li>
+<li><p>此时使用使用dir <a href="file:///ad.test.local/c$">\\ad.test.local\c$</a>查看文件夹可以访问，与之前对比：</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir1.png" alt></p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir2.png" alt="dir2"></p>
+</li>
+</ol>
+<h1 id="0x04-参考文章"><a href="#0x04-参考文章" class="headerlink" title="0x04 参考文章"></a>0x04 参考文章</h1><p><a href="https://cloud.tencent.com/developer/article/1596509">Windows认证 | 域认证</a></p>
+<p><a href="https://1sparrow.com/2018/02/19/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%9B%B8%E5%85%B3/">域渗透相关</a></p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>域</tag>
+      </tags>
+  </entry>
 </search>
