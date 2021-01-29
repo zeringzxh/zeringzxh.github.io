@@ -5065,4 +5065,119 @@ Dec[En(a)⊙En(b)]=a⊕b</script><p>En加密运算，Dec解密运算，当$⊕$�
         <tag>网络情报</tag>
       </tags>
   </entry>
+  <entry>
+    <title>安全快讯（2021.01.23～01.29）</title>
+    <url>/2021/01/29/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-23%EF%BD%9E01-29%EF%BC%89/</url>
+    <content><![CDATA[<p><img src="/2021/01/29/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-23%EF%BD%9E01-29%EF%BC%89/1.jpg" alt></p>
+<a id="more"></a>
+<h1 id="安全快讯（2021-01-23～01-29）"><a href="#安全快讯（2021-01-23～01-29）" class="headerlink" title="安全快讯（2021.01.23～01.29）"></a>安全快讯（2021.01.23～01.29）</h1><h2 id="漏洞通告"><a href="#漏洞通告" class="headerlink" title="漏洞通告"></a>漏洞通告</h2><ol>
+<li><p>Foxit产品安全漏洞：</p>
+<p>Foxit Reader和Foxit PhantomPDF都是中国福昕（Foxit）公司的一款PDF文档阅读器。Foxit PDF SDK ActiveX是中国福昕（Foxit）公司的一个PDF软件开发工具包，也是一个可视化编程组件。该产品提供PDF显示及注释等功能。上述产品被披露存在多个漏洞，攻击者可利用漏洞导致堆栈缓冲区溢出或越界读取，远程执行代码等。</p>
+<p>参考链接：</p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04397">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04397</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04396">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04396</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04399">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04399</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04398">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04398</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04401">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04401</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04400">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04400</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04403">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04403</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04402">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04402</a></p>
+</li>
+<li><p>Mozilla产品安全漏洞：</p>
+<p>Mozilla Firefox和Mozilla Firefox ESR被披露存在多个漏洞，攻击者可利用漏洞控制标签的内容，同时URL栏显示原始域，交特殊的WEB请求，诱使用户解析，可使应用程序崩溃或可以应用程序上下文执行任意代码等。</p>
+<p>参考链接：</p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04654">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04654</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04744">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04744</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04748">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04748</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04747">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04747</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04746">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04746</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04745">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04745</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04750">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04750</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04749">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04749</a></p>
+</li>
+<li><p>JIZHICMS跨站脚本漏洞：</p>
+<p>JIZHICMS 1.7.1中的Home/c/ErrorController.php存在跨站脚本漏洞。攻击者可通过index.php/Error/index?msg={XSS]利用该漏洞注入任意Web脚本或HTML。</p>
+<p>参考链接：</p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-04409">https://www.cnvd.org.cn/flaw/show/CNVD-2021-04409</a></p>
+</li>
+<li><p>SonicWall SSL-VPN 远程命令执行漏洞：</p>
+<p>SonicWall SSL-VPN 历史版本中存在漏洞，远程攻击者利用 CGI 程序处理逻辑漏洞，构造恶意的<code>User-Agent</code>，可造成远程任意命令执行，并获得主机控制权限。通用修补建议：升级到  Sonic SMA 8.0.0.4。</p>
+<p>参考链接：</p>
+<p><a href="https://darrenmartyn.ie/2021/01/24/visualdoor-sonicwall-ssl-vpn-exploit/">https://darrenmartyn.ie/2021/01/24/visualdoor-sonicwall-ssl-vpn-exploit/</a></p>
+</li>
+<li><p>SAP Solution Manager EemAdmin 远程代码执行漏洞：</p>
+<p>SAP Solution Manager是一套系统监控，能方便对企业进行技术相关与应用相关功能的监控。2020年SAP官方发布安全更新修复了位于UXMon中的一处远程代码执行漏洞（CVE-2020-6207）。影响版本：SAP Solution Manager &lt;= 7.2。</p>
+<p>相关链接：</p>
+<p><a href="https://wiki.scn.sap.com/wiki/pages/viewpage.action?pageId=540935305">https://wiki.scn.sap.com/wiki/pages/viewpage.action?pageId=540935305</a></p>
+</li>
+<li><p>Sudo 堆缓冲区溢出致本地提权漏洞（CVE-2021-3156）：</p>
+<p>若成功利用该漏洞，可在无需密码的情况下获得root权限。下载升级sudo软件包，下载链接为：<a href="https://www.sudo.ws/dist/"> https://www.sudo.ws/dist/</a>。</p>
+<p>相关链接：</p>
+<p><a href="https://access.redhat.com/security/cve/CVE-2021-3156">https://access.redhat.com/security/cve/CVE-2021-3156</a></p>
+</li>
+<li><p>IBM WebSphere XXE 漏洞 (CVE-2020-4949)：</p>
+<p>攻击者可构造恶意请求进行XXE攻击，造成文件读取、敏感信息泄漏等。阿里云应急响应中心提醒 WebSphere 用户尽快采取安全措施阻止漏洞攻击。</p>
+<p>相关链接：</p>
+<p><a href="https://www.ibm.com/support/pages/node/6408244">https://www.ibm.com/support/pages/node/6408244</a></p>
+</li>
+</ol>
+<h2 id="恶意代码"><a href="#恶意代码" class="headerlink" title="恶意代码"></a>恶意代码</h2><ol>
+<li><p>SAP SolMan 严重漏洞的自动化 exploit 代码遭公开：</p>
+<p><a href="https://mp.weixin.qq.com/s/KWCURIRmrRPNK7F5Br9ndw">https://mp.weixin.qq.com/s/KWCURIRmrRPNK7F5Br9ndw</a></p>
+</li>
+<li><p>FireEye发布了检测SolarWinds的审计工具：</p>
+<p><a href="https://www.zdnet.com/article/fireeye-releases-tool-for-auditing-networks-for-techniques-used-by-solarwinds-hackers/">https://www.zdnet.com/article/fireeye-releases-tool-for-auditing-networks-for-techniques-used-by-solarwinds-hackers/</a></p>
+</li>
+<li><p>Egregor勒索软件简要分析报告：</p>
+<p><a href="https://www.freebuf.com/articles/database/258970.html">https://www.freebuf.com/articles/database/258970.html</a></p>
+</li>
+</ol>
+<h2 id="威胁情报"><a href="#威胁情报" class="headerlink" title="威胁情报"></a>威胁情报</h2><ol>
+<li><p>蔓灵花组织（APT-C-08）使用Warzone RAT的攻击活动披露：</p>
+<p><a href="https://mp.weixin.qq.com/s/C09P0al1nhsyyujHRp0FAw">https://mp.weixin.qq.com/s/C09P0al1nhsyyujHRp0FAw</a></p>
+</li>
+<li><p>黑客公开交友网站MeetMindful的228万用户的数据：</p>
+<p><a href="https://www.zdnet.com/article/hacker-leaks-data-of-2-28-million-dating-site-users/">https://www.zdnet.com/article/hacker-leaks-data-of-2-28-million-dating-site-users/</a></p>
+</li>
+<li><p>KindleDrip漏洞可通过简单的电子邮件入侵Kindle设备：</p>
+<p><a href="https://securityaffairs.co/wordpress/113743/hacking/kindle-kindledrip-exploit.html">https://securityaffairs.co/wordpress/113743/hacking/kindle-kindledrip-exploit.html</a></p>
+</li>
+<li><p>30人贩卖6亿条个人信息，获利800万被抓：</p>
+<p><a href="https://www.cnbeta.com/articles/tech/1081905.htm">https://www.cnbeta.com/articles/tech/1081905.htm</a></p>
+</li>
+<li><p>苹果警告：3个iOS的0day漏洞被爆出，可能被广泛利用：</p>
+<p><a href="https://thehackernews.com/2021/01/apple-warns-of-3-ios-zero-day-security.html">https://thehackernews.com/2021/01/apple-warns-of-3-ios-zero-day-security.html</a></p>
+</li>
+<li><p>包含1.76亿巴基斯坦手机用户的数据库被在线销售：</p>
+<p><a href="https://www.hackread.com/pakistani-mobile-phone-users-database-sold-online/">https://www.hackread.com/pakistani-mobile-phone-users-database-sold-online/</a></p>
+</li>
+<li><p>巴西几乎所有人的信息泄露。泄露的数据为 14 GB，包含了 1.04 亿车辆和 4000 万家企业详细信息，潜在受影响人数 2.2 亿。</p>
+<p><a href="https://www.solidot.org/story?sid=66764">https://www.solidot.org/story?sid=66764</a></p>
+</li>
+</ol>
+<h2 id="其他资讯"><a href="#其他资讯" class="headerlink" title="其他资讯"></a>其他资讯</h2><ol>
+<li><p>黑客窃走敏感财务信息 英特尔被迫提前发财报：</p>
+<p><a href="https://view.inews.qq.com/k/20210122A01DGL00?uid=&amp;shareto=">https://view.inews.qq.com/k/20210122A01DGL00?uid=&amp;shareto=</a></p>
+</li>
+<li><p>拜登整合网安技术人才，拜登任期内，网安必将大动作不断。：</p>
+<p><a href="https://www.aljazeera.com/news/2021/1/22/after-govt-hack-biden-enlists-world-class-cybersecurity-team">https://www.aljazeera.com/news/2021/1/22/after-govt-hack-biden-enlists-world-class-cybersecurity-team</a></p>
+</li>
+<li><p>工信部通报今年首批157款侵害用户权益行为APP：</p>
+<p><a href="https://www.secrss.com/articles/28860">https://www.secrss.com/articles/28860</a></p>
+</li>
+<li><p>pip 停止支持 Python 2</p>
+</li>
+<li><p>亚洲零售巨头Dairy Farm遭受恶意勒索软件攻击：</p>
+<p><a href="https://www.bleepingcomputer.com/news/security/pan-asian-retail-giant-dairy-farm-suffers-revil-ransomware-attack/">https://www.bleepingcomputer.com/news/security/pan-asian-retail-giant-dairy-farm-suffers-revil-ransomware-attack/</a></p>
+</li>
+</ol>
+<p><strong>【以上信息均来自互联网，若有侵权，留言删除】</strong></p>
+]]></content>
+      <categories>
+        <category>每周安全资讯</category>
+      </categories>
+      <tags>
+        <tag>网络情报</tag>
+      </tags>
+  </entry>
 </search>
