@@ -23,26 +23,20 @@
     var CONFIG = {"hostname":"fl4g.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="云计算安全概念与威胁分析云计算基本概念云计算的主要特征：  IT资源以服务的形式提供 常见的服务：基础设施即服务IaaS、平台即服务PaaS、软件即服务SaaS、数据即服务DaaS、存储即服务STaaS  多租户共享IT资源  IT资源按需定制与按用付费  IT资源可伸缩性部署">
-<meta property="og:type" content="article">
-<meta property="og:title" content="第23章 云计算安全需求分析与安全保护工程">
-<meta property="og:url" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="安全快讯（2021.01.30～02.05）">
+<meta property="og:url" content="https://fl4g.cn/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/index.html">
 <meta property="og:site_name" content="zering的博客">
-<meta property="og:description" content="云计算安全概念与威胁分析云计算基本概念云计算的主要特征：  IT资源以服务的形式提供 常见的服务：基础设施即服务IaaS、平台即服务PaaS、软件即服务SaaS、数据即服务DaaS、存储即服务STaaS  多租户共享IT资源  IT资源按需定制与按用付费  IT资源可伸缩性部署">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/云计算安全要求.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/云计算安全等保设计.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/平台等保要求.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/安全管理.jpg">
-<meta property="og:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/安全运维.jpg">
-<meta property="article:published_time" content="2020-09-28T09:21:03.000Z">
-<meta property="article:modified_time" content="2020-09-29T03:48:09.282Z">
+<meta property="og:image" content="https://fl4g.cn/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/1.jpg">
+<meta property="article:published_time" content="2021-02-08T06:13:10.000Z">
+<meta property="article:modified_time" content="2021-02-08T06:23:31.663Z">
 <meta property="article:author" content="zering">
-<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="网络情报">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/云计算安全要求.jpg">
+<meta name="twitter:image" content="https://fl4g.cn/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/1.jpg">
 
-<link rel="canonical" href="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/">
+<link rel="canonical" href="https://fl4g.cn/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -55,7 +49,7 @@
   };
 </script>
 
-  <title>第23章 云计算安全需求分析与安全保护工程 | zering的博客</title>
+  <title>安全快讯（2021.01.30～02.05） | zering的博客</title>
   
 
 
@@ -213,7 +207,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="https://fl4g.cn/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -226,7 +220,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          第23章 云计算安全需求分析与安全保护工程
+          安全快讯（2021.01.30～02.05）
         </h1>
 
         <div class="post-meta">
@@ -235,28 +229,22 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-09-28 17:21:03" itemprop="dateCreated datePublished" datetime="2020-09-28T17:21:03+08:00">2020-09-28</time>
+              <time title="创建时间：2021-02-08 14:13:10 / 修改时间：14:23:31" itemprop="dateCreated datePublished" datetime="2021-02-08T14:13:10+08:00">2021-02-08</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-29 11:48:09" itemprop="dateModified" datetime="2020-09-29T11:48:09+08:00">2020-09-29</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%BD%AF%E8%80%83/" itemprop="url" rel="index"><span itemprop="name">信息安全工程师软考</span></a>
+                  <a href="/categories/%E6%AF%8F%E5%91%A8%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/" itemprop="url" rel="index"><span itemprop="name">每周安全资讯</span></a>
                 </span>
             </span>
 
           
-            <span id="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" class="post-meta-item leancloud_visitors" data-flag-title="第23章 云计算安全需求分析与安全保护工程" title="阅读次数">
+            <span id="/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/" class="post-meta-item leancloud_visitors" data-flag-title="安全快讯（2021.01.30～02.05）" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -271,8 +259,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -282,14 +270,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
+              <span>3.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -301,91 +289,99 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="云计算安全概念与威胁分析"><a href="#云计算安全概念与威胁分析" class="headerlink" title="云计算安全概念与威胁分析"></a>云计算安全概念与威胁分析</h1><h2 id="云计算基本概念"><a href="#云计算基本概念" class="headerlink" title="云计算基本概念"></a>云计算基本概念</h2><p>云计算的主要特征：</p>
-<ol>
-<li><p>IT资源以服务的形式提供</p>
-<p>常见的服务：基础设施即服务IaaS、平台即服务PaaS、软件即服务SaaS、数据即服务DaaS、存储即服务STaaS</p>
-</li>
-<li><p>多租户共享IT资源</p>
-</li>
-<li><p>IT资源按需定制与按用付费</p>
-</li>
-<li><p>IT资源可伸缩性部署</p>
-</li>
-</ol>
+        <p><img src="/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/1.jpg" alt></p>
 <a id="more"></a>
-<p>云计算四种部署模式：私有云、社区云、公有云和混合云</p>
-<h2 id="云计算安全分析"><a href="#云计算安全分析" class="headerlink" title="云计算安全分析"></a>云计算安全分析</h2><ol>
-<li><p>云端安全威胁：指使用云计算服务的终端设备</p>
+<h1 id="安全快讯（2021-01-30～02-05）"><a href="#安全快讯（2021-01-30～02-05）" class="headerlink" title="安全快讯（2021.01.30～02.05）"></a>安全快讯（2021.01.30～02.05）</h1><h2 id="漏洞通告"><a href="#漏洞通告" class="headerlink" title="漏洞通告"></a>漏洞通告</h2><ol>
+<li><p>微软发布微补丁，修复Installer中的提权0day ：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bleepingcomputer.com/news/security/windows-installer-zero-day-vulnerability-gets-free-micropatch/">https://www.bleepingcomputer.com/news/security/windows-installer-zero-day-vulnerability-gets-free-micropatch/</a></p>
 </li>
-<li><p>云“管”安全威胁：指连接用户端和与云计算平台的网络</p>
+<li><p>CVE-2021-3115——Golang Windows版本 RCE漏洞</p>
+<p>1月，谷歌工程师修复了Go语言（Golang）中的一个远程代码执行漏洞。该漏洞CVE编号为CVE-2021-3115，漏洞主要影响使用go get命令的Windows Go用户。该漏洞是由日本安全研究人员RyotaK发现的，属于命令注入漏洞。漏洞产生的根本原因是用户运行go get命令来提取库时编译过程的工作原理造成的。</p>
+<p>参考来源：</p>
+<p><a target="_blank" rel="noopener" href="https://www.4hou.com/posts/g826">https://www.4hou.com/posts/g826</a></p>
 </li>
-<li><p>云计算平台安全威胁</p>
-<p>主要网络安全威胁：</p>
-<ul>
-<li>云计算平台物理安全威胁</li>
-<li>云计算平台服务安全威胁</li>
-<li>云平台资源滥用安全威胁</li>
-<li>云计算平台运维及内部安全威胁</li>
-<li>数据残留</li>
-<li>过度依赖</li>
-<li>利用共享技术漏洞进行的攻击</li>
-<li>滥用云服务</li>
-<li>云服务中断</li>
-<li>利用不安全接口的攻击</li>
-<li>数据丢失、篡改或泄漏</li>
-</ul>
+<li><p>Apache Druid 远程代码执行漏洞（CVE-2021-25646）</p>
+<p>Apache Druid包括执行用户提供的JavaScript的功能嵌入在各种类型请求中的代码。此功能在用于高信任度环境中，默认已被禁用。但是，在Druid 0.20.0及更低版本中，经过身份验证的用户发送恶意请求，利用Apache Druid漏洞可以执行任意代码。</p>
+<p>及时更新Apache Druid，下载链接为：</p>
+<p><a target="_blank" rel="noopener" href="https://druid.apache.org/downloads.html">https://druid.apache.org/downloads.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apache/druid/releases/tag/druid-0.20.1">https://github.com/apache/druid/releases/tag/druid-0.20.1</a></p>
 </li>
-</ol>
-<h2 id="云计算安全要求"><a href="#云计算安全要求" class="headerlink" title="云计算安全要求"></a>云计算安全要求</h2><p><img src="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/云计算安全要求.jpg" style="zoom:50%;"></p>
-<h1 id="云计算服务安全需求"><a href="#云计算服务安全需求" class="headerlink" title="云计算服务安全需求"></a>云计算服务安全需求</h1><h2 id="云计算技术安全需求"><a href="#云计算技术安全需求" class="headerlink" title="云计算技术安全需求"></a>云计算技术安全需求</h2><ol>
-<li>云端安全需求分析：涉及云用户的身份标识和鉴别、资源访问控制、数据安全存储、云端设备及服务软件安全</li>
-<li>网络安全通信安全需求分析：技术包括身份认证、密钥分配、数据加密、信道加密、防火墙、VPN、抗拒绝服务</li>
-<li>云计算平台安全需求分析：安全需求有物理环境安全、主机服务器安全、操作系统、数据库安全、应用及数据安全、云操作系统安全、虚拟机安全和多租户安全隔离</li>
-</ol>
-<h2 id="云计算安全合规需求"><a href="#云计算安全合规需求" class="headerlink" title="云计算安全合规需求"></a>云计算安全合规需求</h2><ol>
-<li>云计算安全国际管理标准规范</li>
-<li>云计算安全国内管理标准规范<ul>
-<li>《关于加强党政部门云计算服务网络安全管理的意见》</li>
-<li>《云计算服务安全评估方法》</li>
-<li>《信息安全技术 云计算服务安全指南》（GB/T 31167-2014）</li>
-<li>《信息安全技术 云计算服务安全能力要求》（GB/T 31168-2014）</li>
-<li>《信息安全技术 网络安全等级保护基本要求 第2部分：云计算安全扩展要求》（GA/T 1390.2-2017）</li>
-<li>其他</li>
-</ul>
+<li><p>Apache Shiro权限绕过漏洞（CVE-2020-17523）</p>
+<p>Apache Shiro 1.7.0之前的版本，当与Spring结合使用时，攻击者可发送特定HTTP请求导致验证绕过，获取敏感权限。</p>
+<p>安全版本：Apache Shiro &gt;= 1.7.1</p>
+<p>相关链接：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apache/shiro/releases/tag/shiro-root-1.7.1">https://github.com/apache/shiro/releases/tag/shiro-root-1.7.1</a></p>
+</li>
+<li><p>Azure Functions中存在提权漏洞，可逃逸至Docker主机</p>
+<p><a target="_blank" rel="noopener" href="https://securityaffairs.co/wordpress/114061/hacking/azure-functions-escape-docker.html">https://securityaffairs.co/wordpress/114061/hacking/azure-functions-escape-docker.html</a></p>
+</li>
+<li><p>SolarWinds软件中发现了3个新的严重安全漏洞：</p>
+<p><a target="_blank" rel="noopener" href="https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/full-system-control-with-new-solarwinds-orion-based-and-serv-u-ftp-vulnerabilities/">https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/full-system-control-with-new-solarwinds-orion-based-and-serv-u-ftp-vulnerabilities/</a></p>
+</li>
+<li><p>Android 发布 2 月份漏洞补丁公告，修复 5 个高危漏洞：</p>
+<p><a target="_blank" rel="noopener" href="https://threatpost.com/five-critical-bugs-patched-feb-security-bulletin/163623/">https://threatpost.com/five-critical-bugs-patched-feb-security-bulletin/163623/</a></p>
+</li>
+<li><p>Cisco修复SMB VPN路由器中的多个代码执行漏洞：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bleepingcomputer.com/news/security/cisco-fixes-critical-code-execution-bugs-in-smb-vpn-routers/">https://www.bleepingcomputer.com/news/security/cisco-fixes-critical-code-execution-bugs-in-smb-vpn-routers/</a></p>
 </li>
 </ol>
-<h2 id="云计算隐私保护需求"><a href="#云计算隐私保护需求" class="headerlink" title="云计算隐私保护需求"></a>云计算隐私保护需求</h2><p>个人数据安全隐私保护要求：</p>
-<ol>
-<li>数据采集：明确信息采集范围和用途，告知用户相关风险</li>
-<li>数据传输：加密</li>
-<li>数据存储：加密、认证、访问控制、备份</li>
-<li>数据使用：安全控制策略规则</li>
-<li>数据维护：数据安全生命周期管理流程</li>
-<li>数据安全事件处置</li>
+<h2 id="恶意代码"><a href="#恶意代码" class="headerlink" title="恶意代码"></a>恶意代码</h2><ol>
+<li><p>意大利CERT警告新Android恶意软件Oscorp可窃取数据：</p>
+<p><a target="_blank" rel="noopener" href="https://thehackernews.com/2021/01/italy-cert-warns-of-new-credential.html">https://thehackernews.com/2021/01/italy-cert-warns-of-new-credential.html</a></p>
+</li>
+<li><p>Perl.com官网被劫持用以分发恶意软件：</p>
+<p><a target="_blank" rel="noopener" href="https://securityaffairs.co/wordpress/114006/hacking/website-perl-com-hijacked.html">https://securityaffairs.co/wordpress/114006/hacking/website-perl-com-hijacked.html</a></p>
+</li>
+<li><p>新的供应链攻击：Operation NightScout。亚洲地区的利用安卓模拟器NoxPlayer供应链攻击：</p>
+<p><a target="_blank" rel="noopener" href="https://www.welivesecurity.com/2021/02/01/operation-nightscout-supply-chain-attack-online-gaming-asia/">https://www.welivesecurity.com/2021/02/01/operation-nightscout-supply-chain-attack-online-gaming-asia/</a></p>
+</li>
+<li><p>新型间谍木马来袭，紧盯Minecraft账号信息，建议用户打开系统自动更新，并检测更新进行安装。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/iuhy7836KFxf6ErtMOXoTw">https://mp.weixin.qq.com/s/iuhy7836KFxf6ErtMOXoTw</a></p>
+</li>
 </ol>
-<h1 id="云计算安全保护与技术方案"><a href="#云计算安全保护与技术方案" class="headerlink" title="云计算安全保护与技术方案"></a>云计算安全保护与技术方案</h1><h2 id="云计算安全等级保护框架"><a href="#云计算安全等级保护框架" class="headerlink" title="云计算安全等级保护框架"></a>云计算安全等级保护框架</h2><p><img src="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/云计算安全等保设计.jpg" style="zoom:50%;"></p>
-<h2 id="云计算安全防护"><a href="#云计算安全防护" class="headerlink" title="云计算安全防护"></a>云计算安全防护</h2><p><img src="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/平台等保要求.jpg" style="zoom:50%;"></p>
-<p>常见安全机制：</p>
-<ol>
-<li>身份鉴别认证机制</li>
-<li>数据完整性机制</li>
-<li>访问控制机制</li>
-<li>入侵防范机制</li>
-<li>安全审计机制</li>
-<li>云操作系统安全增强机制</li>
+<h2 id="威胁情报"><a href="#威胁情报" class="headerlink" title="威胁情报"></a>威胁情报</h2><ol>
+<li><p>巴基斯坦打车应用BYKEA泄露200GB的超过4亿条数据：</p>
+<p><a target="_blank" rel="noopener" href="https://www.hackread.com/bykea-data-breach-pakistani-ride-hailing-app/">https://www.hackread.com/bykea-data-breach-pakistani-ride-hailing-app/</a></p>
+</li>
+<li><p>泛亚大型零售连锁运营商牛奶集团(Dairy Farm Group)本月受到REvil勒索软件攻击，被勒索赎金高达3000万美元的赎金：</p>
+<p><a target="_blank" rel="noopener" href="https://www.163.com/dy/article/G1J8KKL40511A5GF.html">https://www.163.com/dy/article/G1J8KKL40511A5GF.html</a></p>
+</li>
+<li><p>以色列Clearsky曝光遭LC黑客入侵的250多台电信企业服务器：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnbeta.com/articles/tech/1084625.htm">https://www.cnbeta.com/articles/tech/1084625.htm</a></p>
+</li>
+<li><p>美国无线运营商UScellular披露数据泄露，可能已经暴露了客户的个人信息并转移了他们的电话号码：</p>
+<p><a target="_blank" rel="noopener" href="https://ago.vermont.gov/blog/2021/01/22/uscellular-notice-of-data-breach-to-consumers/">https://ago.vermont.gov/blog/2021/01/22/uscellular-notice-of-data-breach-to-consumers/</a></p>
+</li>
+<li><p>勒索软件运营商利用VMWare ESXi漏洞对VM磁盘进行加密：</p>
+<p><a target="_blank" rel="noopener" href="https://securityaffairs.co/wordpress/114124/malware/ransomware-attack-vmware-esxi.html">https://securityaffairs.co/wordpress/114124/malware/ransomware-attack-vmware-esxi.html</a></p>
+</li>
+<li><p>警察考试数据库泄露了50万印度公民的PII：</p>
+<p><a target="_blank" rel="noopener" href="https://securityaffairs.co/wordpress/114148/data-breach/police-exam-database-exposes-500k-indian-citizens-pii.html">https://securityaffairs.co/wordpress/114148/data-breach/police-exam-database-exposes-500k-indian-citizens-pii.html</a></p>
+</li>
 </ol>
-<h2 id="云计算安全管理"><a href="#云计算安全管理" class="headerlink" title="云计算安全管理"></a>云计算安全管理</h2><p><img src="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/安全管理.jpg" style="zoom:50%;"></p>
-<h2 id="云计算安全运维"><a href="#云计算安全运维" class="headerlink" title="云计算安全运维"></a>云计算安全运维</h2><p><img src="/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/安全运维.jpg" style="zoom:50%;"></p>
-<p>安全措施：</p>
-<ol>
-<li>云计算安全风险评估机制</li>
-<li>云计算内部安全防护机制：身份认证、安全操作审计、远程安全登录</li>
-<li>云计算网络安全监测机制</li>
-<li>云计算应急响应机制</li>
-<li>云计算容灾备份机制</li>
+<h2 id="其他资讯"><a href="#其他资讯" class="headerlink" title="其他资讯"></a>其他资讯</h2><ol>
+<li><p>农行被银保监会罚款420万：</p>
+<p><a target="_blank" rel="noopener" href="https://finance.sina.com.cn/money/bank/gsdt/2021-02-01/doc-ikftssap2262605.shtml">https://finance.sina.com.cn/money/bank/gsdt/2021-02-01/doc-ikftssap2262605.shtml</a></p>
+</li>
+<li><p>Chrome再次屏蔽七个端口 以抵御NAT Slipstreaming攻击：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnbeta.com/articles/tech/1084621.htm">https://www.cnbeta.com/articles/tech/1084621.htm</a></p>
+</li>
+<li><p>勒索团伙Fonix宣布退出，并发布其解密密钥</p>
+<p><a target="_blank" rel="noopener" href="https://www.zdnet.com/article/fonixcrypter-ransomware-gang-releases-master-decryption-key/">https://www.zdnet.com/article/fonixcrypter-ransomware-gang-releases-master-decryption-key/</a></p>
+</li>
+<li><p>TikTok“查找好友”功能存在漏洞：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/J445HmsnsMW5pY1-T0kQng">https://mp.weixin.qq.com/s/J445HmsnsMW5pY1-T0kQng</a></p>
+</li>
+<li><p>Cisco反垃圾邮件服务SpamCop中断，大量邮件被拒：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bleepingcomputer.com/news/security/spamcop-anti-spam-service-suffers-an-outage-after-its-domain-expired/">https://www.bleepingcomputer.com/news/security/spamcop-anti-spam-service-suffers-an-outage-after-its-domain-expired/</a></p>
+</li>
+<li><p>Defender ATP误将Chrome多个更新标记为PHP后门：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bleepingcomputer.com/news/security/microsoft-defender-atp-detects-chrome-updates-as-php-backdoors/">https://www.bleepingcomputer.com/news/security/microsoft-defender-atp-detects-chrome-updates-as-php-backdoors/</a></p>
+</li>
 </ol>
-<h1 id="云计算安全综合应用案例分析"><a href="#云计算安全综合应用案例分析" class="headerlink" title="云计算安全综合应用案例分析"></a>云计算安全综合应用案例分析</h1><p>阿里云安全、腾讯云安全、华为云安全、微软Azure云安全、云计算隐私保护详见P514-P524</p>
+<p><strong>【以上信息均来自互联网，若有侵权，留言删除】</strong></p>
+<font color="#dd0000" size="6">**春节停更**</font> 
+
 
     </div>
 
@@ -406,19 +402,10 @@
   <div class="popular-posts-header">相关文章</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/09/2020年软考-信息安全工程师学习笔记/" rel="bookmark">2020年软考--信息安全工程师学习笔记</a></div>
+      <div class="popular-posts-title"><a href="/2021/01/22/安全快讯（2021-01-15～01-22）/" rel="bookmark">安全快讯（2021.01.15～01.22）</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/09/第1章-网络信息安全概述/" rel="bookmark">第1章 网络信息安全概述</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/10/第2章-网络攻击原理与常用方法/" rel="bookmark">第2章 网络攻击原理与常用方法</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/14/第3章-密码学基本理论/" rel="bookmark">第3章 密码学基本理论</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/09/16/第4章-网络安全体系与网络安全模型/" rel="bookmark">第4章 网络安全体系与网络安全模型</a></div>
+      <div class="popular-posts-title"><a href="/2021/01/29/安全快讯（2021-01-23～01-29）/" rel="bookmark">安全快讯（2021.01.23～01.29）</a></div>
     </li>
   </ul>
 
@@ -431,7 +418,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://fl4g.cn/2020/09/28/%E7%AC%AC23%E7%AB%A0-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" title="第23章 云计算安全需求分析与安全保护工程">https://fl4g.cn/2020/09/28/第23章-云计算安全需求分析与安全保护工程/</a>
+    <a href="https://fl4g.cn/2021/02/08/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89/" title="安全快讯（2021.01.30～02.05）">https://fl4g.cn/2021/02/08/安全快讯（2021-01-30～02-05）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -443,7 +430,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"><i class="fa fa-tag"></i> 学习笔记</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E6%83%85%E6%8A%A5/" rel="tag"><i class="fa fa-tag"></i> 网络情报</a>
           </div>
 
         
@@ -452,13 +439,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/28/%E7%AC%AC22%E7%AB%A0-%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" rel="prev" title="第22章 网站安全需求分析与安全保护工程">
-      <i class="fa fa-chevron-left"></i> 第22章 网站安全需求分析与安全保护工程
+    <a href="/2021/01/29/%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-23%EF%BD%9E01-29%EF%BC%89/" rel="prev" title="安全快讯（2021.01.23～01.29）">
+      <i class="fa fa-chevron-left"></i> 安全快讯（2021.01.23～01.29）
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/29/%E7%AC%AC24%E7%AB%A0-%E5%B7%A5%E6%8E%A7%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E5%B7%A5%E7%A8%8B/" rel="next" title="第24章 工控安全需求分析与安全保护工程">
-      第24章 工控安全需求分析与安全保护工程 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -518,7 +502,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%A8%81%E8%83%81%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">云计算安全概念与威胁分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">云计算基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">云计算安全分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E8%A6%81%E6%B1%82"><span class="nav-number">1.3.</span> <span class="nav-text">云计算安全要求</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E6%9C%8D%E5%8A%A1%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82"><span class="nav-number">2.</span> <span class="nav-text">云计算服务安全需求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E6%8A%80%E6%9C%AF%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82"><span class="nav-number">2.1.</span> <span class="nav-text">云计算技术安全需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E5%90%88%E8%A7%84%E9%9C%80%E6%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">云计算安全合规需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E9%9C%80%E6%B1%82"><span class="nav-number">2.3.</span> <span class="nav-text">云计算隐私保护需求</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">云计算安全保护与技术方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4%E6%A1%86%E6%9E%B6"><span class="nav-number">3.1.</span> <span class="nav-text">云计算安全等级保护框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4"><span class="nav-number">3.2.</span> <span class="nav-text">云计算安全防护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">3.3.</span> <span class="nav-text">云计算安全管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4"><span class="nav-number">3.4.</span> <span class="nav-text">云计算安全运维</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%89%E5%85%A8%E7%BB%BC%E5%90%88%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">云计算安全综合应用案例分析</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%BF%AB%E8%AE%AF%EF%BC%882021-01-30%EF%BD%9E02-05%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">安全快讯（2021.01.30～02.05）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E9%80%9A%E5%91%8A"><span class="nav-number">1.1.</span> <span class="nav-text">漏洞通告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">恶意代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5"><span class="nav-number">1.3.</span> <span class="nav-text">威胁情报</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%B5%84%E8%AE%AF"><span class="nav-number">1.4.</span> <span class="nav-text">其他资讯</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
